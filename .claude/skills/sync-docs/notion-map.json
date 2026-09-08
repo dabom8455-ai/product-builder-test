@@ -66,6 +66,28 @@
       "repo_file": "docs/briefs/homepage_build_brief.md",
       "notion_page_id": "3d5ca2bf-c770-8156-859a-e9cd1ed854a0",
       "notion_title": "지시서 · 홈페이지 구축 (마케팅팀)"
+    },
+    {
+      "repo_file": "docs/infra/data_registry.md",
+      "notion_page_id": "3d5ca2bf-c770-81be-afed-eb47936bb59d",
+      "notion_title": "데이터 레지스트리 (Data Registry)"
+    }
+  ],
+  "databases": [
+    {
+      "name": "① 리드 (Lead)",
+      "notion_url": "https://app.notion.com/p/fd3766edbddc47edb931ba8f69f34c06",
+      "data_source_id": "2a087e96-6c25-4032-bfe2-bd306ceb4d80"
+    },
+    {
+      "name": "② 상담 (Consultation)",
+      "notion_url": "https://app.notion.com/p/b357ac999eae4fc0b7411e02404f5717",
+      "data_source_id": "c62b2bf6-d152-4b5d-91c3-adcffa19e551"
+    },
+    {
+      "name": "⑪ 의사결정 로그 (Decision Log)",
+      "notion_url": "https://app.notion.com/p/d34fbaac99a145ab99e80d7da9109d4a",
+      "data_source_id": "8df0dcc8-f266-4e01-ae3d-a939a98c17cc"
     }
   ]
 }
