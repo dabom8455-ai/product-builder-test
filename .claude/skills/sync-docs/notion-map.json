@@ -166,6 +166,11 @@
       "repo_file": "docs/external/company_work_manual.md",
       "notion_page_id": "3d5ca2bf-c770-81cc-b730-c1e65ee89044",
       "notion_title": "도현컴퍼니 업무매뉴얼 (외부 협력사용) v1.0"
+    },
+    {
+      "repo_file": "docs/roles/rovisor.md",
+      "notion_page_id": "3d5ca2bf-c770-813d-93c7-f4306c1659d6",
+      "notion_title": "로비서 — 대표 직속 AI 비서 운영지침"
     }
   ],
   "team_pages": {
@@ -197,6 +202,11 @@
       "name": "트렌드·아이디어 뱅크 (Idea Bank) — ⑥ 전략기획실",
       "notion_url": "https://app.notion.com/p/34e30fd1e8cf46d190ff8f3be4192767",
       "data_source_id": "f0a10baa-4e0d-4a2d-a0af-b8dd3aa52e73"
+    },
+    {
+      "name": "인사이트 노트 (Insight Notes) — 로비서",
+      "notion_url": "https://app.notion.com/p/d1037663c7eb409986dcb64ef67679a0",
+      "data_source_id": "7632c586-8967-4447-a499-fb36087977d6"
     }
   ]
 }
