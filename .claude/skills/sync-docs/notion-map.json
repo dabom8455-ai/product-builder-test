@@ -161,6 +161,11 @@
       "repo_file": "docs/strategy/homepage_re_and_pagemap.md",
       "notion_page_id": "3d5ca2bf-c770-8195-bd18-c3669d055220",
       "notion_title": "홈페이지 역설계 분석 + 페이지맵"
+    },
+    {
+      "repo_file": "docs/external/company_work_manual.md",
+      "notion_page_id": "3d5ca2bf-c770-81cc-b730-c1e65ee89044",
+      "notion_title": "도현컴퍼니 업무매뉴얼 (외부 협력사용) v1.0"
     }
   ],
   "team_pages": {
