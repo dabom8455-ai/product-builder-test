@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap');
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #F4EEE1; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #23261F; }
+    .serif { font-family: 'Noto Serif KR', serif; }
+    a { color: #C4A24B; } a:hover { color: #A9862F; }
+  </style>
+</helmet>
+
+<div style="width: 1200px; background: #F4EEE1; padding: 64px 64px 72px;">
+
+  <!-- header -->
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; margin-bottom: 48px;">
+    <span style="font-size: 13px; letter-spacing: .22em; text-transform: uppercase; color: #C4A24B; font-weight: 700;">Organization</span>
+    <h1 class="serif" style="margin: 0; font-size: 38px; color: #1E4A3C; font-weight: 700;">도현컴퍼니 조직도</h1>
+    <p style="margin: 0; font-size: 16px; color: #5C6157; line-height: 1.6; max-width: 560px;">4개 팀이 병렬로 움직이고, 클부장이 조정·보고합니다. 시간을 팔지 않고 시스템을 파는 구조.</p>
+  </div>
+
+  <!-- 대표 -->
+  <div style="display: flex; justify-content: center;">
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; width: 260px; background: #1E4A3C; border-radius: 14px; padding: 22px; box-shadow: 0 8px 24px rgba(22,58,47,.18);">
+      <span style="color: #C4A24B; font-size: 12px; font-weight: 700; letter-spacing: .12em;">대표 · 원장</span>
+      <span class="serif" style="color: #FCF9F2; font-size: 22px; font-weight: 700;">방향 · 최종 결정</span>
+    </div>
+  </div>
+  <!-- connector -->
+  <div style="display: flex; justify-content: center;"><div style="width: 2px; height: 34px; background: #C7B98F;"></div></div>
+
+  <!-- 클부장 -->
+  <div style="display: flex; justify-content: center;">
+    <div style="display: flex; align-items: center; gap: 18px; width: 420px; background: #FCF9F2; border: 2px solid #C4A24B; border-radius: 14px; padding: 20px 26px;">
+      <div style="display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; background: #C4A24B; border-radius: 10px; flex-shrink: 0;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#163A2F" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l3-4 3 3 5-6"/></svg>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 2px;">
+        <span style="color: #C4A24B; font-size: 12px; font-weight: 700; letter-spacing: .1em;">클부장 · 총괄책임자 (COO)</span>
+        <span class="serif" style="color: #1E4A3C; font-size: 18px; font-weight: 700;">조정 · 진행 점검 · 우선순위 · 보고</span>
+      </div>
+    </div>
+  </div>
+  <!-- connector down + horizontal bus -->
+  <div style="display: flex; justify-content: center;"><div style="width: 2px; height: 30px; background: #C7B98F;"></div></div>
+  <div style="display: flex; justify-content: center;"><div style="width: 858px; height: 2px; background: #C7B98F;"></div></div>
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin-top: 0;">
+    <div style="display: flex; justify-content: center;"><div style="width: 2px; height: 26px; background: #C7B98F;"></div></div>
+    <div style="display: flex; justify-content: center;"><div style="width: 2px; height: 26px; background: #C7B98F;"></div></div>
+    <div style="display: flex; justify-content: center;"><div style="width: 2px; height: 26px; background: #C7B98F;"></div></div>
+    <div style="display: flex; justify-content: center;"><div style="width: 2px; height: 26px; background: #C7B98F;"></div></div>
+  </div>
+
+  <!-- 4 teams -->
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px;">
+    <!-- team 1 -->
+    <div style="display: flex; flex-direction: column; gap: 12px; background: #FCF9F2; border: 1px solid #E6DDC8; border-radius: 14px; padding: 24px 22px; border-top: 4px solid #1E4A3C;">
+      <span style="font-size: 12px; color: #C4A24B; font-weight: 700;">TEAM ①</span>
+      <h3 class="serif" style="margin: 0; font-size: 19px; color: #1E4A3C; font-weight: 700;">학원운영팀</h3>
+      <p style="margin: 0; font-size: 13.5px; color: #5C6157; line-height: 1.55;">운영을 자동화해 원장 시간을 산다</p>
+      <div style="height: 1px; background: #EDE5D2;"></div>
+      <div style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: #4A4F44;">
+        <span>· 상담 · 등록 자동화</span>
+        <span>· 출결 · 진도 관리</span>
+        <span>· 수강료 · 행정</span>
+      </div>
+    </div>
+    <!-- team 2 -->
+    <div style="display: flex; flex-direction: column; gap: 12px; background: #FCF9F2; border: 1px solid #E6DDC8; border-radius: 14px; padding: 24px 22px; border-top: 4px solid #1E4A3C;">
+      <span style="font-size: 12px; color: #C4A24B; font-weight: 700;">TEAM ②</span>
+      <h3 class="serif" style="margin: 0; font-size: 19px; color: #1E4A3C; font-weight: 700;">마케팅팀</h3>
+      <p style="margin: 0; font-size: 13.5px; color: #5C6157; line-height: 1.55;">알리고 판다</p>
+      <div style="height: 1px; background: #EDE5D2;"></div>
+      <div style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: #4A4F44;">
+        <span>· GEO · 유튜브 · 스레드</span>
+        <span>· 블로그 · 콘텐츠</span>
+        <span>· 리드 · 판매 퍼널</span>
+      </div>
+    </div>
+    <!-- team 3 -->
+    <div style="display: flex; flex-direction: column; gap: 12px; background: #FCF9F2; border: 1px solid #E6DDC8; border-radius: 14px; padding: 24px 22px; border-top: 4px solid #1E4A3C;">
+      <span style="font-size: 12px; color: #C4A24B; font-weight: 700;">TEAM ③</span>
+      <h3 class="serif" style="margin: 0; font-size: 19px; color: #1E4A3C; font-weight: 700;">수익화팀</h3>
+      <p style="margin: 0; font-size: 13.5px; color: #5C6157; line-height: 1.55;">재무를 설계해 수익을 극대화</p>
+      <div style="height: 1px; background: #EDE5D2;"></div>
+      <div style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: #4A4F44;">
+        <span>· 손익 · 현금흐름</span>
+        <span>· 가격 · 수익모델</span>
+        <span>· 재무설계 상품화</span>
+      </div>
+    </div>
+    <!-- team 4 -->
+    <div style="display: flex; flex-direction: column; gap: 12px; background: #FCF9F2; border: 1px solid #E6DDC8; border-radius: 14px; padding: 24px 22px; border-top: 4px solid #C4A24B;">
+      <span style="font-size: 12px; color: #C4A24B; font-weight: 700;">TEAM ④</span>
+      <h3 class="serif" style="margin: 0; font-size: 19px; color: #1E4A3C; font-weight: 700;">전자책·글쓰기팀</h3>
+      <p style="margin: 0; font-size: 13.5px; color: #5C6157; line-height: 1.55;">노하우를 지식상품으로</p>
+      <div style="height: 1px; background: #EDE5D2;"></div>
+      <div style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: #4A4F44;">
+        <span>· 콘텐츠 자산화</span>
+        <span>· 집필 자동화</span>
+        <span>· 판매 · 유통</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- flow note -->
+  <div style="display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 40px; background: #ECE4D2; border-radius: 12px; padding: 18px 24px;">
+    <span style="font-size: 13px; color: #1E4A3C; font-weight: 700;">선순환</span>
+    <span style="font-size: 14px; color: #5C6157;">① 운영 노하우 → ④ 전자책 → ② 마케팅 소재 → ③ 가격설정 → 다시 수익으로</span>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>
