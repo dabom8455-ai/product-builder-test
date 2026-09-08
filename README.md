@@ -27,6 +27,8 @@
                         ┌────┴────┐
                         │  클부장  │  ← 총괄책임자 (COO)
                         └────┬────┘
+                             ├╌╌╌ ⑤ 시스템·데이터 인프라 (직속)
+                             │      모든 과정을 데이터로 남기는 바닥
         ┌──────────────┬─────┴─────┬──────────────┐
    ①학원운영팀     ②마케팅팀    ③수익화팀     ④전자책·글쓰기팀
    (운영 자동화)   (홍보·판매)  (재무·수익)   (지식 상품화)
@@ -34,6 +36,8 @@
 
 4개 팀은 **병렬**로 움직입니다. 클부장이 팀 간 우선순위와 자원을 조정하고,
 막힌 곳을 뚫고, 핵심 상황을 대표에게 보고합니다.
+그리고 **⑤ 시스템·데이터 인프라**(클부장 직속)가 4개 팀의 모든 활동을 데이터로 기록해,
+자동화·판매·개선의 연료로 만듭니다.
 
 ---
 
@@ -48,6 +52,7 @@
 | [`docs/teams/team2_marketing.md`](docs/teams/team2_marketing.md) | ② 마케팅팀 |
 | [`docs/teams/team3_monetization.md`](docs/teams/team3_monetization.md) | ③ 수익화팀 |
 | [`docs/teams/team4_ebook.md`](docs/teams/team4_ebook.md) | ④ 전자책·글쓰기팀 |
+| [`docs/teams/team5_data_infra.md`](docs/teams/team5_data_infra.md) | ⑤ 시스템·데이터 인프라 (클부장 직속) |
 | [`docs/templates/weekly_report.md`](docs/templates/weekly_report.md) | 주간 보고 템플릿 (클부장 → 대표) |
 
 ---
