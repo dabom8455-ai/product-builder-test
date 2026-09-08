@@ -156,6 +156,11 @@
       "repo_file": "docs/ops/routines.md",
       "notion_page_id": "3d5ca2bf-c770-819a-9a51-c4753164820f",
       "notion_title": "자동 루틴 대장 (Routines)"
+    },
+    {
+      "repo_file": "docs/strategy/homepage_re_and_pagemap.md",
+      "notion_page_id": "3d5ca2bf-c770-8195-bd18-c3669d055220",
+      "notion_title": "홈페이지 역설계 분석 + 페이지맵"
     }
   ],
   "team_pages": {
