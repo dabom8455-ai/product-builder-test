@@ -96,6 +96,16 @@
       "repo_file": "docs/infra/business_profile.md",
       "notion_page_id": "3d5ca2bf-c770-8105-91d5-d7c23b8a436c",
       "notion_title": "회사 기본 정보 (Business Profile)"
+    },
+    {
+      "repo_file": "docs/mvp/operations_map.md",
+      "notion_page_id": "3d5ca2bf-c770-8124-a45c-cff37b9c41cc",
+      "notion_title": "운영 업무 지도 (Operations Map)"
+    },
+    {
+      "repo_file": "docs/mvp/cycle1_90day.md",
+      "notion_page_id": "3d5ca2bf-c770-8180-aa20-e0f7a2c34075",
+      "notion_title": "90일 1차 주기 — 상담 후속 관리 검증"
     }
   ],
   "databases": [
