@@ -1,0 +1,61 @@
+{
+  "workspace": {
+    "name": "이수한의 노션",
+    "id": "52aca2bf-c770-816a-974b-0003d268e04c",
+    "user_email": "dabom8455@gmail.com"
+  },
+  "parent_page": {
+    "title": "도현컴퍼니 — 회사 운영 매뉴얼",
+    "notion_page_id": "3d5ca2bf-c770-8166-ae68-fbc9a3094134",
+    "notion_url": "https://app.notion.com/p/3d5ca2bfc7708166ae68fbc9a3094134",
+    "maps_to_repo_file": "README.md"
+  },
+  "documents": [
+    {
+      "repo_file": "README.md",
+      "notion_page_id": "3d5ca2bf-c770-8166-ae68-fbc9a3094134",
+      "notion_title": "도현컴퍼니 — 회사 운영 매뉴얼",
+      "note": "부모 페이지. README 본문의 개요 섹션에 해당. 문서 지도 목록은 하위 페이지 구조로 대체됨."
+    },
+    {
+      "repo_file": "docs/00_company_charter.md",
+      "notion_page_id": "3d5ca2bf-c770-811d-95ac-f4afae3ae8ed",
+      "notion_title": "01 · 회사 헌장 (Company Charter)"
+    },
+    {
+      "repo_file": "docs/01_org_and_clbujang.md",
+      "notion_page_id": "3d5ca2bf-c770-8105-a20c-e69bcb840093",
+      "notion_title": "02 · 조직 구조 & 클부장 운영체계"
+    },
+    {
+      "repo_file": "docs/02_roadmap_2026.md",
+      "notion_page_id": "3d5ca2bf-c770-8192-b6d5-f4f59f9abd16",
+      "notion_title": "03 · 2026 로드맵 — MVP 출시까지"
+    },
+    {
+      "repo_file": "docs/teams/team1_academy_ops.md",
+      "notion_page_id": "3d5ca2bf-c770-813d-bc1d-c71f1ce97f52",
+      "notion_title": "팀① · 학원운영팀"
+    },
+    {
+      "repo_file": "docs/teams/team2_marketing.md",
+      "notion_page_id": "3d5ca2bf-c770-8170-940d-f040ac4e028f",
+      "notion_title": "팀② · 마케팅팀"
+    },
+    {
+      "repo_file": "docs/teams/team3_monetization.md",
+      "notion_page_id": "3d5ca2bf-c770-8147-ac6a-fd109be52162",
+      "notion_title": "팀③ · 수익화팀"
+    },
+    {
+      "repo_file": "docs/teams/team4_ebook.md",
+      "notion_page_id": "3d5ca2bf-c770-815e-947e-fdc5c4c856ac",
+      "notion_title": "팀④ · 전자책·글쓰기팀"
+    },
+    {
+      "repo_file": "docs/templates/weekly_report.md",
+      "notion_page_id": "3d5ca2bf-c770-81db-a006-d5aec6af53d7",
+      "notion_title": "04 · 주간 보고 템플릿 (클부장 → 대표)"
+    }
+  ]
+}
