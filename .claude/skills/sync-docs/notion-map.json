@@ -136,6 +136,16 @@
       "repo_file": "docs/strategy/competitor_analysis_2026-09.md",
       "notion_page_id": "3d5ca2bf-c770-8133-98b9-e382b1a133d7",
       "notion_title": "경쟁사·시장 분석 1차 (2026-09)"
+    },
+    {
+      "repo_file": "docs/finance/financials_snapshot.md",
+      "notion_page_id": "3d5ca2bf-c770-8102-a1ae-ce7f396a3d12",
+      "notion_title": "재무 1장 (Financial Snapshot)"
+    },
+    {
+      "repo_file": "docs/ebook/sangdam_followup_book_draft.md",
+      "notion_page_id": "3d5ca2bf-c770-8195-aba8-fe8b1b7ab6d2",
+      "notion_title": "전자책 초안 — 상담이 등록으로 이어지는 법 (v0.2)"
     }
   ],
   "team_pages": {
