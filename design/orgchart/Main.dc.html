@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap');
+    *{box-sizing:border-box;}
+    body{margin:0;font-family:'Noto Sans KR',system-ui,sans-serif;color:#23261F;}
+    .serif{font-family:'Noto Serif KR',serif;}
+    a{color:#C4A24B;} a:hover{color:#A9862F;}
+    .eyebrow{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:#C4A24B;font-weight:700;}
+    .conn{width:2px;background:#C4A24B;margin:0 auto;}
+    .team-num{font-family:'Noto Serif KR',serif;font-size:26px;font-weight:700;line-height:1;}
+    .duty{display:flex;gap:8px;font-size:13px;color:#4A5147;line-height:1.5;margin:0 0 7px;}
+    .duty::before{content:'';flex:0 0 6px;height:6px;margin-top:6px;border-radius:50%;background:#C4A24B;}
+  </style>
+</helmet>
+
+<div style="width:1240px;background:#F4EEE1;padding-bottom:8px;">
+
+  <!-- ============ HEADER ============ -->
+  <div style="background:#163A2F;padding:44px 56px 40px;">
+    <span class="eyebrow">Dohyeon Company · Organization</span>
+    <h1 class="serif" style="margin:12px 0 8px;color:#FCF9F2;font-size:44px;font-weight:700;line-height:1.2;">도현컴퍼니 조직도</h1>
+    <p style="margin:0;color:#A9BBAE;font-size:15px;">피아노 교육을 AI로 자동화하고, 검증된 시스템을 판다 &nbsp;·&nbsp; <span style="color:#C4A24B;font-weight:700;">“시스템을 팔아 시간을 사는 회사”</span> &nbsp;·&nbsp; 2026-09-08 기준</p>
+  </div>
+
+  <!-- ============ BODY ============ -->
+  <div style="padding:40px 56px 8px;">
+
+    <!-- LEVEL 1 : 대표 -->
+    <div style="display:flex;justify-content:center;">
+      <div style="width:520px;background:#FCF9F2;border:2px solid #C4A24B;border-radius:16px;padding:24px 30px;text-align:center;box-shadow:0 6px 20px rgba(30,74,60,.08);">
+        <span class="eyebrow">Level 1 · 최종 의사결정</span>
+        <div style="display:flex;align-items:baseline;justify-content:center;gap:12px;margin:8px 0 6px;">
+          <span class="serif" style="font-size:15px;color:#5C6157;">대표 (원장)</span>
+          <span class="serif" style="font-size:30px;font-weight:700;color:#1E4A3C;">이보나</span>
+        </div>
+        <p style="margin:0;font-size:13.5px;color:#4A5147;line-height:1.6;">방향 제시 · 자원 배분 최종결정 · 헌장 수호</p>
+      </div>
+    </div>
+
+    <div class="conn" style="height:30px;"></div>
+
+    <!-- LEVEL 2 : 클부장 -->
+    <div style="display:flex;justify-content:center;">
+      <div style="width:640px;background:#1E4A3C;border-radius:16px;padding:24px 30px;text-align:center;box-shadow:0 8px 24px rgba(22,58,47,.22);">
+        <span class="eyebrow">Level 2 · 총괄책임 (COO)</span>
+        <div style="display:flex;align-items:baseline;justify-content:center;gap:12px;margin:8px 0 6px;">
+          <span class="serif" style="font-size:30px;font-weight:700;color:#FCF9F2;">클부장</span>
+          <span class="serif" style="font-size:15px;color:#A9BBAE;">Chief Operating Officer</span>
+        </div>
+        <p style="margin:0;font-size:13.5px;color:#CBD8CE;line-height:1.6;">대표 방향을 4개 팀 실행으로 번역 · 팀 간 조정 · 우선순위 판단 · <b style="color:#C4A24B;">매주 대표 보고</b></p>
+      </div>
+    </div>
+
+    <!-- 클부장 직속 라인 -->
+    <div class="conn" style="height:24px;"></div>
+    <div style="text-align:center;margin-bottom:14px;"><span style="display:inline-block;padding:5px 14px;background:#EDE4D0;border:1px dashed #C4A24B;border-radius:20px;font-size:12px;font-weight:700;color:#8A6D1F;letter-spacing:.05em;">╌╌ 클부장 직속 (바닥 인프라) ╌╌</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:760px;margin:0 auto 4px;">
+      <div style="background:#FCF9F2;border:1px solid #D8CBA8;border-left:5px solid #C4A24B;border-radius:12px;padding:20px 22px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span class="serif" style="font-size:20px;font-weight:700;color:#1E4A3C;">⑤ 시스템·데이터 인프라</span></div>
+        <p style="margin:0 0 4px;font-size:13px;color:#4A5147;line-height:1.55;"><b>모든 과정을 데이터로 남긴다.</b> 리드·상담·의사결정 로그 표준화.</p>
+        <p style="margin:0;font-size:12px;color:#8A8070;">→ 데이터·대시보드를 전 팀·대표에게 공급</p>
+      </div>
+      <div style="background:#FCF9F2;border:1px solid #D8CBA8;border-left:5px solid #C4A24B;border-radius:12px;padding:20px 22px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span class="serif" style="font-size:20px;font-weight:700;color:#1E4A3C;">⑥ 전략기획실</span></div>
+        <p style="margin:0 0 4px;font-size:13px;color:#4A5147;line-height:1.55;"><b>경쟁·시장을 분석해 빈틈을 찾는다.</b> 주간 트렌드 스캔·아이디어 도출.</p>
+        <p style="margin:0;font-size:12px;color:#8A8070;">→ 경쟁 인텔·빈틈 리포트를 전 팀·대표에게 공급</p>
+      </div>
+    </div>
+
+    <div class="conn" style="height:22px;"></div>
+    <!-- 가로 분기 바 -->
+    <div style="height:2px;background:#C4A24B;margin:0 120px;"></div>
+    <div style="display:flex;justify-content:space-between;margin:0 120px 0;">
+      <div class="conn" style="height:18px;"></div><div class="conn" style="height:18px;"></div><div class="conn" style="height:18px;"></div><div class="conn" style="height:18px;"></div>
+    </div>
+
+    <!-- LEVEL 3 : 4개 실행팀 -->
+    <div style="text-align:center;margin:6px 0 16px;"><span class="eyebrow">Level 3 · 병렬 실행팀 (서로 기다리지 않고 동시에 움직인다)</span></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+
+      <!-- ① 학원운영 -->
+      <div style="background:#FCF9F2;border:1px solid #E6DDC8;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(30,74,60,.06);">
+        <div style="background:#1E4A3C;padding:16px 18px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span class="team-num" style="color:#C4A24B;">①</span>
+            <span style="font-size:11px;color:#A9BBAE;font-weight:700;letter-spacing:.05em;">학팀장</span>
+          </div>
+          <h3 class="serif" style="margin:6px 0 0;color:#FCF9F2;font-size:19px;font-weight:700;">학원운영팀</h3>
+        </div>
+        <div style="padding:16px 18px 18px;">
+          <p style="margin:0 0 14px;font-size:12.5px;color:#5C6157;line-height:1.5;font-style:italic;">“운영을 자동화해 원장의 시간을 산다.”</p>
+          <div class="duty">상담·출결·진도 운영 자동화</div>
+          <div class="duty">학부모 소통·월간 리포트</div>
+          <div class="duty">상담→등록 전환(컨시어지)</div>
+          <div style="margin-top:12px;padding-top:10px;border-top:1px dashed #E2D8C2;font-size:11.5px;color:#8A6D1F;"><b>산출물 →</b> 운영 데이터·상담 노하우 (③④로)</div>
+        </div>
+      </div>
+
+      <!-- ② 마케팅 -->
+      <div style="background:#FCF9F2;border:1px solid #E6DDC8;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(30,74,60,.06);">
+        <div style="background:#1E4A3C;padding:16px 18px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span class="team-num" style="color:#C4A24B;">②</span>
+            <span style="font-size:11px;color:#A9BBAE;font-weight:700;letter-spacing:.05em;">마팀장</span>
+          </div>
+          <h3 class="serif" style="margin:6px 0 0;color:#FCF9F2;font-size:19px;font-weight:700;">마케팅팀</h3>
+        </div>
+        <div style="padding:16px 18px 18px;">
+          <p style="margin:0 0 14px;font-size:12.5px;color:#5C6157;line-height:1.5;font-style:italic;">“학원과 시스템을 알리고 판다.”</p>
+          <div class="duty">유튜브 주력 · 주 2회 발행</div>
+          <div class="duty">홈페이지 노코드 구축·카피</div>
+          <div class="duty">GEO·스레드·블로그 확산</div>
+          <div style="margin-top:12px;padding-top:10px;border-top:1px dashed #E2D8C2;font-size:11.5px;color:#8A6D1F;"><b>산출물 →</b> 고객 리드·시장 피드백 (③·대표로)</div>
+        </div>
+      </div>
+
+      <!-- ③ 수익화 -->
+      <div style="background:#FCF9F2;border:1px solid #E6DDC8;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(30,74,60,.06);">
+        <div style="background:#1E4A3C;padding:16px 18px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span class="team-num" style="color:#C4A24B;">③</span>
+            <span style="font-size:11px;color:#A9BBAE;font-weight:700;letter-spacing:.05em;">수팀장</span>
+          </div>
+          <h3 class="serif" style="margin:6px 0 0;color:#FCF9F2;font-size:19px;font-weight:700;">수익화팀</h3>
+        </div>
+        <div style="padding:16px 18px 18px;">
+          <p style="margin:0 0 14px;font-size:12.5px;color:#5C6157;line-height:1.5;font-style:italic;">“재무를 설계해 수익을 극대화한다.”</p>
+          <div class="duty">학원 재무설계·손익 관리</div>
+          <div class="duty">전자책·시스템 가격 책정</div>
+          <div class="duty">결제·수익모델 설계</div>
+          <div style="margin-top:12px;padding-top:10px;border-top:1px dashed #E2D8C2;font-size:11.5px;color:#8A6D1F;"><b>산출물 →</b> 가격·수익모델 (①②④로)</div>
+        </div>
+      </div>
+
+      <!-- ④ 전자책·글쓰기 -->
+      <div style="background:#FCF9F2;border:1px solid #E6DDC8;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(30,74,60,.06);">
+        <div style="background:#1E4A3C;padding:16px 18px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span class="team-num" style="color:#C4A24B;">④</span>
+            <span style="font-size:11px;color:#A9BBAE;font-weight:700;letter-spacing:.05em;">전팀장</span>
+          </div>
+          <h3 class="serif" style="margin:6px 0 0;color:#FCF9F2;font-size:19px;font-weight:700;">전자책·글쓰기팀</h3>
+        </div>
+        <div style="padding:16px 18px 18px;">
+          <p style="margin:0 0 14px;font-size:12.5px;color:#5C6157;line-height:1.5;font-style:italic;">“노하우를 지식상품으로 만든다.”</p>
+          <div class="duty">커리큘럼·운영 노하우 집필</div>
+          <div class="duty">상담 노하우북·소책자 제작</div>
+          <div class="duty">전자책 판매 구조화</div>
+          <div style="margin-top:12px;padding-top:10px;border-top:1px dashed #E2D8C2;font-size:11.5px;color:#8A6D1F;"><b>산출물 →</b> 콘텐츠 자산 (② 마케팅 소재로)</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============ 선순환 고리 ============ -->
+    <div style="margin-top:34px;background:#163A2F;border-radius:16px;padding:26px 30px;">
+      <div style="text-align:center;margin-bottom:16px;">
+        <span class="eyebrow">The Virtuous Cycle</span>
+        <h2 class="serif" style="margin:8px 0 4px;color:#FCF9F2;font-size:24px;font-weight:700;">한 바퀴가 곧 선순환</h2>
+        <p style="margin:0;color:#A9BBAE;font-size:13px;">①의 운영 노하우 → ④의 전자책 → ②의 마케팅 소재 → ③이 전 과정의 값을 매긴다</p>
+      </div>
+      <div style="display:flex;align-items:stretch;justify-content:center;gap:0;flex-wrap:wrap;">
+        <div style="flex:1;min-width:150px;background:#1E4A3C;border-radius:10px;padding:14px;text-align:center;"><div style="font-size:12px;color:#C4A24B;font-weight:700;">① 운영</div><div style="font-size:12.5px;color:#DCE5DF;margin-top:4px;line-height:1.4;">실제 운영 노하우가 쌓인다</div></div>
+        <div style="display:flex;align-items:center;color:#C4A24B;font-size:22px;padding:0 10px;">→</div>
+        <div style="flex:1;min-width:150px;background:#1E4A3C;border-radius:10px;padding:14px;text-align:center;"><div style="font-size:12px;color:#C4A24B;font-weight:700;">④ 전자책</div><div style="font-size:12.5px;color:#DCE5DF;margin-top:4px;line-height:1.4;">노하우가 지식상품이 된다</div></div>
+        <div style="display:flex;align-items:center;color:#C4A24B;font-size:22px;padding:0 10px;">→</div>
+        <div style="flex:1;min-width:150px;background:#1E4A3C;border-radius:10px;padding:14px;text-align:center;"><div style="font-size:12px;color:#C4A24B;font-weight:700;">② 마케팅</div><div style="font-size:12.5px;color:#DCE5DF;margin-top:4px;line-height:1.4;">콘텐츠가 고객을 부른다</div></div>
+        <div style="display:flex;align-items:center;color:#C4A24B;font-size:22px;padding:0 10px;">→</div>
+        <div style="flex:1;min-width:150px;background:#1E4A3C;border-radius:10px;padding:14px;text-align:center;"><div style="font-size:12px;color:#C4A24B;font-weight:700;">③ 수익화</div><div style="font-size:12.5px;color:#DCE5DF;margin-top:4px;line-height:1.4;">값을 매겨 수익이 돈다</div></div>
+      </div>
+    </div>
+
+    <!-- ============ 하단 : 클부장 운영 신호등 + 정보 ============ -->
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:20px;margin-top:22px;">
+      <div style="background:#FCF9F2;border:1px solid #E6DDC8;border-radius:14px;padding:20px 22px;">
+        <span class="eyebrow">클부장 운영체계 · 주간 진행 신호등</span>
+        <div style="display:flex;gap:12px;margin-top:12px;">
+          <div style="flex:1;text-align:center;"><div style="width:16px;height:16px;border-radius:50%;background:#4C9A5B;margin:0 auto 6px;"></div><div style="font-size:12px;font-weight:700;color:#1E4A3C;">🟢 계획대로</div><div style="font-size:11px;color:#8A8070;margin-top:2px;">유지</div></div>
+          <div style="flex:1;text-align:center;"><div style="width:16px;height:16px;border-radius:50%;background:#D9A73C;margin:0 auto 6px;"></div><div style="font-size:12px;font-weight:700;color:#1E4A3C;">🟡 지연·위험</div><div style="font-size:11px;color:#8A8070;margin-top:2px;">자원 재배치</div></div>
+          <div style="flex:1;text-align:center;"><div style="width:16px;height:16px;border-radius:50%;background:#C0503F;margin:0 auto 6px;"></div><div style="font-size:12px;font-weight:700;color:#1E4A3C;">🔴 막힘</div><div style="font-size:11px;color:#8A8070;margin-top:2px;">즉시 개입·대표 보고</div></div>
+        </div>
+        <p style="margin:14px 0 0;font-size:12px;color:#5C6157;line-height:1.55;">매주: ①진행점검(신호등) · ②우선순위(영향×시급) · ③병렬 조정 · ④대표 보고 · ⑤자동화 판정(L0→L1→L2)</p>
+      </div>
+      <div style="background:#EDE4D0;border-radius:14px;padding:20px 22px;">
+        <span class="eyebrow">도현피아노</span>
+        <p style="margin:10px 0 0;font-size:12.5px;color:#4A5147;line-height:1.7;">
+          경기 용인시 처인구 모현읍<br>왕산로14 몬테로이 2단지 상가<br>
+          ☎ 010-5158-3613 · 운영 13:00~18:00<br>
+          @dohyeon_piano
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- footer -->
+  <div style="padding:16px 56px;background:#10241C;text-align:center;">
+    <span style="color:#5C7568;font-size:11.5px;letter-spacing:.03em;">병렬 조직 · 완벽보다 물길 — 일단 흐르게 만들고 피드백으로 고친다 &nbsp;·&nbsp; 우선순위: 대표 지시 &gt; 헌장 &gt; 플레이북 &gt; 클부장 판단</span>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>
