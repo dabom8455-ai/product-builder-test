@@ -131,8 +131,22 @@
       "repo_file": "docs/teams/reports/2026-09-08_전자책_상담노하우북_목차.md",
       "notion_page_id": "3d5ca2bf-c770-8146-a5cf-d36a434d7da9",
       "notion_title": "[전팀장] 첫 전자책 「상담 노하우북」 목차 (2026-09-08)"
+    },
+    {
+      "repo_file": "docs/strategy/competitor_analysis_2026-09.md",
+      "notion_page_id": "3d5ca2bf-c770-8133-98b9-e382b1a133d7",
+      "notion_title": "경쟁사·시장 분석 1차 (2026-09)"
     }
   ],
+  "team_pages": {
+    "note": "새 팀 관련 문서는 최상위가 아니라 해당 팀 페이지 하위에 만든다 (sync-docs SKILL §2-B).",
+    "①_academy_ops": "3d5ca2bf-c770-813d-bc1d-c71f1ce97f52",
+    "②_marketing": "3d5ca2bf-c770-8170-940d-f040ac4e028f",
+    "③_monetization": "3d5ca2bf-c770-8147-ac6a-fd109be52162",
+    "④_ebook": "3d5ca2bf-c770-815e-947e-fdc5c4c856ac",
+    "⑤_data_infra": "3d5ca2bf-c770-8195-b293-f8a6fc6f8987",
+    "⑥_strategy_intel": "3d5ca2bf-c770-81d0-b38b-f815f8e30439"
+  },
   "databases": [
     {
       "name": "① 리드 (Lead)",
