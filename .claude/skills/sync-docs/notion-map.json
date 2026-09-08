@@ -146,6 +146,11 @@
       "repo_file": "docs/ebook/sangdam_followup_book_draft.md",
       "notion_page_id": "3d5ca2bf-c770-8195-aba8-fe8b1b7ab6d2",
       "notion_title": "전자책 초안 — 상담이 등록으로 이어지는 법 (v0.2)"
+    },
+    {
+      "repo_file": "docs/mvp/followup_action_card.md",
+      "notion_page_id": "3d5ca2bf-c770-8170-a728-dfd02d1288dd",
+      "notion_title": "상담 후속 실전 카드 (핸드폰 옆에 두기)"
     }
   ],
   "team_pages": {
