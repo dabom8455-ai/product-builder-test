@@ -1,0 +1,10 @@
+{
+  "artboards": [
+    { "file": "AcademySite.dc.html", "x": 0, "y": 0, "w": 1280, "h": 1960, "title": "A. 학부모 사이트 (B2C)" },
+    { "file": "SystemSite.dc.html", "x": 1420, "y": 0, "w": 1280, "h": 2180, "title": "B. 시스템·전자책 사이트 (B2B)" }
+  ],
+  "annotations": [
+    { "id": "note-split", "x": 0, "y": -120, "w": 720, "text": "홈페이지 분리 구조 초안 — A(학부모/교육) · B(원장/시스템·전자책). 디자인·폰트는 대표님 md 반영 후 전면 확정 예정(현재 색은 임시)." }
+  ],
+  "launch": { "view": "canvas" }
+}
