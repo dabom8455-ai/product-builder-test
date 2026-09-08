@@ -151,6 +151,11 @@
       "repo_file": "docs/mvp/followup_action_card.md",
       "notion_page_id": "3d5ca2bf-c770-8170-a728-dfd02d1288dd",
       "notion_title": "상담 후속 실전 카드 (핸드폰 옆에 두기)"
+    },
+    {
+      "repo_file": "docs/ops/routines.md",
+      "notion_page_id": "3d5ca2bf-c770-819a-9a51-c4753164820f",
+      "notion_title": "자동 루틴 대장 (Routines)"
     }
   ],
   "team_pages": {
