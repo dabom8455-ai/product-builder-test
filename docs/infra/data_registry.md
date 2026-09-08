@@ -14,6 +14,7 @@
 | ① 리드 | ① 리드 (Lead) | [열기](https://app.notion.com/p/fd3766edbddc47edb931ba8f69f34c06) | `2a087e96-6c25-4032-bfe2-bd306ceb4d80` | 🟢 가동 |
 | ② 상담 | ② 상담 (Consultation) | [열기](https://app.notion.com/p/b357ac999eae4fc0b7411e02404f5717) | `c62b2bf6-d152-4b5d-91c3-adcffa19e551` | 🟢 가동 |
 | ⑪ 의사결정 로그 | ⑪ 의사결정 로그 (Decision Log) | [열기](https://app.notion.com/p/d34fbaac99a145ab99e80d7da9109d4a) | `8df0dcc8-f266-4e01-ae3d-a939a98c17cc` | 🟢 가동 |
+| ⑥ 트렌드·아이디어 뱅크 | 트렌드·아이디어 뱅크 (Idea Bank) | [열기](https://app.notion.com/p/34e30fd1e8cf46d190ff8f3be4192767) | `f0a10baa-4e0d-4a2d-a0af-b8dd3aa52e73` | 🟢 가동 |
 
 > 모든 DB는 노션 부모 페이지 "도현컴퍼니 — 회사 운영 매뉴얼" 하위에 있습니다.
 
