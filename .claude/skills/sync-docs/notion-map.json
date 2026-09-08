@@ -86,6 +86,11 @@
       "repo_file": "docs/playbook/metascript_problem_interview.md",
       "notion_page_id": "3d5ca2bf-c770-816f-a54e-e69539341532",
       "notion_title": "메타스크립트 — 문제 파악 인터뷰 (학원 운영)"
+    },
+    {
+      "repo_file": "docs/mvp/consult_followup_kit.md",
+      "notion_page_id": "3d5ca2bf-c770-8187-bc4d-c7abb3db038a",
+      "notion_title": "상담 후속 관리 키트 (컨시어지 MVP v1)"
     }
   ],
   "databases": [
