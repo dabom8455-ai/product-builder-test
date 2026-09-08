@@ -47,6 +47,7 @@
 |------|------|
 | [`docs/00_company_charter.md`](docs/00_company_charter.md) | 회사 헌장 — 미션·비전·가치·2026 목표·핵심지표 |
 | [`docs/01_org_and_clbujang.md`](docs/01_org_and_clbujang.md) | 조직 구조 & 클부장 운영체계 — 보고체계·우선순위 판단 기준·RACI |
+| [`docs/teams/00_team_operating_guidelines.md`](docs/teams/00_team_operating_guidelines.md) | 팀별 업무 운영지침 — 팀장 임명·일하는 방식·보고 규약 |
 | [`docs/02_roadmap_2026.md`](docs/02_roadmap_2026.md) | 2026 로드맵 — MVP 출시까지의 단계 |
 | [`docs/teams/team1_academy_ops.md`](docs/teams/team1_academy_ops.md) | ① 학원운영팀 |
 | [`docs/teams/team2_marketing.md`](docs/teams/team2_marketing.md) | ② 마케팅팀 |

@@ -28,6 +28,11 @@
       "notion_title": "02 · 조직 구조 & 클부장 운영체계"
     },
     {
+      "repo_file": "docs/teams/00_team_operating_guidelines.md",
+      "notion_page_id": "3d5ca2bf-c770-81d0-8802-c6705e142c2e",
+      "notion_title": "팀별 업무 운영지침 (Team Operating Guidelines)"
+    },
+    {
       "repo_file": "docs/02_roadmap_2026.md",
       "notion_page_id": "3d5ca2bf-c770-8192-b6d5-f4f59f9abd16",
       "notion_title": "03 · 2026 로드맵 — MVP 출시까지"
