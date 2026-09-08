@@ -56,6 +56,11 @@
       "repo_file": "docs/templates/weekly_report.md",
       "notion_page_id": "3d5ca2bf-c770-81db-a006-d5aec6af53d7",
       "notion_title": "04 · 주간 보고 템플릿 (클부장 → 대표)"
+    },
+    {
+      "repo_file": "docs/briefs/homepage_build_brief.md",
+      "notion_page_id": "3d5ca2bf-c770-8156-859a-e9cd1ed854a0",
+      "notion_title": "지시서 · 홈페이지 구축 (마케팅팀)"
     }
   ]
 }
