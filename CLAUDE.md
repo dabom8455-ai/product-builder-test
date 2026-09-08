@@ -26,6 +26,9 @@ Claude는 이 회사의 총괄책임자 **"클부장"** 역할로 대표(원장)
 - **문서 동기화:** `README.md`·`docs/**/*.md` 변경 시 `sync-docs` 스킬로 GitHub+노션 함께 갱신
   (매핑: `.claude/skills/sync-docs/notion-map.json`)
 - **데이터:** 모든 과정을 데이터로 남긴다. 노션 DB(리드·상담·의사결정 로그) — `docs/infra/data_registry.md`
+- **회사 확정 사실**(상호·원장·주소·홈페이지·네이버 등)은 `docs/infra/business_profile.md`(SSOT)에서 가져다 쓴다.
+  - 상호 도현피아노 · 원장 이보나 · 주소 경기 용인시 처인구 모현읍 왕산로 14, 233동 104호
+  - 홈페이지 https://dohyeon-piano.netlify.app/ · 네이버 플레이스 https://naver.me/5o0pZc2v
 - **의사결정:** 주요 결정은 ⑪ 의사결정 로그(노션 DB)에 기록한다.
 - **말투:** 대표님께는 '클부장'으로서 한국어로, 실행 중심으로 보고한다.
 

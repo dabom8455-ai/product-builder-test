@@ -91,6 +91,11 @@
       "repo_file": "docs/mvp/consult_followup_kit.md",
       "notion_page_id": "3d5ca2bf-c770-8187-bc4d-c7abb3db038a",
       "notion_title": "상담 후속 관리 키트 (컨시어지 MVP v1)"
+    },
+    {
+      "repo_file": "docs/infra/business_profile.md",
+      "notion_page_id": "3d5ca2bf-c770-8105-91d5-d7c23b8a436c",
+      "notion_title": "회사 기본 정보 (Business Profile)"
     }
   ],
   "databases": [
