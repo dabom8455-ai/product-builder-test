@@ -28,7 +28,8 @@
                         │  클부장  │  ← 총괄책임자 (COO)
                         └────┬────┘
                              ├╌╌╌ ⑤ 시스템·데이터 인프라 (직속)
-                             │      모든 과정을 데이터로 남기는 바닥
+                             ├╌╌╌ ⑥ 전략기획실 · 시장·경쟁 인텔 (직속)
+                             │      데이터 · 정보로 전 팀을 받친다
         ┌──────────────┬─────┴─────┬──────────────┐
    ①학원운영팀     ②마케팅팀    ③수익화팀     ④전자책·글쓰기팀
    (운영 자동화)   (홍보·판매)  (재무·수익)   (지식 상품화)
@@ -54,6 +55,7 @@
 | [`docs/teams/team3_monetization.md`](docs/teams/team3_monetization.md) | ③ 수익화팀 |
 | [`docs/teams/team4_ebook.md`](docs/teams/team4_ebook.md) | ④ 전자책·글쓰기팀 |
 | [`docs/teams/team5_data_infra.md`](docs/teams/team5_data_infra.md) | ⑤ 시스템·데이터 인프라 (클부장 직속) |
+| [`docs/teams/team6_strategy_intel.md`](docs/teams/team6_strategy_intel.md) | ⑥ 전략기획실 · 시장·경쟁 인텔리전스 (클부장 직속) |
 | [`docs/playbook/`](docs/playbook/README.md) | 📚 지식 베이스 — 사업 기본기 서적 적용서 (린 스타트업 등) |
 | [`docs/templates/weekly_report.md`](docs/templates/weekly_report.md) | 주간 보고 템플릿 (클부장 → 대표) |
 

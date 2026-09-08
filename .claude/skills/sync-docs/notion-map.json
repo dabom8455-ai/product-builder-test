@@ -63,6 +63,11 @@
       "notion_title": "팀⑤ · 시스템·데이터 인프라 (클부장 직속)"
     },
     {
+      "repo_file": "docs/teams/team6_strategy_intel.md",
+      "notion_page_id": "3d5ca2bf-c770-81d0-b38b-f815f8e30439",
+      "notion_title": "⑥ 전략기획실 · 시장·경쟁 인텔리전스 (클부장 직속)"
+    },
+    {
       "repo_file": "docs/templates/weekly_report.md",
       "notion_page_id": "3d5ca2bf-c770-81db-a006-d5aec6af53d7",
       "notion_title": "04 · 주간 보고 템플릿 (클부장 → 대표)"
