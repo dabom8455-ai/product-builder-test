@@ -11,6 +11,9 @@
 > **#1 = 네이버 블로그 매일 1글 → 우리동네 맘카페 게시 → 초등맘 상담 전환** → [`blog_sop.md`](marketing/blog_sop.md)
 > 초등 저학년 엄마가 읽고 "우리 아이도 피아노 시켜야겠다" 마음이 들게 하는 공감·정보형 글. 매일 1개.
 > ※ **유튜브·GEO·스레드는 2순위로 하향** — 블로그가 궤도에 오르면 병행.
+>
+> 📚 **글쓰기 기술 학습자료(전원 숙지):** [`marketing/writing_playbook.md`](marketing/writing_playbook.md) — 세인투 전자책에서 추린 블로그·스레드·인스타 마케팅 글쓰기 기술.
+> ✍️ **블로그 톤 고정판:** [`marketing/blog_guide.md`](marketing/blog_guide.md) · **첫 실전 초안:** [`marketing/drafts/`](marketing/drafts/).
 
 ---
 
