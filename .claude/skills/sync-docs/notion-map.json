@@ -181,6 +181,11 @@
       "repo_file": "docs/finance/tuition_pricing.md",
       "notion_page_id": "3d6ca2bf-c770-81bf-89bb-e8f0f220e1e2",
       "notion_title": "교습비 가격표 — 확정본 (③수익화)"
+    },
+    {
+      "repo_file": "docs/finance/students_roster_analysis.md",
+      "notion_page_id": null,
+      "notion_title": "(집계만 저장소 · 개별 데이터는 노션 「원생 명단」 DB)"
     }
   ],
   "team_pages": {
@@ -217,6 +222,11 @@
       "name": "인사이트 노트 (Insight Notes) — 로비서",
       "notion_url": "https://app.notion.com/p/d1037663c7eb409986dcb64ef67679a0",
       "data_source_id": "7632c586-8967-4447-a499-fb36087977d6"
+    },
+    {
+      "name": "원생 명단 (Students) — 9월 출석부 기반 · ① 학원운영",
+      "notion_url": "https://app.notion.com/p/e614e5318ed34b88a4938f55412a4d22",
+      "data_source_id": "fd6a0c10-d0f8-48d8-b457-66dfa7c17b5f"
     }
   ]
 }
