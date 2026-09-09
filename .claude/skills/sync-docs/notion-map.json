@@ -274,6 +274,12 @@
       "notion_url": "https://app.notion.com/p/fc70e8ca6888451e88657711da6f6d6c",
       "data_source_id": "a83b4210-7e60-4a3e-9b98-ee8d5f81f752",
       "mirror_repo_file": "docs/mvp/roster_monthly_snapshot.md"
+    },
+    {
+      "name": "일일 인텔 로그 (Daily Intel Log) — ⑥ 전략기획실",
+      "notion_url": "https://app.notion.com/p/4029b63a4ba84aa5a894f2e151a1bc87",
+      "data_source_id": "725768a5-af4f-4455-97fa-8a408e1efe16",
+      "note": "매일 07:30 인텔 브리핑 기록. SOP: docs/roles/intel_daily_brief.md"
     }
   ]
 }
