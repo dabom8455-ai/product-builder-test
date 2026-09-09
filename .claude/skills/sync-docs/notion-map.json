@@ -173,6 +173,11 @@
       "notion_title": "로비서 — 대표 직속 AI 비서 운영지침"
     },
     {
+      "repo_file": "docs/brand/company_identity.md",
+      "notion_page_id": "3d6ca2bf-c770-8193-a097-d930252ba20b",
+      "notion_title": "도현컴퍼니 — 회사 아이덴티티 (Company Identity)"
+    },
+    {
       "repo_file": "docs/mvp/lead_status_sop.md",
       "notion_page_id": "3d6ca2bf-c770-81bd-9158-c23d12d43e37",
       "notion_title": "리드 상태 전이 규칙 (Lead Status SOP)"
