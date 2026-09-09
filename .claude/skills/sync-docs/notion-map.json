@@ -176,6 +176,11 @@
       "repo_file": "docs/mvp/lead_status_sop.md",
       "notion_page_id": "3d6ca2bf-c770-81bd-9158-c23d12d43e37",
       "notion_title": "리드 상태 전이 규칙 (Lead Status SOP)"
+    },
+    {
+      "repo_file": "docs/finance/tuition_pricing.md",
+      "notion_page_id": "3d6ca2bf-c770-81bf-89bb-e8f0f220e1e2",
+      "notion_title": "교습비 가격표 — 확정본 (③수익화)"
     }
   ],
   "team_pages": {
