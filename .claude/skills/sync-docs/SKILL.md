@@ -43,6 +43,9 @@ description: 회사 운영 매뉴얼 문서(README.md 및 docs/ 하위 .md)를 �
 4. **지정 브랜치(`claude/introduction-4jy6be`) 외 다른 브랜치로 푸시하지 않는다.**
 
 ### 2. Notion 반영
+
+> ⛔ **치명적 주의 — 팀 페이지 replace_content 금지 조합:** 팀 페이지(`team_pages`)는 **하위 문서 페이지들의 부모**다. 부모 페이지를 `replace_content` + `allow_deleting_content:true`로 갱신하면 **본문에 없는 하위 페이지가 통째로 삭제된다**(2026-09-09 실제 사고: 마케팅 하위 3개 문서 소실 후 재생성). 팀 페이지 본문을 꼭 고쳐야 하면 `update_content`(부분 치환) 또는 `allow_deleting_content` 없이/`false`로 한다. 하위 문서 생성은 부모를 건드리지 말고 `create-pages`만 쓴다.
+
 바뀐 각 `.md` 파일에 대해:
 
 **A) 매핑에 이미 있는 문서 (수정)**
