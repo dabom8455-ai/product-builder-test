@@ -237,6 +237,12 @@
       "name": "월간 진도 리포트 (Progress Reports) — ① 학원운영",
       "notion_url": "https://app.notion.com/p/2e484c196851424db9ff541754289d57",
       "data_source_id": "ecfad058-1fcd-41ab-a180-af93e256b22e"
+    },
+    {
+      "name": "월별 원생 현황 (Monthly Roster Snapshot) — ① 학원운영",
+      "notion_url": "https://app.notion.com/p/fc70e8ca6888451e88657711da6f6d6c",
+      "data_source_id": "a83b4210-7e60-4a3e-9b98-ee8d5f81f752",
+      "mirror_repo_file": "docs/mvp/roster_monthly_snapshot.md"
     }
   ]
 }
