@@ -13,7 +13,7 @@
 | 6 | [1회성] 일요일까지 종합계획 · 금 9.11 [세션연결] | 2026-09-11 13:00 (1회) | 시작 주 특례 선발행. 발행 후 자동 소멸 | `trig_011mJF7srrfex8SMhakcDVf9` |
 | 7 | 🤖 로비서 데일리 브리핑 [세션연결] | 매일 07:00 | 어제 회고→오늘 연계 브리핑 → 대표+클부장 | `trig_01NeuF6Nc6sD8PLASj4bLWX5` |
 | — | [1회성] 초3 학부모 등록 후속 [세션연결] | 2026-09-10 13:00 (1회) | 핫리드 후속 리마인드 + 문자안 | `trig_01Du2dRYHHD5RNjkXsUQdQJA` |
-| 8 | 🎹 월말 진도 리포트 리마인드 [세션연결] ⭐ | 매월 25일 13:00 | ① #1 자동화. 학부모 진도 리포트 입력 리마인드→생성→DB기록 | `trig_015PwznSsPqJExkgMVvs3Hmw` |
+| 8 | 🎹 월말 진도 리포트 + 원생 스냅샷 [세션연결] ⭐ | 매월 25일 13:00 | ① #1 자동화. 진도 리포트 생성/기록 + 월별 원생 현황 이력 1행 추가 | `trig_015PwznSsPqJExkgMVvs3Hmw` |
 
 ### 비활성(결함) — 새 세션 방식이라 저장소 push 불가로 중단, 대체됨
 `trig_012eGcj2rxG8Cc2C6kSipipT`(수)·`trig_018fgA8qy2tCK681fM3Qu3xD`(일)·`trig_01Ltk5TNv4gfHYXg2w4WftPd`(금)·`trig_01KqckXC9jhfpejojudFZ1R9`(로비서)·`trig_01SxAxXQQnRCKKLSUPRreVnG`(초3 후속) — 모두 enabled=false. (삭제 도구 미제공 → claude.ai 루틴 화면에서 정리 가능)
