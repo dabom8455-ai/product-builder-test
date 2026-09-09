@@ -186,6 +186,11 @@
       "repo_file": "docs/finance/students_roster_analysis.md",
       "notion_page_id": null,
       "notion_title": "(집계만 저장소 · 개별 데이터는 노션 「원생 명단」 DB)"
+    },
+    {
+      "repo_file": "docs/mvp/monthly_progress_report.md",
+      "notion_page_id": "3d6ca2bf-c770-81bc-8d0c-df2b50856b1f",
+      "notion_title": "⭐ 월말 학부모 진도 리포트 자동화 (#1 최우선)"
     }
   ],
   "team_pages": {
@@ -227,6 +232,11 @@
       "name": "원생 명단 (Students) — 9월 출석부 기반 · ① 학원운영",
       "notion_url": "https://app.notion.com/p/e614e5318ed34b88a4938f55412a4d22",
       "data_source_id": "fd6a0c10-d0f8-48d8-b457-66dfa7c17b5f"
+    },
+    {
+      "name": "월간 진도 리포트 (Progress Reports) — ① 학원운영",
+      "notion_url": "https://app.notion.com/p/2e484c196851424db9ff541754289d57",
+      "data_source_id": "ecfad058-1fcd-41ab-a180-af93e256b22e"
     }
   ]
 }
