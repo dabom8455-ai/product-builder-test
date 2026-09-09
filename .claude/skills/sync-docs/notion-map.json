@@ -179,8 +179,24 @@
     },
     {
       "repo_file": "docs/teams/marketing/blog_sop.md",
-      "notion_page_id": "3d6ca2bf-c770-8146-8f54-f3ece1525fbe",
-      "notion_title": "⭐ 블로그 글쓰기 SOP — 맘카페 상담전환 (② #1)"
+      "notion_page_id": "3d6ca2bf-c770-8198-a002-c2fd37509ce5",
+      "notion_title": "⭐ 블로그 글쓰기 SOP — 맘카페 상담전환 (② #1)",
+      "note": "구 페이지(3d6ca2bf-c770-8146-8f54-f3ece1525fbe) 휴지통 이동됨 → 2026-09-09 ② 하위에 재생성."
+    },
+    {
+      "repo_file": "docs/teams/marketing/writing_playbook.md",
+      "notion_page_id": "3d6ca2bf-c770-8155-9888-c29275121621",
+      "notion_title": "마케팅 글쓰기 교본 — 블로그·스레드·인스타 (전자책 요약)"
+    },
+    {
+      "repo_file": "docs/teams/marketing/blog_guide.md",
+      "notion_page_id": "3d6ca2bf-c770-8149-ab60-d8753e4ec7e8",
+      "notion_title": "도현피아노 블로그 보이스 가이드 (실전 톤 고정판)"
+    },
+    {
+      "repo_file": "docs/teams/marketing/drafts/2026-09-09_블로그_01_우리아이제대로배우나.md",
+      "notion_page_id": "3d6ca2bf-c770-81e2-aeb2-d40c7598fe10",
+      "notion_title": "[블로그 초안 01] 우리 아이, 피아노를 제대로 배우고 있는 걸까요?"
     },
     {
       "repo_file": "docs/mvp/lead_status_sop.md",
