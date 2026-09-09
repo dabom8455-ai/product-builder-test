@@ -14,6 +14,7 @@
 >
 > 📚 **글쓰기 기술 학습자료(전원 숙지):** [`marketing/writing_playbook.md`](marketing/writing_playbook.md) — 세인투 전자책에서 추린 블로그·스레드·인스타 마케팅 글쓰기 기술.
 > ✍️ **블로그 톤 고정판:** [`marketing/blog_guide.md`](marketing/blog_guide.md) · **첫 실전 초안:** [`marketing/drafts/`](marketing/drafts/).
+> 🧵 **세트 규칙:** 블로그 1글 = **스레드 1글 항상 동반** → [`marketing/threads_guide.md`](marketing/threads_guide.md).
 
 ---
 
