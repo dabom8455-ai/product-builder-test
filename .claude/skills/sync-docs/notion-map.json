@@ -260,6 +260,22 @@
       "repo_file": "docs/knowledge/sein2_reward_pack/ebook4.md",
       "notion_page_id": "3d7ca2bf-c770-81df-a8ef-c2dcf3d9e213",
       "notion_title": "4권 · 30일 전자책 출판 & 판매"
+    },
+    {
+      "repo_file": "docs/roles/jegal_advisor.md",
+      "notion_page_id": "3d7ca2bf-c770-81ba-ac61-f7f230255746",
+      "notion_title": "🏰 왕궁 어전회의 & 軍師 제갈량 (전략 참모 제도)",
+      "note": "royal_court.md·jegal_onboarding_action_plan.md 3개 문서를 이 허브 1페이지에 통합 미러링. 어전회의 아티팩트: claude.ai/code/artifact/dcecbfcf-b7e2-44c3-92cc-e0d68b33d6cf"
+    },
+    {
+      "repo_file": "docs/roles/royal_court.md",
+      "notion_page_id": "3d7ca2bf-c770-81ba-ac61-f7f230255746",
+      "notion_title": "(↑ 왕궁 어전회의 허브에 통합)"
+    },
+    {
+      "repo_file": "docs/roles/jegal_onboarding_action_plan.md",
+      "notion_page_id": "3d7ca2bf-c770-81ba-ac61-f7f230255746",
+      "notion_title": "(↑ 왕궁 어전회의 허브에 통합 · 대표 실행서)"
     }
   ],
   "team_pages": {

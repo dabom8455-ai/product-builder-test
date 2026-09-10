@@ -16,6 +16,7 @@
 | 8 | 🎹 월말 진도 리포트 + 원생 스냅샷 [세션연결] ⭐ | 매월 25일 13:00 | ① #1 자동화. 진도 리포트 생성/기록 + 월별 원생 현황 이력 1행 추가 | `trig_015PwznSsPqJExkgMVvs3Hmw` |
 | 9 | ✍️🧵 블로그+스레드 매일 초안 [세션연결] ⭐ | 매일 10:00 | ② #1 자동화. 네이버 블로그 1편 **+ 스레드 동반글 1편**(초등맘 상담전환) 초안 → repo·보고 | `trig_017ZTKQpaLoKkgovGU7rc7HW` |
 | 10 | 🌐 일일 인텔 브리핑 [세션연결] | 매일 07:30 | ⑥ 전략기획실. GitHub 기술추천 2건 + 국내외 뉴스·정책 요약 + 경쟁 동향 → 노션 「일일 인텔 로그」 DB 날짜별 기록·보고 | `trig_012183AnTRv3GQcNwFc7vNvQ` |
+| 11 | 🪶 軍師 제갈량 · 오늘의 계책 [세션연결] | 매일 08:00 | 군사 제갈량이 정세를 살펴 「오늘의 계책」 5단(정세·급소·계책3·왕께 아뢰는 請·경계) 작성 → 노션 인텔 로그 기록 + 대표 보고. 지침: `docs/roles/jegal_advisor.md` | `trig_01DaJiRaitBnPjDFZRGDt93a` |
 
 ### 비활성(결함) — 새 세션 방식이라 저장소 push 불가로 중단, 대체됨
 `trig_012eGcj2rxG8Cc2C6kSipipT`(수)·`trig_018fgA8qy2tCK681fM3Qu3xD`(일)·`trig_01Ltk5TNv4gfHYXg2w4WftPd`(금)·`trig_01KqckXC9jhfpejojudFZ1R9`(로비서)·`trig_01SxAxXQQnRCKKLSUPRreVnG`(초3 후속) — 모두 enabled=false. (삭제 도구 미제공 → claude.ai 루틴 화면에서 정리 가능)
