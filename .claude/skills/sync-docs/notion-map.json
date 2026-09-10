@@ -68,6 +68,12 @@
       "notion_title": "⑥ 전략기획실 · 시장·경쟁 인텔리전스 (클부장 직속)"
     },
     {
+      "repo_file": "docs/teams/team7_security.md",
+      "notion_page_id": "3d7ca2bf-c770-8198-a2f0-fc7eb83f2914",
+      "notion_title": "팀⑦ · 보안팀 (정보·시스템·법적 안정성 · 클부장 직속)",
+      "note": "2026-09-11 신설. 보팀장 지휘·클부장 직속. 신념: 수익·속도 최우선, 보안은 안전벨트. 보안 신호등(GO/조건부/보류)."
+    },
+    {
       "repo_file": "docs/templates/weekly_report.md",
       "notion_page_id": "3d5ca2bf-c770-81db-a006-d5aec6af53d7",
       "notion_title": "04 · 주간 보고 템플릿 (클부장 → 대표)"
