@@ -280,6 +280,12 @@
       "notion_url": "https://app.notion.com/p/4029b63a4ba84aa5a894f2e151a1bc87",
       "data_source_id": "725768a5-af4f-4455-97fa-8a408e1efe16",
       "note": "매일 07:30 인텔 브리핑 기록. SOP: docs/roles/intel_daily_brief.md"
+    },
+    {
+      "name": "콘텐츠 발행·성과 로그 (Content Log) — ② 마케팅",
+      "notion_url": "https://app.notion.com/p/60c81dc1fae94e00b06633d84be70ada",
+      "data_source_id": "81d1a75d-5b14-40a4-b38a-09427be60c60",
+      "note": "블로그·스레드 발행마다 1행. 유입·상담 채워 견인 측정. blog_sop §7."
     }
   ]
 }
