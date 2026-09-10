@@ -222,6 +222,44 @@
       "repo_file": "docs/mvp/monthly_progress_report.md",
       "notion_page_id": "3d6ca2bf-c770-81bc-8d0c-df2b50856b1f",
       "notion_title": "⭐ 월말 학부모 진도 리포트 자동화 (#1 최우선)"
+    },
+    {
+      "repo_file": "docs/knowledge/sein2_reward_pack/00_index.md",
+      "notion_page_id": "3d7ca2bf-c770-8121-8711-f962bed1448a",
+      "notion_title": "🎁 세인투 AI 수익화 풀패키지 — 리워드 모음 (도현컴퍼니 적용판)",
+      "note": "허브 페이지. 하위: 도구가이드 / 템플릿60선(유튜브·블로그·인스타·쓰레드·이메일) / 전자책 1~4권. 원본: laced-uranium-1ee.notion.site 리워드 모음. 2026-09-10 클부장 임포트."
+    },
+    {
+      "repo_file": "docs/knowledge/sein2_reward_pack/tools.md",
+      "notion_page_id": "3d7ca2bf-c770-81b7-94e4-f7c89a08b32b",
+      "notion_title": "AI 도구 가이드 (2026.09 기준, 77종)"
+    },
+    {
+      "repo_file": "docs/knowledge/sein2_reward_pack/templates.md",
+      "notion_page_id": "3d7ca2bf-c770-811c-ab34-eb354b38bb28",
+      "notion_title": "플랫폼 프롬프트 템플릿 60선 (서브허브)",
+      "note": "하위 5페이지: 유튜브/블로그/인스타그램/쓰레드/이메일 각 12선. ② 마케팅 데일리 프롬프트 엔진."
+    },
+    {
+      "repo_file": "docs/knowledge/sein2_reward_pack/ebook1.md",
+      "notion_page_id": "3d7ca2bf-c770-8189-b74f-dc9869f3d49a",
+      "notion_title": "1권 · AI 활용의 기본기 (GPT~에이전트)",
+      "note": "부모: 전자책 프롬프트 모음집 3d7ca2bf-c770-810c-a30f-dab764e3ecea"
+    },
+    {
+      "repo_file": "docs/knowledge/sein2_reward_pack/ebook2.md",
+      "notion_page_id": "3d7ca2bf-c770-816a-80c9-dd332c21c036",
+      "notion_title": "2권 · 인플루언서 AI 글쓰기 자동화"
+    },
+    {
+      "repo_file": "docs/knowledge/sein2_reward_pack/ebook3.md",
+      "notion_page_id": "3d7ca2bf-c770-81fe-b886-f09cdd36d1a9",
+      "notion_title": "3권 · 월천 수익 챗GPT 활용"
+    },
+    {
+      "repo_file": "docs/knowledge/sein2_reward_pack/ebook4.md",
+      "notion_page_id": "3d7ca2bf-c770-81df-a8ef-c2dcf3d9e213",
+      "notion_title": "4권 · 30일 전자책 출판 & 판매"
     }
   ],
   "team_pages": {
