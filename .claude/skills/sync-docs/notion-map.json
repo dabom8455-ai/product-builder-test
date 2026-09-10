@@ -74,6 +74,12 @@
       "note": "2026-09-11 신설. 보팀장 지휘·클부장 직속. 신념: 수익·속도 최우선, 보안은 안전벨트. 보안 신호등(GO/조건부/보류)."
     },
     {
+      "repo_file": "docs/teams/team8_homepage_cs.md",
+      "notion_page_id": "3d7ca2bf-c770-8148-a2e2-dde1783b558a",
+      "notion_title": "팀⑧ · 홈페이지 구축·유지보수(CS)팀",
+      "note": "2026-09-11 신설. 홈팀장 지휘·정규 팀. 모든 홈페이지 구조설계·생성·관리·수리 + 백엔드 로드맵. OSS 도입은 대표 승인 게이트."
+    },
+    {
       "repo_file": "docs/templates/weekly_report.md",
       "notion_page_id": "3d5ca2bf-c770-81db-a006-d5aec6af53d7",
       "notion_title": "04 · 주간 보고 템플릿 (클부장 → 대표)"
@@ -291,7 +297,9 @@
     "③_monetization": "3d5ca2bf-c770-8147-ac6a-fd109be52162",
     "④_ebook": "3d5ca2bf-c770-815e-947e-fdc5c4c856ac",
     "⑤_data_infra": "3d5ca2bf-c770-8195-b293-f8a6fc6f8987",
-    "⑥_strategy_intel": "3d5ca2bf-c770-81d0-b38b-f815f8e30439"
+    "⑥_strategy_intel": "3d5ca2bf-c770-81d0-b38b-f815f8e30439",
+    "⑦_security": "3d7ca2bf-c770-8198-a2f0-fc7eb83f2914",
+    "⑧_homepage_cs": "3d7ca2bf-c770-8148-a2e2-dde1783b558a"
   },
   "databases": [
     {
