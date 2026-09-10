@@ -1,6 +1,11 @@
 {
   "artboards": [
-    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1080, "h": 1350, "title": "도현피아노 소개 카드 (맘카페 첨부용)", "print": "fixed" }
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1080, "h": 1350, "title": "① 정갈한 여백 (Refined Minimal)", "print": "fixed" },
+    { "file": "DirectionB.dc.html", "x": 1200, "y": 0, "w": 1080, "h": 1350, "title": "② 다크 럭셔리 (Dark Editorial)", "print": "fixed" },
+    { "file": "DirectionC.dc.html", "x": 2400, "y": 0, "w": 1080, "h": 1350, "title": "③ 웜 페이퍼 부티크 (Warm Boutique)", "print": "fixed" }
   ],
-  "launch": { "view": "focused", "file": "Main.dc.html" }
+  "annotations": [
+    { "id": "brief", "x": 0, "y": -150, "w": 1080, "text": "고급·세련 방향 3안 — 마음에 드는 번호를 알려주세요. 고른 안을 최종 카드로 다듬고 나머지는 정리합니다." }
+  ],
+  "launch": { "view": "canvas" }
 }
