@@ -5,8 +5,8 @@
 
 ## 1. 제작물 (✅ 완료)
 - **온라인 리듬·박자 연습기(웹)** — 작동하는 메트로놈 + 초등 리듬 카드 따라치기.
-  🔗 https://claude.ai/code/artifact/4070783b-539c-431a-aa0d-76d9eb5b7b41
-  - 소스: `tools/rhythm-trainer.html`
+  🔗 https://dohyeon-piano.netlify.app/rhythm/
+  - 소스: `tools/rhythm-trainer.html` (홈페이지 저장소 `dohyeon-piano/public/rhythm/index.html`로 배포) · claude.ai 미러: artifact/4070783b
   - 기능: BPM 40~200·박자표(2/4·3/4·4/4)·시각 펄스·탭템포 메트로놈 / 3단계 리듬 카드(따·따다·쉼표), 소리에 맞춰 음표가 빨갛게 켜지며 손뼉 따라치기 / 하단 학부모 상담 CTA(전화·주소).
   - 재고·제작비 0. 링크만 공유하면 폰에서 바로 사용.
 
@@ -34,7 +34,7 @@
 메트로놈에 맞춰 음표가 반짝일 때 손뼉으로 따라치면
 초등 저학년도 박자를 몸으로 익혀요. 폰에서 바로 됩니다.
 
-👉 (링크) https://claude.ai/code/artifact/4070783b-539c-431a-aa0d-76d9eb5b7b41
+👉 (링크) https://dohyeon-piano.netlify.app/rhythm/
 
 무료로 써보시고, 도움이 되면 댓글이나 문자로 '리듬 체험' 남겨주세요.
 반응이 좋으면 집에서 쓰는 리듬 카드(실물)도 준비해볼게요 🎹
