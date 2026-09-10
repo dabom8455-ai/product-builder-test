@@ -30,7 +30,8 @@
                         └────┬────┘
                              ├╌╌╌ ⑤ 시스템·데이터 인프라 (직속)
                              ├╌╌╌ ⑥ 전략기획실 · 시장·경쟁 인텔 (직속)
-                             │      데이터 · 정보로 전 팀을 받친다
+                             ├╌╌╌ ⑦ 보안팀 · 보팀장 (직속)
+                             │      데이터·정보·안전으로 전 팀을 받친다
         ┌──────────────┬─────┴─────┬──────────────┐
    ①학원운영팀     ②마케팅팀    ③수익화팀     ④전자책·글쓰기팀
    (운영 자동화)   (홍보·판매)  (재무·수익)   (지식 상품화)
@@ -40,6 +41,8 @@
 막힌 곳을 뚫고, 핵심 상황을 대표에게 보고합니다.
 그리고 **⑤ 시스템·데이터 인프라**(클부장 직속)가 4개 팀의 모든 활동을 데이터로 기록해,
 자동화·판매·개선의 연료로 만듭니다.
+**⑦ 보안팀**(클부장 직속)은 회사·고객 정보와 시스템을 지키되, **수익성과 실행 속도를
+최우선**으로 두고 최소한의 마찰로 안전을 겁니다 — 보안은 브레이크가 아니라 안전벨트.
 
 ---
 
@@ -57,6 +60,7 @@
 | [`docs/teams/team4_ebook.md`](docs/teams/team4_ebook.md) | ④ 전자책·글쓰기팀 |
 | [`docs/teams/team5_data_infra.md`](docs/teams/team5_data_infra.md) | ⑤ 시스템·데이터 인프라 (클부장 직속) |
 | [`docs/teams/team6_strategy_intel.md`](docs/teams/team6_strategy_intel.md) | ⑥ 전략기획실 · 시장·경쟁 인텔리전스 (클부장 직속) |
+| [`docs/teams/team7_security.md`](docs/teams/team7_security.md) | ⑦ 보안팀 · 정보·시스템·법적 안정성 (클부장 직속) |
 | [`docs/playbook/`](docs/playbook/README.md) | 📚 지식 베이스 — 사업 기본기 서적 적용서 (린 스타트업 등) |
 | [`docs/templates/weekly_report.md`](docs/templates/weekly_report.md) | 주간 보고 템플릿 (클부장 → 대표) |
 
