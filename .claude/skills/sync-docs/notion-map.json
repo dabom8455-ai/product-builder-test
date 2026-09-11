@@ -50,7 +50,8 @@
     {
       "repo_file": "docs/teams/team3_monetization.md",
       "notion_page_id": "3d5ca2bf-c770-8147-ac6a-fd109be52162",
-      "notion_title": "팀③ · 수익화팀"
+      "notion_title": "팀③ · 재무·회계 수익화팀",
+      "note": "2026-09-11 구 '수익화팀' → '재무·회계 수익화팀' 개명(대표 지시), 팀장=재팀장. 회사 회계 관리 책임 추가. 제목·본문 노션 동기화(하위 3개 보존 부분 치환)."
     },
     {
       "repo_file": "docs/teams/team4_ebook.md",
@@ -174,6 +175,12 @@
       "repo_file": "docs/finance/financials_snapshot.md",
       "notion_page_id": "3d5ca2bf-c770-8102-a1ae-ce7f396a3d12",
       "notion_title": "재무 1장 (Financial Snapshot)"
+    },
+    {
+      "repo_file": "docs/finance/accounting_plan.md",
+      "notion_page_id": "3d8ca2bf-c770-81a0-9ebb-dfab7bd7ff9f",
+      "notion_title": "📘 재무상태 정립 & 회계 관리 계획",
+      "note": "③ 재무·회계 수익화팀 하위. 2부문 분리 회계·월 마감·세무·지표. 2026-09-11 재팀장."
     },
     {
       "repo_file": "docs/ebook/sangdam_followup_book_draft.md",
