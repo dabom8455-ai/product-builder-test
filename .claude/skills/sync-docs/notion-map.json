@@ -99,7 +99,14 @@
     {
       "repo_file": "docs/infra/data_registry.md",
       "notion_page_id": "3d5ca2bf-c770-81be-afed-eb47936bb59d",
-      "notion_title": "데이터 레지스트리 (Data Registry)"
+      "notion_title": "데이터 레지스트리 (Data Registry)",
+      "note": "2026-09-11 조직진단 반영: 가동 DB 10개 전수 등록 + 거버넌스 4규칙. 빈 중복본 792b6d67은 삭제예정."
+    },
+    {
+      "repo_file": "docs/ops/org_diagnosis_2026-09-11.md",
+      "notion_page_id": "3d8ca2bf-c770-817c-80b0-d9da782b9560",
+      "notion_title": "조직진단 & 업무 재조정 (2026-09-11)",
+      "note": "⑤ 인프라 하위. 역할 지도·중복(D1 월별원생현황 2개/D2 대장 4→10)·경계(O1 리드/O2 원생표) 재조정."
     },
     {
       "repo_file": "docs/playbook/README.md",
