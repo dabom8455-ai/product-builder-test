@@ -69,6 +69,12 @@
       "note": "2026-09-11 구 ⑥(클부장 직속 인텔) → 대표 직속 전략기획실로 격상. 전실장=클부장 동급. A팀 수립·B팀 비판. 일일 인텔 루틴 승계."
     },
     {
+      "repo_file": "docs/teams/strategy/redteam_checklist.md",
+      "notion_page_id": "3d8ca2bf-c770-813a-b18f-c47ff476e7a7",
+      "notion_title": "전략 레드팀 체크리스트 — B팀 표준 질문 10",
+      "note": "전략기획실 하위. B팀이 A팀 전략안을 때리는 표준 10문항 + 판정규칙 + SOP. 2026-09-11 클부장 일일 기틀."
+    },
+    {
       "repo_file": "docs/teams/team7_security.md",
       "notion_page_id": "3d7ca2bf-c770-8198-a2f0-fc7eb83f2914",
       "notion_title": "팀⑦ · 보안팀 (정보·시스템·법적 안정성 · 클부장 직속)",
