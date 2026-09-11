@@ -35,6 +35,7 @@
 |---|---|
 | 🏢 도현컴퍼니 사업회의(회의 도구) | https://claude.ai/code/artifact/dcecbfcf-b7e2-44c3-92cc-e0d68b33d6cf |
 | 🎁 상담 후속 소개 인포그래픽 카드 | https://claude.ai/code/artifact/ef128f4d-e9cd-4282-bcbe-e987d8e42736 |
+| 📋 전 팀 현황 보드(경영 대시보드) | https://claude.ai/code/artifact/965c4765-d888-4a43-9e00-24470fb06ee2 |
 
 ---
 
