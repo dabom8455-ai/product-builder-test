@@ -247,7 +247,14 @@
     {
       "repo_file": "docs/mvp/monthly_progress_report.md",
       "notion_page_id": "3d6ca2bf-c770-81bc-8d0c-df2b50856b1f",
-      "notion_title": "⭐ 월말 학부모 진도 리포트 자동화 (#1 최우선)"
+      "notion_title": "⭐ 월말 학부모 진도 리포트 자동화 (#1 최우선)",
+      "note": "2026-09-11 §6-1 연속 사이클·역할분담 추가."
+    },
+    {
+      "repo_file": "docs/mvp/parent_feedback_guide.md",
+      "notion_page_id": "3d8ca2bf-c770-8199-b858-d3b0c704760d",
+      "notion_title": "월말 「원장 피드백」 작성지침 (학부모께 드리는 글)",
+      "note": "① 학원운영 하위. AI가 학부모 원장피드백 작성 시 준수. 공손+전문, 연속성(지난달 참조). 25일 루틴 연결."
     },
     {
       "repo_file": "docs/knowledge/sein2_reward_pack/00_index.md",
