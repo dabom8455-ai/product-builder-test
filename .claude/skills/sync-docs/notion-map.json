@@ -97,6 +97,12 @@
       "notion_title": "지시서 · 홈페이지 구축 (마케팅팀)"
     },
     {
+      "repo_file": "docs/infra/web_urls.md",
+      "notion_page_id": "3d8ca2bf-c770-81a4-ada9-da74001539c4",
+      "notion_title": "🌐 도현컴퍼니 웹페이지 URL 모음 (실시간 확인용)",
+      "note": "⑧ 홈페이지·CS팀 하위. 새 웹페이지 배포 시 한 줄 추가. 2026-09-11 전부 200 OK."
+    },
+    {
       "repo_file": "docs/infra/data_registry.md",
       "notion_page_id": "3d5ca2bf-c770-81be-afed-eb47936bb59d",
       "notion_title": "데이터 레지스트리 (Data Registry)",
