@@ -55,7 +55,8 @@
     {
       "repo_file": "docs/teams/team4_ebook.md",
       "notion_page_id": "3d5ca2bf-c770-815e-947e-fdc5c4c856ac",
-      "notion_title": "팀④ · 전자책·글쓰기팀"
+      "notion_title": "팀④ · 지식·콘텐츠 수익화팀",
+      "note": "2026-09-11 구 '전자책·글쓰기팀' → '지식·콘텐츠 수익화팀' 재편(브리프 #001 대표 승인). 전자책 단독 X → 리드마그넷·템플릿·해외 영어 콘텐츠로 시스템 판매 퍼널 복무. 제목·본문 노션 동기화 완료(하위 문서 2개 보존 위해 부분 치환)."
     },
     {
       "repo_file": "docs/teams/team5_data_infra.md",
@@ -339,6 +340,54 @@
       "repo_file": "docs/roles/jegal_onboarding_action_plan.md",
       "notion_page_id": "3d7ca2bf-c770-81ba-ac61-f7f230255746",
       "notion_title": "(↑ 왕궁 어전회의 허브에 통합 · 대표 실행서)"
+    },
+    {
+      "repo_file": "docs/teams/strategy/brief_001_수익화_해외전략.md",
+      "notion_page_id": "3d8ca2bf-c770-8139-9e1a-d618ec5b3f06",
+      "notion_title": "📑 전략 브리프 #001 — 수익화·해외 판매 전략",
+      "note": "전략기획실 하위. 2026-09-11 대표 승인(39만원·Gumroad·④팀 재편)."
+    },
+    {
+      "repo_file": "docs/teams/strategy/brief_002_북극성_큰그림.md",
+      "notion_page_id": "3d8ca2bf-c770-81aa-b9b4-d3dd4970b8c2",
+      "notion_title": "🧭 전략 브리프 #002 — 북극성(큰그림)",
+      "note": "전략기획실 하위. 겉 뾰족(음악교육)·속 범용(교습 OS), 교두보 B1→B2→B3 대표 승인."
+    },
+    {
+      "repo_file": "docs/teams/strategy/brief_003_GTM_리드마그넷_퍼널.md",
+      "notion_page_id": "3d8ca2bf-c770-81ba-a0c9-d850e54ad511",
+      "notion_title": "🎯 전략 브리프 #003 — GTM 설계: 리드마그넷→첫 수익화 퍼널",
+      "note": "전략기획실 하위. 가치 사다리 4층·원장 ICP·카페/스레드 채널·가격 앵커."
+    },
+    {
+      "repo_file": "docs/teams/strategy/brief_004_운영확장_플레이북.md",
+      "notion_page_id": "3d8ca2bf-c770-81d4-be5c-dfa2b55065db",
+      "notion_title": "⚙️ 전략 브리프 #004 — 운영·확장 플레이북(팔리면 어떻게 관리)",
+      "note": "전략기획실 하위. 노트북→관리형 서버리스, 고객규모 Tier A~D, 팀장별 역할."
+    },
+    {
+      "repo_file": "docs/teams/reports/2026-09-11_클부장_종합계획_일요일까지.md",
+      "notion_page_id": "3d8ca2bf-c770-818d-8117-eec3f4bb90dd",
+      "notion_title": "🗓️ 클부장 종합계획 — 일요일까지(후반부) 2026-09-11",
+      "note": "클부장 보고(최상위 부모 하위). 금요일 특례 선발행."
+    },
+    {
+      "repo_file": "docs/strategy/idea_scan/2026-W37.md",
+      "notion_page_id": "3d8ca2bf-c770-81dc-9fc2-d32ae769ec48",
+      "notion_title": "📈 주간 트렌드·아이디어 스캔 — 2026-W37",
+      "note": "전략기획실 하위. 주간 스캔 TOP3. 상세 5건은 아이디어뱅크 DB."
+    },
+    {
+      "repo_file": "docs/teams/marketing/leadmagnet/리드마그넷_잡무탈출7단계_초안.md",
+      "notion_page_id": "3d8ca2bf-c770-8195-9c97-c6901599d03a",
+      "notion_title": "[리드마그넷 초안] 잡무 탈출 7단계 체크리스트",
+      "note": "④ 지식·콘텐츠 하위. 퍼널 0층 무료 PDF 초안."
+    },
+    {
+      "repo_file": "docs/teams/marketing/tripwire/트립와이어_노션운영키트_기획안.md",
+      "notion_page_id": "3d8ca2bf-c770-8107-825f-d72e14b567f2",
+      "notion_title": "[트립와이어 기획안] 노션 피아노학원 운영 키트",
+      "note": "④ 지식·콘텐츠 하위. 퍼널 1층 9,900원 상품 기획."
     }
   ],
   "team_pages": {
@@ -405,6 +454,12 @@
       "notion_url": "https://app.notion.com/p/60c81dc1fae94e00b06633d84be70ada",
       "data_source_id": "81d1a75d-5b14-40a4-b38a-09427be60c60",
       "note": "블로그·스레드 발행마다 1행. 유입·상담 채워 견인 측정. blog_sop §7."
+    },
+    {
+      "name": "🤝 고객 관리 (제품 판매 CRM) — 클부장 총괄",
+      "notion_url": "https://app.notion.com/p/df3dd10d76974a88a09d9b317066b281",
+      "data_source_id": "947fa84c-5d01-4c2b-be96-747d34054293",
+      "note": "2026-09-11 신설. 우리 제품 구매 원장 고객 파이프라인(리드→구매자→구독자). 원생명단과 별개. 연락처 최소수집·⑦보안 경계."
     }
   ]
 }
