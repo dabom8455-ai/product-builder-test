@@ -180,7 +180,13 @@
       "repo_file": "docs/finance/accounting_plan.md",
       "notion_page_id": "3d8ca2bf-c770-81a0-9ebb-dfab7bd7ff9f",
       "notion_title": "📘 재무상태 정립 & 회계 관리 계획",
-      "note": "③ 재무·회계 수익화팀 하위. 2부문 분리 회계·월 마감·세무·지표. 2026-09-11 재팀장."
+      "note": "③ 재무·회계 수익화팀 하위. 2부문 분리 회계·월 마감·세무·지표. 2026-09-11 재팀장. 대표 3건 승인."
+    },
+    {
+      "repo_file": "docs/finance/tax_advisory_request.md",
+      "notion_page_id": "3d8ca2bf-c770-81f6-943c-ff917a051bd0",
+      "notion_title": "🧾 세무 자문 요청서 (세무사 전달용)",
+      "note": "③ 재무·회계 하위. 2026-09-11 대표 세무자문 진행 승인. 세무사 전달 후 답변 반영."
     },
     {
       "repo_file": "docs/ebook/sangdam_followup_book_draft.md",
