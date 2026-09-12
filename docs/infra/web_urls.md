@@ -37,6 +37,7 @@
 | 🎁 상담 후속 소개 인포그래픽 카드 | https://claude.ai/code/artifact/ef128f4d-e9cd-4282-bcbe-e987d8e42736 |
 | 📋 전 팀 현황 보드(경영 대시보드) | https://claude.ai/code/artifact/965c4765-d888-4a43-9e00-24470fb06ee2 |
 | 🧠 조직 마인드맵(조직·운영 현황) | https://claude.ai/code/artifact/90461800-ead3-4acd-ad14-0311d2c63996 |
+| 🎹 상품판매 브로슈어(1인학원 자동화 패키지) | https://claude.ai/code/artifact/b8eb3bdb-fbe0-4c7b-8e42-7b9536cc8747 |
 
 ---
 
