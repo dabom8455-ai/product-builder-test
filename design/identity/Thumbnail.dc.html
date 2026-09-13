@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@500;700;900&display=swap');
+    *{box-sizing:border-box;}
+    body{margin:0;font-family:'Noto Sans KR',system-ui,sans-serif;}
+    .serif{font-family:'Noto Serif KR',serif;}
+  </style>
+</helmet>
+<!-- YouTube 썸네일 1280×720 -->
+<div style="width:1280px;height:720px;background:linear-gradient(135deg,#1E4A3C 0%,#10241C 100%);position:relative;overflow:hidden;">
+
+  <!-- 큰 배경 장식(음표 느낌 원) -->
+  <div style="position:absolute;right:-120px;top:-120px;width:520px;height:520px;border:2px solid rgba(196,162,75,.18);border-radius:50%;"></div>
+  <div style="position:absolute;right:40px;bottom:-160px;width:380px;height:380px;border:2px solid rgba(196,162,75,.12);border-radius:50%;"></div>
+
+  <!-- 로고 배지 -->
+  <div style="position:absolute;top:40px;left:56px;display:flex;align-items:center;gap:12px;">
+    <div style="background:#fff;border-radius:12px;padding:7px 9px;display:flex;"><img src="dohyeon-piano-logo.jpg" style="height:40px;display:block;"></div>
+    <span class="serif" style="color:#FCF9F2;font-size:22px;font-weight:700;">도현피아노</span>
+  </div>
+
+  <!-- 메인 카피 -->
+  <div style="position:absolute;left:56px;top:170px;width:760px;">
+    <div style="display:inline-block;background:#C4A24B;color:#10241C;font-weight:900;font-size:22px;padding:6px 16px;border-radius:8px;margin-bottom:20px;">원장 1인 · AI 자동화 실험</div>
+    <h1 style="margin:0;color:#FCF9F2;font-weight:900;font-size:92px;line-height:1.08;letter-spacing:-.02em;">피아노 학원을<br><span style="color:#C4A24B;">AI로 자동화</span>했다</h1>
+    <p style="margin:24px 0 0;color:#CBD8CE;font-size:26px;font-weight:500;">상담·리포트·재무까지 — 시스템이 대신합니다</p>
+  </div>
+
+  <!-- 우측 인물/영상 자리 -->
+  <div style="position:absolute;right:64px;top:150px;width:360px;height:420px;background:rgba(252,249,242,.06);border:2px dashed rgba(196,162,75,.5);border-radius:20px;display:flex;align-items:center;justify-content:center;text-align:center;">
+    <span style="color:#A9BBAE;font-size:18px;line-height:1.6;">[ 원장님 사진<br>또는 학원 컷 ]</span>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

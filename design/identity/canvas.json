@@ -1,0 +1,11 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1440, "h": 980, "title": "홈페이지 메인화면 (도현피아노 B2C)" },
+    { "file": "Infographic.dc.html", "x": 1540, "y": 0, "w": 1080, "h": 1680, "title": "회사 아이덴티티 인포그래픽" },
+    { "file": "Thumbnail.dc.html", "x": 2720, "y": 0, "w": 1280, "h": 720, "title": "유튜브 썸네일 1280×720" }
+  ],
+  "annotations": [
+    { "id": "note-brand", "x": 0, "y": -120, "w": 900, "text": "도현컴퍼니 브랜드 3종 — 확정 아이덴티티(아이보리·딥그린·골드, Noto Serif/Sans KR, 사훈 '완벽보다 물길') 적용. 로고는 실제 파일 임베드(흰 카드). 색·폰트 대표님 md 오면 재조정." }
+  ],
+  "launch": { "view": "canvas" }
+}

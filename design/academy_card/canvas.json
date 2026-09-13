@@ -1,0 +1,6 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1080, "h": 1350, "title": "도현피아노 소개 카드 · 다크 럭셔리", "print": "fixed" }
+  ],
+  "launch": { "view": "focused", "file": "Main.dc.html" }
+}

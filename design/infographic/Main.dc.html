@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap');
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Noto Sans KR', system-ui, sans-serif; }
+    .serif { font-family: 'Noto Serif KR', serif; }
+    a { color: #C4A24B; } a:hover { color: #A9862F; }
+  </style>
+</helmet>
+
+<div style="width: 1080px; background: #F4EEE1; padding: 0; overflow: hidden;">
+
+  <!-- HEADER -->
+  <div style="background: #1E4A3C; padding: 64px 64px 56px; position: relative;">
+    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 40px;">
+      <div style="display: flex; align-items: flex-end; gap: 5px; height: 40px;">
+        <span style="width: 9px; height: 24px; background: #F4EEE1; border-radius: 2px;"></span>
+        <span style="width: 9px; height: 40px; background: #C4A24B; border-radius: 2px;"></span>
+        <span style="width: 9px; height: 32px; background: #F4EEE1; border-radius: 2px;"></span>
+        <span style="width: 9px; height: 44px; background: #F4EEE1; border-radius: 2px;"></span>
+      </div>
+      <span class="serif" style="color: #FCF9F2; font-size: 40px; font-weight: 700;">도현피아노</span>
+    </div>
+    <span style="display: inline-block; font-size: 20px; letter-spacing: .2em; color: #C4A24B; font-weight: 700; margin-bottom: 22px;">경기 용인 · 처인구 모현읍</span>
+    <h1 class="serif" style="margin: 0; color: #FCF9F2; font-size: 62px; line-height: 1.25; font-weight: 700;">선생님은 교육에만,<br><span style="color: #C4A24B;">운영은 AI가.</span></h1>
+    <p style="margin: 22px 0 0; color: #CBD8CE; font-size: 26px; line-height: 1.6;">아이의 연주와 성장에 온전히 집중하는<br>학원을 만듭니다.</p>
+  </div>
+
+  <!-- CURRICULUM -->
+  <div style="padding: 56px 64px 20px;">
+    <span style="font-size: 20px; letter-spacing: .18em; text-transform: uppercase; color: #C4A24B; font-weight: 700;">커리큘럼</span>
+    <h2 class="serif" style="margin: 10px 0 32px; font-size: 40px; color: #1E4A3C; font-weight: 700;">연령과 목표에 맞춘 과정</h2>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+      <div style="background: #FCF9F2; border: 1px solid #E2D8C2; border-radius: 16px; padding: 28px 26px; border-top: 5px solid #1E4A3C;">
+        <span class="serif" style="font-size: 22px; color: #C4A24B; font-weight: 700;">01</span>
+        <h3 style="margin: 6px 0 4px; font-size: 27px; color: #23261F; font-weight: 700;">유아 음악놀이</h3>
+        <p style="margin: 0; font-size: 19px; color: #5C6157; line-height: 1.5;">놀이로 만나는 첫 음악</p>
+      </div>
+      <div style="background: #FCF9F2; border: 1px solid #E2D8C2; border-radius: 16px; padding: 28px 26px; border-top: 5px solid #1E4A3C;">
+        <span class="serif" style="font-size: 22px; color: #C4A24B; font-weight: 700;">02</span>
+        <h3 style="margin: 6px 0 4px; font-size: 27px; color: #23261F; font-weight: 700;">기초 · 취미</h3>
+        <p style="margin: 0; font-size: 19px; color: #5C6157; line-height: 1.5;">좋아하는 곡을 직접 연주</p>
+      </div>
+      <div style="background: #FCF9F2; border: 1px solid #E2D8C2; border-radius: 16px; padding: 28px 26px; border-top: 5px solid #1E4A3C;">
+        <span class="serif" style="font-size: 22px; color: #C4A24B; font-weight: 700;">03</span>
+        <h3 style="margin: 6px 0 4px; font-size: 27px; color: #23261F; font-weight: 700;">실력 심화</h3>
+        <p style="margin: 0; font-size: 19px; color: #5C6157; line-height: 1.5;">발표회 · 콩쿠르 무대 경험</p>
+      </div>
+      <div style="background: #FCF9F2; border: 1px solid #E2D8C2; border-radius: 16px; padding: 28px 26px; border-top: 5px solid #C4A24B;">
+        <span class="serif" style="font-size: 22px; color: #C4A24B; font-weight: 700;">04</span>
+        <h3 style="margin: 6px 0 4px; font-size: 27px; color: #23261F; font-weight: 700;">입시 · 전공</h3>
+        <p style="margin: 0; font-size: 19px; color: #5C6157; line-height: 1.5;">목표 학교별 맞춤 지도</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROMISE -->
+  <div style="padding: 40px 64px 20px;">
+    <span style="font-size: 20px; letter-spacing: .18em; text-transform: uppercase; color: #C4A24B; font-weight: 700;">도현피아노의 약속</span>
+    <div style="display: flex; flex-direction: column; gap: 18px; margin-top: 28px;">
+      <div style="display: flex; align-items: center; gap: 22px; background: #ECE4D2; border-radius: 16px; padding: 26px 30px;">
+        <div style="display: flex; align-items: center; justify-content: center; width: 62px; height: 62px; background: #1E4A3C; border-radius: 14px; flex-shrink: 0;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C4A24B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"/></svg>
+        </div>
+        <div><h3 style="margin: 0 0 3px; font-size: 27px; color: #1E4A3C; font-weight: 700;">개인별 맞춤 지도</h3><p style="margin: 0; font-size: 19px; color: #5C6157;">아이의 속도와 취향에 맞춰 설계</p></div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 22px; background: #ECE4D2; border-radius: 16px; padding: 26px 30px;">
+        <div style="display: flex; align-items: center; justify-content: center; width: 62px; height: 62px; background: #1E4A3C; border-radius: 14px; flex-shrink: 0;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C4A24B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <div><h3 style="margin: 0 0 3px; font-size: 27px; color: #1E4A3C; font-weight: 700;">투명한 진도 기록</h3><p style="margin: 0; font-size: 19px; color: #5C6157;">오늘 배운 내용을 정확히 전달</p></div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 22px; background: #ECE4D2; border-radius: 16px; padding: 26px 30px;">
+        <div style="display: flex; align-items: center; justify-content: center; width: 62px; height: 62px; background: #1E4A3C; border-radius: 14px; flex-shrink: 0;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C4A24B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div><h3 style="margin: 0 0 3px; font-size: 27px; color: #1E4A3C; font-weight: 700;">끊김 없는 소통</h3><p style="margin: 0; font-size: 19px; color: #5C6157;">AI 자동화로 제때, 먼저 안내</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <div style="margin: 44px 0 0; background: #C4A24B; padding: 48px 64px;">
+    <h2 class="serif" style="margin: 0 0 26px; font-size: 40px; color: #163A2F; font-weight: 700;">상담 문의</h2>
+    <div style="display: flex; flex-direction: column; gap: 18px;">
+      <div style="display: flex; align-items: center; gap: 18px;">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#163A2F" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span class="serif" style="color: #163A2F; font-size: 34px; font-weight: 700;">010-5158-3613</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 18px;">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#163A2F" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <span style="color: #23301F; font-size: 23px; font-weight: 500;">운영 13:00 – 18:00</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 18px;">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#163A2F" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span style="color: #23301F; font-size: 23px; font-weight: 500;">경기 용인시 처인구 모현읍 왕산로14 몬테로이 2단지 상가</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 18px;">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#163A2F" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
+        <span style="color: #23301F; font-size: 23px; font-weight: 500;">dohyeon-piano.netlify.app</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 18px;">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#163A2F" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="#163A2F"/></svg>
+        <span style="color: #23301F; font-size: 23px; font-weight: 500;">인스타그램 @dohyeon_piano</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="background: #10241C; padding: 26px 64px; display: flex; align-items: center; justify-content: space-between;">
+    <span class="serif" style="color: #FCF9F2; font-size: 22px; font-weight: 700;">도현피아노</span>
+    <span style="color: #7A9082; font-size: 18px;">아이의 첫 무대를 함께</span>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>
