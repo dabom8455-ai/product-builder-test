@@ -1,0 +1,322 @@
+<title>도현컴퍼니 어전회의</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;500;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap">
+<style>
+  /* 단청 밤의 조정 — 단일 비주얼 월드(다크 커밋), 모든 색 명시 */
+  :root{
+    --ink:#17120E; --ink2:#0F0B08;
+    --panel:#22190F; --panel2:#2C2114;
+    --line:rgba(201,162,75,.22); --line-strong:rgba(201,162,75,.5);
+    --gold:#C9A24B; --gold-hi:#E7C976; --gold-dim:#9A7A34;
+    --vermilion:#C4463A; --vermilion-hi:#E0685A;
+    --jade:#3FA08A;
+    --hanji:#EDE3CE; --hanji-dim:#C7B79A; --muted:#9C8B70;
+    --shadow:0 18px 50px rgba(0,0,0,.55);
+    --serif:'Noto Serif KR',serif; --sans:'Noto Sans KR',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:
+      radial-gradient(130% 90% at 50% -10%, #241a10 0%, #17120E 46%, #0F0B08 100%);
+    color:var(--hanji); font-family:var(--sans); font-weight:300;
+    line-height:1.7; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:860px; margin:0 auto; padding-left:18px; padding-right:18px; padding-block:40px 72px;}
+
+  /* ── 편액(현판) ── */
+  .hyeonpan{text-align:center; margin-bottom:8px;}
+  .hyeonpan .kanji{font-family:var(--serif); font-weight:900; font-size:15px; letter-spacing:.5em; color:var(--gold); padding-left:.5em;}
+  .hyeonpan h1{font-family:var(--serif); font-weight:900; font-size:clamp(30px,7vw,46px); margin:.28em 0 .1em; color:var(--hanji); letter-spacing:.04em; text-wrap:balance;}
+  .hyeonpan .sub{color:var(--muted); font-size:14px; letter-spacing:.02em;}
+  .rule{display:flex; align-items:center; justify-content:center; gap:14px; margin:22px 0 30px;}
+  .rule i{height:1px; width:84px; background:linear-gradient(90deg,transparent,var(--gold-dim));}
+  .rule i+i{background:linear-gradient(90deg,var(--gold-dim),transparent);}
+  .rule svg{opacity:.9}
+
+  /* ── 옥좌(왕의 하문) ── */
+  .throne{
+    background:linear-gradient(180deg,var(--panel2),var(--panel)); border:1px solid var(--line-strong);
+    border-radius:3px; padding:22px 20px 20px; box-shadow:var(--shadow); position:relative;
+  }
+  .throne::before{content:""; position:absolute; inset:6px; border:1px solid var(--line); border-radius:2px; pointer-events:none;}
+  .throne .who{display:flex; align-items:center; gap:11px; margin-bottom:14px;}
+  .throne .who .seal{width:42px;height:42px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:22px;
+    background:radial-gradient(circle at 35% 30%,#3a2a16,#1c140b); border:1px solid var(--gold-dim); box-shadow:0 0 0 3px rgba(196,70,58,.18);}
+  .throne .who b{font-family:var(--serif); font-weight:700; font-size:17px; color:var(--gold-hi); letter-spacing:.03em;}
+  .throne .who span{font-size:12.5px; color:var(--muted);}
+  label.q{display:block; font-family:var(--serif); font-size:15px; color:var(--hanji-dim); margin-bottom:9px;}
+  textarea{
+    width:100%; min-height:70px; resize:vertical; background:var(--ink2); color:var(--hanji);
+    border:1px solid var(--line); border-radius:3px; padding:13px 14px; font-family:var(--sans); font-size:16px; line-height:1.6;
+  }
+  textarea:focus{outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,162,75,.16);}
+  textarea::placeholder{color:#6f6250;}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin:13px 0 4px;}
+  .chip{font-family:var(--sans); font-size:13px; color:var(--hanji-dim); background:rgba(201,162,75,.07);
+    border:1px solid var(--line); border-radius:999px; padding:6px 13px; cursor:pointer; transition:.15s;}
+  .chip:hover{border-color:var(--gold); color:var(--gold-hi); background:rgba(201,162,75,.13);}
+  .convene{margin-top:16px; width:100%; cursor:pointer; font-family:var(--serif); font-weight:700; font-size:17px; letter-spacing:.14em;
+    padding:15px; border:none; border-radius:3px; color:#231703;
+    background:linear-gradient(135deg,var(--gold-hi),var(--gold) 55%,var(--gold-dim)); box-shadow:0 6px 22px rgba(201,162,75,.24);}
+  .convene:active{transform:translateY(1px)}
+  .convene:disabled{opacity:.55; cursor:default;}
+  #msg{min-height:18px; margin-top:11px; font-size:13.5px; color:var(--gold-hi); text-align:center; letter-spacing:.02em;}
+  #msg.warn{color:var(--vermilion-hi);}
+
+  /* ── 조정 명패(참석 참모) ── */
+  .court-row{display:flex; flex-wrap:wrap; gap:9px; justify-content:center; margin:26px 0 4px;}
+  .tablet{display:flex; align-items:center; gap:8px; background:var(--panel); border:1px solid var(--line); border-radius:2px; padding:7px 11px;}
+  .tablet .em{font-size:16px}
+  .tablet .nm{font-family:var(--serif); font-size:12.5px; color:var(--hanji-dim);}
+  .tablet .nm b{display:block; font-weight:700; font-size:13px; color:var(--gold); letter-spacing:.02em;}
+  .court-note{text-align:center; color:var(--muted); font-size:12px; margin-top:8px;}
+
+  /* ── 장계(회의 결과 두루마리) ── */
+  .memorial{margin-top:30px;}
+  .memorial-head{display:flex; align-items:center; gap:12px; margin-bottom:6px;}
+  .memorial-head i{height:1px; flex:1; background:var(--line);}
+  .memorial-head .lbl{font-family:var(--serif); font-weight:700; color:var(--gold); font-size:13px; letter-spacing:.4em; padding-left:.4em;}
+  .tag-ex{display:inline-block; font-size:11px; color:var(--vermilion-hi); border:1px solid rgba(196,70,58,.45);
+    border-radius:999px; padding:2px 10px; letter-spacing:.05em; margin-left:8px; vertical-align:middle;}
+  .scroll{background:
+      linear-gradient(180deg,var(--panel),var(--panel2)); border:1px solid var(--line-strong);
+      border-radius:3px; padding:24px 22px; box-shadow:var(--shadow); position:relative;}
+  .scroll::before{content:""; position:absolute; inset:7px; border:1px solid var(--line); border-radius:2px; pointer-events:none;}
+  .block{position:relative;}
+  .eyebrow{font-family:var(--serif); font-size:12px; letter-spacing:.34em; color:var(--gold-dim); padding-left:.34em; margin:22px 0 8px;}
+  .eyebrow:first-child{margin-top:0;}
+  .jeongse{font-family:var(--serif); font-size:18px; color:var(--hanji); line-height:1.6;}
+  .geupso{font-size:15.5px; color:var(--vermilion-hi); font-weight:500;}
+  /* 신하 발언 */
+  .say{display:flex; gap:12px; padding:13px 0; border-top:1px solid var(--line);}
+  .say:first-of-type{border-top:none;}
+  .say .av{width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:17px;
+    background:radial-gradient(circle at 35% 30%,#2f2413,#171009); border:1px solid var(--gold-dim);}
+  .say .body .role{font-family:var(--serif); font-weight:700; font-size:13.5px; color:var(--gold-hi); letter-spacing:.02em; margin-bottom:2px;}
+  .say .body .txt{font-size:15px; color:var(--hanji-dim); line-height:1.68;}
+  /* 집행안 */
+  .plan{background:var(--ink2); border:1px solid var(--line); border-left:3px solid var(--gold); border-radius:2px; padding:15px 16px; margin-top:6px;}
+  .plan dl{display:grid; grid-template-columns:auto 1fr; gap:7px 16px; margin:0;}
+  .plan dt{font-family:var(--serif); color:var(--gold); font-size:13px; white-space:nowrap;}
+  .plan dd{margin:0; color:var(--hanji); font-size:15px;}
+  .risk{font-size:14.5px; color:var(--hanji-dim);}
+  .risk::before{content:"⚠ "; color:var(--vermilion-hi);}
+  /* 재가 */
+  .decree{display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; align-items:center;}
+  .decree .stamp{margin-left:auto; font-family:var(--serif); font-weight:900; color:var(--vermilion-hi);
+    border:2px solid var(--vermilion); border-radius:6px; padding:5px 11px; font-size:14px; letter-spacing:.1em; transform:rotate(-6deg); opacity:.9;}
+  .btn2{cursor:pointer; font-family:var(--serif); font-size:14px; padding:11px 16px; border-radius:3px; letter-spacing:.05em;
+    background:transparent; border:1px solid var(--line-strong); color:var(--hanji);}
+  .btn2:hover{border-color:var(--gold); color:var(--gold-hi);}
+  .btn2.primary{background:rgba(196,70,58,.16); border-color:var(--vermilion); color:var(--vermilion-hi); font-weight:700;}
+  footer{text-align:center; color:var(--muted); font-size:12px; margin-top:40px; line-height:1.9;}
+  footer b{color:var(--gold-dim); font-weight:500;}
+  .spin{display:inline-block; animation:sp 1.1s linear infinite;}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion:reduce){.spin{animation:none}}
+</style>
+
+<div class="wrap">
+  <div class="hyeonpan">
+    <div class="kanji">御 前 會 議</div>
+    <h1>도현컴퍼니 어전회의</h1>
+    <div class="sub">왕이 의제를 내리면, 군사 제갈량과 참모진이 논의하여 집행안을 올린다</div>
+  </div>
+  <div class="rule"><i></i>
+    <svg width="18" height="18" viewBox="0 0 16 16" fill="#C9A24B"><path d="M8 0l1.6 6.4L16 8l-6.4 1.6L8 16l-1.6-6.4L0 8l6.4-1.6z"/></svg>
+  <i></i></div>
+
+  <!-- 옥좌: 왕의 하문 -->
+  <section class="throne">
+    <div class="who">
+      <div class="seal">👑</div>
+      <div><b>왕 · 대표 이보나</b><br><span>하문(下問)하시면 어전이 답하옵니다</span></div>
+    </div>
+    <label class="q" for="agenda">의제를 내려 주소서 — 무엇을 논의할까요?</label>
+    <textarea id="agenda" placeholder="예) 체험수업을 실제 등록으로 잇는 전환율을 어떻게 올릴까?"></textarea>
+    <div class="chips" id="chips"></div>
+    <button class="convene" id="convene">어전회의 소집 ⚑</button>
+    <div id="msg"></div>
+  </section>
+
+  <!-- 조정 명패 -->
+  <div class="court-row" id="court"></div>
+  <div class="court-note">군사가 정세를 아뢰고 → 관련 신하가 소견을 올리며 → 승상이 집행안으로 정리하옵니다</div>
+
+  <!-- 장계(결과) -->
+  <section class="memorial" id="memorial" hidden>
+    <div class="memorial-head"><span class="lbl">狀 啓</span><i></i><span id="mDate" style="color:var(--muted);font-size:12px"></span></div>
+    <div class="scroll" id="scroll"></div>
+    <div class="decree">
+      <button class="btn2 primary" id="approve">✔ 재가(裁可) — 이대로 실행</button>
+      <button class="btn2" id="save">장계 저장</button>
+      <button class="btn2" id="revise">재논의</button>
+      <span class="stamp" id="stamp" hidden>裁 可</span>
+    </div>
+  </section>
+
+  <footer>
+    軍師 제갈량 · 丞相 클부장 · 六部 신하 참모진<br>
+    <b>도현컴퍼니 — 시스템을 팔아 시간을 사는 회사</b>
+  </footer>
+</div>
+
+<script>
+// ── 조정 구성(참모진) ──
+const MINISTERS = [
+  {emoji:"🪶", role:"군사 제갈량", duty:"전략·계책"},
+  {emoji:"🎓", role:"승상 클부장", duty:"집행 총괄"},
+  {emoji:"🎹", role:"① 학원운영팀장", duty:"운영·자동화"},
+  {emoji:"📣", role:"② 마케팅팀장", duty:"유입·전환"},
+  {emoji:"💰", role:"③ 수익화팀장", duty:"재무·가격"},
+  {emoji:"📚", role:"④ 전자책팀장", duty:"지식상품"},
+  {emoji:"🔭", role:"⑥ 전략기획실장", duty:"시장·경쟁"},
+];
+const EMOJI = Object.fromEntries(MINISTERS.map(m=>[m.role, m.emoji]));
+const emojiFor = r => EMOJI[r] || (/제갈량|군사/.test(r)?"🪶":/승상|클부장/.test(r)?"🎓":"🗣️");
+
+// ── 회사 정세(참모가 근거로 삼는 사실) ──
+const BRIEF = `[도현컴퍼니 정세 브리핑]
+- 사업: 경기 용인 처인구 모현읍 '도현피아노' 학원 운영을 AI로 자동화하고, 검증된 자동화 시스템을 상품으로 판매. 원장 이보나.
+- 비전: "시간을 팔아 돈을 벌지 않고, 시스템을 팔아 시간을 사는 회사."
+- 세 수익기둥(천하삼분): ①학원 운영 자동화(현금흐름 근거지) ②자동화 시스템 판매(확장) ③지식상품(전자책·강의).
+- 교육 철학: 진도보다 기초. '스스로 악보를 읽는 아이'. 커리큘럼=악보읽기·리듬과박자·기본기·음악성. 초등 중심.
+- 1차 목표(확정): 순증 +6명/월 ≈ 월 306만원. BEP 약 15명 수준. 고정비에 원비 포함 책값 20만 반영.
+- 마케팅: 매일 블로그+스레드 초안 자동화, 주력 카페 '마더 모현'(4,146명)에 1호 발행. 학원 소개 카드(다크 럭셔리) 첨부.
+- 자산: 세인투 리워드 팩(플랫폼 프롬프트 60선·전자책 프롬프트 4권·AI도구 77종) 사내 도입.
+- 운영 OS: 린 스타트업. "솔루션이 아니라 문제와 사랑에 빠져라. 견인(traction) 우선. 완벽보다 물길."`;
+
+const PERSONAS = `[참석 참모]
+- 군사 제갈량: 세계 최고 전략가. 냉철한 직언, 큰 그림(천하삼분), 데이터·근거 기반, 실행가능한 계책. 아부 금지.
+- 승상 클부장: 총괄·집행. 이견을 조율해 하나의 집행안(누가·무엇을·언제·성공기준)으로 정리.
+- 팀장 신하들: 각자 현장 관점에서 소견. 서로 이견이 있으면 드러낸다. 근거 없으면 '확인 필요'.
+말투: 사극의 품격을 살짝(전하·아뢰옵니다) 얹되 내용은 21세기 실전. 각 발언 2~3문장, 구체적으로.`;
+
+const PRESETS = [
+  "체험수업 → 실제 등록 전환율 올리기",
+  "맘카페·블로그 유입을 상담으로 잇기",
+  "교습비 인상 없이 객단가 올리는 법",
+  "첫 전자책, 무엇부터 만들까",
+  "원생 이탈(퇴원) 막는 리텐션 전략",
+];
+
+// 처음에 보이는 '예시 어전회의' (페이지가 무엇을 하는지 첫 화면에 보여줌)
+const EXAMPLE = {
+  agenda:"체험수업을 실제 등록으로 잇는 전환율을 어떻게 올릴까?",
+  jeongse:"유입은 시작됐으나(맘카페 1호 발행) 체험→등록의 길목이 비어 있어, 새는 물을 먼저 막아야 할 국면입니다.",
+  geupso:"체험 직후 48시간의 '후속 공백'. 상담은 하되 등록을 청하는 마지막 한 걸음이 없습니다.",
+  speakers:[
+    {role:"군사 제갈량", say:"전하, 새 물을 더 붓기 전에 항아리의 금부터 메워야 하옵니다. 체험을 받은 학부모의 마음이 식기 전, 48시간 안에 '왜 지금 등록해야 하는가'를 손에 쥐여 주는 것이 이번 계책의 급소이옵니다."},
+    {role:"② 마케팅팀장", say:"체험 당일 저녁, 아이의 그날 성취를 한 줄과 사진으로 보내는 '체험 리포트' 문자를 표준화하겠사옵니다. 감동이 남아 있을 때 신뢰가 등록으로 이어지옵니다."},
+    {role:"③ 수익화팀장", say:"48시간 내 등록 시 교재비 면제 같은 '기한 있는 명분'을 더하면 값을 깎지 않고도 결정을 앞당길 수 있사옵니다. 할인이 아니라 마감이 움직이옵니다."},
+    {role:"① 학원운영팀장", say:"체험 후 상담 예약률·등록률을 노션에 기록해 어느 길목에서 새는지 눈으로 보게 하겠사옵니다."},
+  ],
+  plan:{ what:"'체험 후 48시간 등록 전환 키트' 가동 — ①당일 체험 리포트 문자 ②D+1 상담 리마인드 ③기한 있는 등록 명분(교재비 면제)", who:"② 마케팅(문안)·① 운영(발송·기록)·③ 수익화(명분 설계)", when:"이번 주 표준안 완성, 다음 체험생부터 적용", success:"체험→등록 전환율 및 D+2 상담예약률을 노션에 기록해 2주 뒤 비교" },
+  risk:"명분이 '할인'으로 흐르면 객단가가 무너집니다. 값이 아니라 '기한·혜택'으로만 설계할 것.",
+};
+
+const $ = s => document.querySelector(s);
+const el = (t,c,txt)=>{const e=document.createElement(t); if(c)e.className=c; if(txt!=null)e.textContent=txt; return e;};
+
+// 명패 렌더
+$("#court").append(...MINISTERS.map(m=>{
+  const t=el("div","tablet");
+  t.append(el("span","em",m.emoji));
+  const nm=el("div","nm"); nm.append(el("b",null,m.role)); nm.append(document.createTextNode(m.duty));
+  t.append(nm); return t;
+}));
+// 프리셋 칩
+$("#chips").append(...PRESETS.map(p=>{const c=el("span","chip",p); c.onclick=()=>{$("#agenda").value=p; saveDraft();}; return c;}));
+
+// 초안 기억(per-viewer 편의)
+function saveDraft(){ try{ localStorage.setItem("court.agenda",$("#agenda").value);}catch(e){} }
+try{ const d=localStorage.getItem("court.agenda"); if(d)$("#agenda").value=d; }catch(e){}
+$("#agenda").addEventListener("input", saveDraft);
+
+// 장계 렌더
+function renderMemorial(d, isExample){
+  const s=$("#scroll"); s.innerHTML="";
+  $("#mDate").textContent = new Date().toLocaleDateString("ko-KR",{year:"numeric",month:"long",day:"numeric"});
+  const head=$(".memorial-head .lbl"); head.innerHTML = "狀 啓"; if(isExample){const t=el("span","tag-ex","예시"); head.after(t.cloneNode(true));}
+  // 의제
+  s.append(el("div","eyebrow","의제 · 議題"));
+  s.append(el("div","jeongse", "「"+d.agenda+"」"));
+  // 정세
+  s.append(el("div","eyebrow","정세 · 情勢"));
+  s.append(el("div","jeongse",d.jeongse));
+  // 급소
+  s.append(el("div","eyebrow","급소 · 急所"));
+  s.append(el("div","geupso",d.geupso));
+  // 중론
+  s.append(el("div","eyebrow","중론 · 衆論"));
+  d.speakers.forEach(sp=>{
+    const row=el("div","say"); row.append(el("div","av",emojiFor(sp.role)));
+    const b=el("div","body"); b.append(el("div","role",sp.role)); b.append(el("div","txt",sp.say));
+    row.append(b); s.append(row);
+  });
+  // 집행안
+  s.append(el("div","eyebrow","집행안 · 執行案 (승상 클부장)"));
+  const plan=el("div","plan"); const dl=el("dl");
+  [["무엇을",d.plan.what],["누가",d.plan.who],["언제",d.plan.when],["성공기준",d.plan.success]].forEach(([k,v])=>{
+    dl.append(el("dt",null,k)); dl.append(el("dd",null,v));
+  });
+  plan.append(dl); s.append(plan);
+  // 리스크
+  s.append(el("div","eyebrow","경계 · 警戒"));
+  s.append(el("div","risk",d.risk));
+  $("#stamp").hidden=true;
+  $("#memorial").hidden=false;
+}
+renderMemorial(EXAMPLE, true); // 첫 화면: 예시 어전회의
+
+// 어전회의 소집 (실시간 참모 토론)
+let busy=false;
+async function convene(){
+  const agenda=$("#agenda").value.trim();
+  if(!agenda){ setMsg("의제를 먼저 내려 주소서.",true); $("#agenda").focus(); return; }
+  if(busy) return; busy=true;
+  const btn=$("#convene"); btn.disabled=true; const orig=btn.textContent;
+  btn.innerHTML='<span class="spin">⚙</span> 어전이 논의 중…';
+  setMsg("");
+  const sample = await (window.claude?.use ? claude.use("sample") : Promise.resolve(null));
+  if(!sample){
+    setMsg("이 화면에서는 실시간 논의를 열 수 없사옵니다. (위 예시로 흐름을 보실 수 있사옵니다)",true);
+    btn.disabled=false; btn.textContent=orig; busy=false; return;
+  }
+  const prompt = `너는 도현컴퍼니의 왕궁 어전회의를 진행하는 사회자다. 아래 정세와 참모 설정을 근거로, 왕이 내린 의제에 대해 어전회의를 열어라.\n\n${BRIEF}\n\n${PERSONAS}\n\n[왕의 의제]\n"${agenda}"\n\n반드시 아래 JSON 형식으로만 답하라(설명·마크다운 금지):\n{\n "jeongse":"정세 한 줄(냉정하게)",\n "geupso":"이번 국면의 급소 한 가지",\n "speakers":[{"role":"군사 제갈량","say":"2~3문장"},{"role":"관련 팀장(② 마케팅팀장 등 의제에 맞는 신하 2~3명)","say":"2~3문장, 서로 이견 드러내도 좋음"}],\n "plan":{"what":"집행안 내용","who":"담당(팀)","when":"시점","success":"성공기준(측정)"},\n "risk":"경계할 함정 한 가지"\n}\n\n규칙: 근거 없는 수치는 지어내지 말고 필요하면 '확인 필요'라 하라. 계책은 이번 주에 착수 가능한 구체적인 것으로. 도현피아노(용인 모현·초등 피아노) 맥락에 맞출 것. speakers는 3~4명으로.`;
+  try{
+    const d = await sample.json(prompt, {modelTier:"default", onText:({text})=>{ if(text) setMsg("군사가 정세를 살피는 중…"); }});
+    d.agenda = agenda;
+    if(!d.speakers) d.speakers=[];
+    renderMemorial(d, false);
+    lastPlan = d;
+    setMsg("어전회의가 열렸사옵니다. 재가하시면 실행으로 넘어가옵니다.");
+    $("#memorial").scrollIntoView({behavior:"smooth", block:"start"});
+  }catch(e){
+    const code=e&&e.code;
+    if(code==="rate_limited") setMsg("잠시 후 다시 소집해 주소서(요청이 많사옵니다).",true);
+    else if(code==="cancelled") setMsg("논의가 중단되었사옵니다.",true);
+    else setMsg("논의를 여는 데 실패했사옵니다. 다시 시도해 주소서.",true);
+  }finally{
+    btn.disabled=false; btn.textContent=orig; busy=false;
+  }
+}
+function setMsg(t,warn){ const m=$("#msg"); m.textContent=t; m.className=warn?"warn":""; }
+$("#convene").addEventListener("click", convene);
+
+// 재가 / 저장 / 재논의
+let lastPlan = EXAMPLE;
+$("#approve").addEventListener("click", ()=>{
+  $("#stamp").hidden=false; setMsg("재가(裁可)되었사옵니다. 승상 클부장에게 '이건 실행'이라 명하시면 즉시 집행하옵니다.");
+});
+$("#revise").addEventListener("click", ()=>{ $("#agenda").focus(); setMsg("의제를 다듬어 다시 소집해 주소서."); window.scrollTo({top:0,behavior:"smooth"}); });
+$("#save").addEventListener("click", async ()=>{
+  const dl = await (window.claude?.use ? claude.use("downloads") : Promise.resolve(null));
+  const d = lastPlan;
+  const md = `# 어전회의 장계 — ${new Date().toLocaleDateString("ko-KR")}\n\n## 의제\n${d.agenda}\n\n## 정세\n${d.jeongse}\n\n## 급소\n${d.geupso}\n\n## 중론\n`+
+    d.speakers.map(s=>`- **${s.role}:** ${s.say}`).join("\n")+
+    `\n\n## 집행안\n- 무엇을: ${d.plan.what}\n- 누가: ${d.plan.who}\n- 언제: ${d.plan.when}\n- 성공기준: ${d.plan.success}\n\n## 경계\n${d.risk}\n`;
+  if(!dl){ setMsg("이 화면에서는 저장을 지원하지 않사옵니다.",true); return; }
+  try{ await dl.save({filename:`어전회의_장계_${new Date().toISOString().slice(0,10)}.md`, data:md}); }
+  catch(e){ if(e&&e.code!=="declined") setMsg("저장에 실패했사옵니다.",true); }
+});
+</script>
