@@ -1,0 +1,147 @@
+// 앱 전역 데이터 모델. docs/PLAN.md §3 의 엔티티를 클라이언트 저장소용으로 단순화했다.
+
+export type Channel = "hall" | "baemin" | "coupang" | "yogiyo" | "naver";
+
+export const CHANNELS: { id: Channel; label: string; delivery: boolean }[] = [
+  { id: "hall", label: "홀/포장", delivery: false },
+  { id: "baemin", label: "배민", delivery: true },
+  { id: "coupang", label: "쿠팡이츠", delivery: true },
+  { id: "yogiyo", label: "요기요", delivery: true },
+  { id: "naver", label: "네이버주문", delivery: false },
+];
+
+export type Tone = "friendly" | "polite" | "witty";
+export type VatMode = "general" | "simplified" | "none";
+export type TaxType = "insurance" | "freelance" | "none";
+
+export interface Store {
+  name: string;
+  tone: Tone;
+  brandColor: string;
+  /** 상시 근로자 5인 이상 → 연장·야간 가산수당 적용 */
+  over5Employees: boolean;
+  vatMode: VatMode;
+  /** 채널별 중개+결제 수수료율 (0~1) */
+  channelFeeRate: Record<Channel, number>;
+  /** 배달 1건(메뉴 1개)당 추가 포장재비 */
+  deliveryPackagingCost: number;
+  targetCostRatio: { drink: number; dessert: number };
+}
+
+export interface LaborRule {
+  minWage: number;
+  /** 근로자 부담 4대보험 추정 공제율 */
+  employeeInsuranceRate: number;
+  /** 사업주 부담 4대보험 추정 비율 (손익의 인건비에 가산) */
+  employerInsuranceRate: number;
+  freelanceTaxRate: number;
+}
+
+export interface Ingredient {
+  id: string;
+  name: string;
+  /** 표시 단위: g, ml, 개 */
+  unit: string;
+  packSize: number;
+  packPrice: number;
+  updatedAt: string;
+}
+
+export interface IngredientPrice {
+  ingredientId: string;
+  packPrice: number;
+  date: string;
+}
+
+export type MenuCategory = "drink" | "dessert";
+
+export interface RecipeItem {
+  /** 재료 id 또는 서브레시피(메뉴 id, isSub) */
+  refId: string;
+  kind: "ingredient" | "sub";
+  qty: number;
+}
+
+export interface Menu {
+  id: string;
+  name: string;
+  category: MenuCategory;
+  price: number;
+  deliveryPrice: number;
+  /** 서브레시피(시럽·베이스 등): 판매 메뉴가 아니며, yieldQty 단위로 생산된다 */
+  isSub: boolean;
+  yieldQty: number;
+  yieldUnit: string;
+  recipe: RecipeItem[];
+  /** 레시피 로스율 (0~1) */
+  lossRate: number;
+  active: boolean;
+  description?: string;
+}
+
+export interface SaleLine {
+  id: string;
+  date: string; // YYYY-MM-DD
+  channel: Channel;
+  menuId: string;
+  qty: number;
+}
+
+export interface Employee {
+  id: string;
+  name: string;
+  hourlyWage: number;
+  weeklyContractHours: number;
+  taxType: TaxType;
+  healthCertExpiry?: string;
+  contractSigned: boolean;
+  pin: string;
+  active: boolean;
+}
+
+export interface Attendance {
+  id: string;
+  employeeId: string;
+  clockIn: string; // ISO
+  clockOut?: string; // ISO
+  /** 명시적 휴게시간(분). 비어 있으면 법정 최소 휴게시간 적용 */
+  breakMin?: number;
+}
+
+export interface Expense {
+  id: string;
+  month: string; // YYYY-MM
+  category: "fixed" | "variable";
+  name: string;
+  amount: number;
+}
+
+export interface RecurringExpense {
+  id: string;
+  name: string;
+  amount: number;
+}
+
+export type ReviewPlatform = "naver" | "baemin" | "coupang" | "etc";
+export type Sentiment = "positive" | "neutral" | "negative";
+
+export interface Review {
+  id: string;
+  platform: ReviewPlatform;
+  rating: number;
+  author?: string;
+  text: string;
+  createdAt: string;
+  sentiment: Sentiment;
+  menuIds: string[];
+  keywords: string[];
+  reply?: string;
+  status: "pending" | "drafted" | "posted";
+}
+
+export interface MenuActionLog {
+  id: string;
+  menuId: string;
+  action: string;
+  appliedAt: string; // YYYY-MM-DD
+}

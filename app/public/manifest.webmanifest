@@ -1,0 +1,9 @@
+{
+  "name": "카페댐 — 카페 운영 올인원",
+  "short_name": "카페댐",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf7f2",
+  "theme_color": "#6b4f3a",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

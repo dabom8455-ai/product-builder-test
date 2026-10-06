@@ -3,3 +3,4 @@
 
 ## 카페 운영 올인원 앱 (CafeDam)
 - 기획서: [docs/PLAN.md](docs/PLAN.md)
+- 앱: [app/](app/README.md) — `cd app && npm install && npm run dev`
