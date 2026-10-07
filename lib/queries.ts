@@ -172,7 +172,10 @@ export type Progress = {
 async function activeDates(childId: number, since: string): Promise<Set<string>> {
   const rows = await sql<{ d: string }>`
     SELECT DISTINCT to_char(log_date, 'YYYY-MM-DD') AS d
-      FROM daily_logs WHERE child_id = ${childId} AND log_date >= ${since}
+      FROM daily_logs
+     WHERE child_id = ${childId} AND log_date >= ${since}
+       AND task_key NOT IN (SELECT task_key FROM task_defs
+                             WHERE child_id = ${childId} AND parent_only = TRUE)
     UNION
     SELECT to_char(used_on, 'YYYY-MM-DD') AS d
       FROM pass_cards WHERE child_id = ${childId} AND used_on >= ${since}`;
@@ -205,6 +208,8 @@ export async function progressFor(childId: number, date = todayKST()): Promise<P
   const [{ c: weekChecks }] = await sql<{ c: string }>`
     SELECT count(*)::text AS c FROM daily_logs
      WHERE child_id = ${childId} AND log_date >= ${weekStart} AND log_date <= ${date}
+       AND task_key NOT IN (SELECT task_key FROM task_defs
+                             WHERE child_id = ${childId} AND parent_only = TRUE)
        AND (value_bool = TRUE OR value_num IS NOT NULL OR value_text <> '')`;
 
   const tasks = await tasksForDate(childId, date);
@@ -367,10 +372,17 @@ export async function usePassCard(childId: number, date = todayKST()) {
 
 /* ---------- 부모 ---------- */
 
+/**
+ * 3일 미입력 경보의 기준일. 부모가 주 1회 넣는 체중·키(parent_only)는 제외한다.
+ * 포함하면 아이가 6일째 멈춰 있어도 부모가 체중을 재는 날 경보가 꺼진다.
+ */
 export async function lastInputDate(childId: number): Promise<string | null> {
   const r = await sqlOne<{ d: string | null }>`
     SELECT to_char(max(log_date),'YYYY-MM-DD') AS d
-      FROM daily_logs WHERE child_id = ${childId}`;
+      FROM daily_logs
+     WHERE child_id = ${childId}
+       AND task_key NOT IN (SELECT task_key FROM task_defs
+                             WHERE child_id = ${childId} AND parent_only = TRUE)`;
   return r?.d ?? null;
 }
 
