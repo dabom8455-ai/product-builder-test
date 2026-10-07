@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark">
+<title>결석 원비 계산기</title>
+<style>
+/* 레이아웃: 왼쪽 입력 / 오른쪽 결과 (900px 미만에서는 위아래). 학원 색 #FF6B2B 하나만 강하게 쓰고 나머지는 따뜻한 중립색. */
+:root{
+  --bg:#FBF6F2; --card:#FFFFFF; --ink:#2B2019; --muted:#74655B; --line:#E7DBD2; --field:#FFFFFF;
+  --brand:#FF6B2B; --brand-ink:#B53A00; --on-brand:#2B1200; --soft:#FFE8DB;
+  --warn-bg:#FFF2CC; --warn-ink:#5E4300; --warn-line:#EBC45A;
+  --info-bg:#E6F0FF; --info-ink:#12366B; --info-line:#9DBDEE;
+  --ok-bg:#E1F4E5; --ok-ink:#16572A;
+  --c-class:#D9E8FF; --c-class-ink:#0C3A78;
+  --c-absent:#FFD3D3; --c-absent-ink:#85100F;
+  --c-ext:#FFE08A; --c-ext-ink:#5E4300;
+  --c-return:#C9EECF; --c-return-ink:#14562A;
+  --c-orig:#E4D8FF; --c-orig-ink:#47268F;
+  --c-new:#FF6B2B; --c-new-ink:#2B1200;
+  --c-hol:#E3E0DD; --c-hol-ink:#4F4741;
+  --font:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --radius:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#17120F; --card:#241C17; --ink:#F6EDE6; --muted:#B5A599; --line:#3B2F27; --field:#1B1511;
+    --brand-ink:#FF9560; --soft:#3A2418;
+    --warn-bg:#3D3010; --warn-ink:#FFE3A0; --warn-line:#7A6020;
+    --info-bg:#16284A; --info-ink:#C4D9FF; --info-line:#35568F;
+    --ok-bg:#163420; --ok-ink:#BFEBCB;
+    --c-class:#1E3A66; --c-class-ink:#CFE1FF;
+    --c-absent:#6A2020; --c-absent-ink:#FFD6D6;
+    --c-ext:#6B5316; --c-ext-ink:#FFE9AE;
+    --c-return:#1F5A33; --c-return-ink:#D2F4DA;
+    --c-orig:#3F2E73; --c-orig-ink:#E6DCFF;
+    --c-hol:#3A3430; --c-hol-ink:#D3C9C1;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#17120F; --card:#241C17; --ink:#F6EDE6; --muted:#B5A599; --line:#3B2F27; --field:#1B1511;
+  --brand-ink:#FF9560; --soft:#3A2418;
+  --warn-bg:#3D3010; --warn-ink:#FFE3A0; --warn-line:#7A6020;
+  --info-bg:#16284A; --info-ink:#C4D9FF; --info-line:#35568F;
+  --ok-bg:#163420; --ok-ink:#BFEBCB;
+  --c-class:#1E3A66; --c-class-ink:#CFE1FF;
+  --c-absent:#6A2020; --c-absent-ink:#FFD6D6;
+  --c-ext:#6B5316; --c-ext-ink:#FFE9AE;
+  --c-return:#1F5A33; --c-return-ink:#D2F4DA;
+  --c-orig:#3F2E73; --c-orig-ink:#E6DCFF;
+  --c-hol:#3A3430; --c-hol-ink:#D3C9C1;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:18px;line-height:1.5;margin:0;padding-inline:16px;padding-block:20px 110px;-webkit-text-size-adjust:100%}
+h1,h2,h3,p{margin:0}
+.app{max-width:1180px;margin-inline:auto;display:flex;flex-direction:column;gap:18px}
+header.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{width:46px;height:46px;border-radius:12px;background:var(--brand);color:var(--on-brand);display:grid;place-items:center;font-weight:900;font-size:24px}
+header.top h1{font-size:26px;line-height:1.2;text-wrap:balance}
+header.top p{color:var(--muted);font-size:15px}
+.spacer{flex:1}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;align-items:start}
+@media (min-width:900px){.layout{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}}
+.col{display:flex;flex-direction:column;gap:16px;min-width:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.card>h2{font-size:20px;display:flex;align-items:center;gap:8px}
+details.card>summary{cursor:pointer;font-size:20px;font-weight:700;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px}
+details.card>summary::-webkit-details-marker{display:none}
+details.card>summary::after{content:"펼치기";font-size:15px;font-weight:500;color:var(--muted)}
+details.card[open]>summary::after{content:"접기"}
+details.card>.inner{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+label,.lbl{font-weight:700;font-size:16px;display:block;margin-bottom:6px}
+.sub{color:var(--muted);font-size:15px;font-weight:400}
+input[type=text],input[type=date],input[type=number],textarea{width:100%;min-height:52px;font:inherit;font-size:18px;color:var(--ink);background:var(--field);border:2px solid var(--line);border-radius:12px;padding:10px 12px}
+textarea{min-height:110px;resize:vertical;line-height:1.5}
+input:focus,textarea:focus,button:focus-visible,summary:focus-visible{outline:3px solid var(--brand);outline-offset:1px}
+.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:420px){.row.keep2{grid-template-columns:minmax(0,1fr)}}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip,.seg button,.btn{font:inherit;font-weight:700;font-size:17px;min-height:50px;min-width:50px;padding:8px 14px;border-radius:12px;border:2px solid var(--line);background:var(--field);color:var(--ink);cursor:pointer}
+.chip[aria-pressed=true],.seg button[aria-pressed=true]{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.chip:disabled{opacity:.35;cursor:not-allowed;text-decoration:line-through}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg button{flex:1 1 auto}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.btn.ghost{background:transparent}
+.btn.small{min-height:44px;font-size:15px;padding:6px 12px}
+.period{border:2px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;background:var(--field)}
+.period .ph{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:end}
+.period .ph .arrow{font-size:24px;font-weight:900;color:var(--brand-ink);padding-bottom:10px}
+.period .big{font-size:20px;font-weight:900;margin-bottom:6px;display:block}
+.period .big small{display:block;font-size:14px;font-weight:500;color:var(--muted)}
+@media (max-width:520px){.period .ph{grid-template-columns:minmax(0,1fr)}.period .ph .arrow{display:none}}
+.pnote{color:var(--info-ink);background:var(--info-bg);border:1px solid var(--info-line);border-radius:10px;padding:8px 10px;font-size:15px}
+.pfoot{display:flex;justify-content:flex-end}
+.msgbox{padding:12px 14px;border-radius:12px;font-size:16px;line-height:1.5}
+.msgbox.warn{background:var(--warn-bg);color:var(--warn-ink);border:1px solid var(--warn-line)}
+.msgbox.info{background:var(--info-bg);color:var(--info-ink);border:1px solid var(--info-line)}
+.warns{display:flex;flex-direction:column;gap:8px}
+.hero{background:var(--soft);border-color:var(--brand);gap:6px}
+.hero .k{font-weight:700;color:var(--brand-ink);font-size:17px}
+.hero .v{font-size:42px;font-weight:900;line-height:1.15;letter-spacing:-.02em;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.hero .s{color:var(--muted);font-size:16px}
+.hero .tag{align-self:flex-start;background:var(--brand);color:var(--on-brand);font-weight:800;border-radius:999px;padding:2px 12px;font-size:15px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:520px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:2px}
+.stat .n{font-size:30px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1.2}
+.stat .l{font-size:14px;color:var(--muted);font-weight:700}
+.stat.em{border-color:var(--brand)}
+.mini{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.mini .stat .n{font-size:22px}
+.months{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.month h3{font-size:17px;margin-bottom:6px}
+.grid7{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+.dow{font-size:13px;text-align:center;color:var(--muted);font-weight:700}
+.cell{min-height:50px;border-radius:8px;padding:3px 2px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;font-variant-numeric:tabular-nums;font-size:15px;line-height:1.15}
+.cell b{font-weight:800}
+.cell i{font-style:normal;font-size:11px;font-weight:700;margin-top:1px;white-space:nowrap}
+.cell.out{opacity:.35}
+.cell.blank{visibility:hidden}
+.st-class{background:var(--c-class);color:var(--c-class-ink)}
+.st-absent{background:var(--c-absent);color:var(--c-absent-ink)}
+.st-ext{background:var(--c-ext);color:var(--c-ext-ink)}
+.st-return{background:var(--c-return);color:var(--c-return-ink)}
+.st-orig{background:var(--c-orig);color:var(--c-orig-ink);outline:2px solid var(--c-orig-ink);outline-offset:-2px}
+.st-new{background:var(--c-new);color:var(--c-new-ink)}
+.st-hol{background:repeating-linear-gradient(135deg,var(--c-hol),var(--c-hol) 5px,transparent 5px,transparent 8px);color:var(--c-hol-ink)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:14px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend em{width:18px;height:18px;border-radius:5px;display:inline-block}
+.msg{white-space:pre-wrap;background:var(--field);border:2px solid var(--line);border-radius:12px;padding:14px;font-size:17px;line-height:1.7;overflow-wrap:anywhere}
+.copied{color:var(--ok-ink);background:var(--ok-bg);border-radius:8px;padding:2px 10px;font-weight:700;font-size:15px}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--brand);color:var(--on-brand);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:10px;text-decoration:none;z-index:5;font-weight:800}
+.bar span{font-size:15px;font-weight:700}
+.bar strong{font-size:22px;flex:1;min-width:0;overflow-wrap:anywhere}
+@media (min-width:900px){.bar{display:none}body{padding-block:20px 40px}}
+@media (prefers-reduced-motion:no-preference){.chip,.btn,.seg button{transition:background .12s,border-color .12s}}
+</style>
+</head><body>
+
+<div class="app">
+  <header class="top">
+    <div class="logo" aria-hidden="true">♪</div>
+    <div>
+      <h1><span id="hName">도현피아노</span> 결석 원비 계산기</h1>
+      <p>쉰 기간을 넣으면 새 납부일이나 다음 달 원비가 바로 나와요.</p>
+    </div>
+    <div class="spacer"></div>
+    <button class="btn small ghost" id="btnSample" type="button">예시 불러오기</button>
+  </header>
+
+  <div class="layout">
+    <div class="col" id="inputs">
+      <details class="card" id="settingsBox">
+        <summary>1. 학원 설정</summary>
+        <div class="inner">
+          <div>
+            <label for="academyName">학원 이름</label>
+            <input type="text" id="academyName" autocomplete="off">
+          </div>
+          <div>
+            <span class="lbl">학원 문 여는 요일</span>
+            <div class="chips" id="openChips"></div>
+          </div>
+          <div>
+            <label for="holidays">학원 휴무일 <span class="sub">한 줄에 하나, 뒤에 메모 가능</span></label>
+            <textarea id="holidays" placeholder="2026-10-09 한글날&#10;2026-12-25 성탄절"></textarea>
+            <p class="sub" id="holNote"></p>
+          </div>
+          <p class="sub">휴무일은 원래 수업이 없는 날이라 결석으로 세지 않아요. 이 설정은 이 브라우저에 저장돼요.</p>
+        </div>
+      </details>
+
+      <section class="card">
+        <h2>2. 아이 정보</h2>
+        <div class="row">
+          <div>
+            <label for="childName">아이 이름</label>
+            <input type="text" id="childName" autocomplete="off" placeholder="예: 김서윤">
+          </div>
+          <div>
+            <label for="fee">한 달 원비 (원)</label>
+            <input type="text" id="fee" inputmode="numeric" autocomplete="off" placeholder="160000">
+          </div>
+        </div>
+        <div>
+          <span class="lbl">주 수업 횟수</span>
+          <div class="seg" id="weeklySeg">
+            <button type="button" data-weekly="1">주1회</button>
+            <button type="button" data-weekly="2">주2회</button>
+            <button type="button" data-weekly="3">주3회</button>
+            <button type="button" data-weekly="4">주4회</button>
+            <button type="button" data-weekly="5">주5회</button>
+          </div>
+        </div>
+        <div>
+          <span class="lbl">요일 방식</span>
+          <div class="seg">
+            <button type="button" data-set="mode" data-val="fixed">① 요일이 정해진 아이</button>
+            <button type="button" data-set="mode" data-val="any">② 아무 요일이나 오는 아이</button>
+          </div>
+        </div>
+        <div id="fixedBox">
+          <span class="lbl">수업 요일 <span class="sub">학원 문 닫는 요일은 고를 수 없어요</span></span>
+          <div class="chips" id="dayChips"></div>
+        </div>
+        <p class="sub" id="anyNote" hidden>한 주(월~일)에 학원 문 여는 날 중 앞에서부터 주 횟수만큼을 수업일로 봐요.</p>
+        <div class="row">
+          <div>
+            <label for="paid">이번 원비 낸 날</label>
+            <input type="date" id="paid">
+          </div>
+          <div>
+            <label for="next">다음 납부 예정일</label>
+            <input type="date" id="next">
+          </div>
+        </div>
+        <p class="sub">원비 낸 날을 넣으면 한 달 뒤 같은 날짜가 자동으로 들어가요. 없는 날짜면 그 달 마지막 날이에요.</p>
+      </section>
+
+      <section class="card">
+        <h2>3. 쉰 기간</h2>
+        <div id="periods" class="col"></div>
+        <button type="button" class="btn" id="addPeriod">+ 기간 추가</button>
+        <p class="sub">다시 등원한 날은 출석했으므로 결석에서 빼요. 같은 날이 겹쳐도 한 번만 세요.</p>
+        <div class="row">
+          <div>
+            <label for="makeup">이미 보강해 준 횟수</label>
+            <input type="number" id="makeup" min="0" inputmode="numeric" placeholder="0">
+          </div>
+          <div>
+            <label for="manual">빠진 횟수 직접 입력</label>
+            <input type="number" id="manual" min="0" inputmode="numeric" placeholder="비워 두면 자동">
+          </div>
+        </div>
+        <p class="sub">직접 입력하면 자동 계산 대신 그 숫자를 써요.</p>
+      </section>
+
+      <section class="card">
+        <h2>4. 처리 방법</h2>
+        <div class="seg">
+          <button type="button" data-set="method" data-val="postpone">① 납부일 연기</button>
+          <button type="button" data-set="method" data-val="deduct">② 다음 원비 차감</button>
+        </div>
+        <div id="deductBox" class="col" hidden>
+          <div>
+            <span class="lbl">1회 수업료 기준</span>
+            <div class="seg">
+              <button type="button" data-set="unit" data-val="actual">이번 달 실제 수업 횟수로 나누기</button>
+              <button type="button" data-set="unit" data-val="weekly">주 횟수 × 4주로 나누기</button>
+            </div>
+          </div>
+          <div>
+            <span class="lbl">차감액 끝자리</span>
+            <div class="seg">
+              <button type="button" data-set="round" data-val="100">100원 버림</button>
+              <button type="button" data-set="round" data-val="1000">1,000원 버림</button>
+              <button type="button" data-set="round" data-val="1">그대로</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="col" id="results">
+      <div class="warns" id="warns"></div>
+      <section class="card hero" id="hero"></section>
+      <div class="stats" id="stats"></div>
+      <div class="mini" id="mini" hidden></div>
+      <section class="card">
+        <h2>달력</h2>
+        <div class="months" id="months"></div>
+        <div class="legend" id="legend">
+          <span><em class="st-class"></em>수업일</span>
+          <span><em class="st-absent"></em>결석</span>
+          <span><em class="st-ext"></em>연장된 수업</span>
+          <span><em class="st-return"></em>다시 등원한 날</span>
+          <span><em class="st-orig"></em>원래 납부일</span>
+          <span><em class="st-new"></em>새 납부일</span>
+          <span><em class="st-hol"></em>휴무일</span>
+        </div>
+      </section>
+      <section class="card">
+        <h2>학부모 안내 문자</h2>
+        <div class="msg" id="msg"></div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button type="button" class="btn primary" id="btnCopy">문자 복사</button>
+          <span class="copied" id="copied" hidden>복사됐어요</span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+<a class="bar" href="#results" id="bar"><span id="barK">결과</span><strong id="barV">입력해 주세요</strong></a>
+
+<script>
+(function(){
+'use strict';
+var DAY=86400000, WD=['일','월','화','수','목','금','토'], ORDER=[1,2,3,4,5,6,0];
+var KEY='dohyun-absence-calc-v1';
+var DEFAULT_DAYS={1:[3],2:[2,4],3:[1,3,5],4:[1,2,3,4],5:[1,2,3,4,5]};
+
+/* ---------- 날짜 도구 (날짜를 1970-01-01부터 센 일수로 다룸) ---------- */
+function pad(n){return String(n).padStart(2,'0');}
+function parse(s){
+  var m=/^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec((s||'').trim());
+  if(!m) return null;
+  var y=+m[1],mo=+m[2],d=+m[3],t=Date.UTC(y,mo-1,d),dt=new Date(t);
+  if(dt.getUTCMonth()!==mo-1||dt.getUTCDate()!==d) return null;
+  return t/DAY;
+}
+function ymd(n){var dt=new Date(n*DAY);return {y:dt.getUTCFullYear(),m:dt.getUTCMonth()+1,d:dt.getUTCDate()};}
+function iso(n){var o=ymd(n);return o.y+'-'+pad(o.m)+'-'+pad(o.d);}
+function wd(n){return ((n+4)%7+7)%7;}
+function md(n){var o=ymd(n);return o.m+'월 '+o.d+'일';}
+function mdw(n){return md(n)+'('+WD[wd(n)]+')';}
+function addMonth(n){
+  var o=ymd(n),last=new Date(Date.UTC(o.y,o.m+1,0)).getUTCDate();
+  return Date.UTC(o.y,o.m,Math.min(o.d,last))/DAY;
+}
+function won(n){return Math.round(n).toLocaleString('ko-KR')+'원';}
+function toInt(s){var t=String(s==null?'':s).replace(/[^\d]/g,'');return t===''?null:parseInt(t,10);}
+
+/* ---------- 상태 ---------- */
+var settings={name:'도현피아노',open:[1,2,3,4,5],holidays:''};
+var hadSaved=false;
+try{var raw=localStorage.getItem(KEY);if(raw){hadSaved=true;var o=JSON.parse(raw);
+  if(o&&typeof o==='object'){
+    if(typeof o.name==='string')settings.name=o.name;
+    if(Array.isArray(o.open))settings.open=o.open.filter(function(x){return x>=0&&x<=6;});
+    if(typeof o.holidays==='string')settings.holidays=o.holidays;
+  }}}catch(e){}
+function saveSettings(){try{localStorage.setItem(KEY,JSON.stringify(settings));}catch(e){}}
+
+var child={name:'',fee:'',weekly:2,mode:'fixed',days:[2,4],paid:'',next:'',
+  periods:[{from:'',to:''}],makeup:'',manual:'',method:'postpone',unit:'actual',round:100};
+child.days=child.days.filter(function(d){return settings.open.indexOf(d)>=0;});
+
+/* ---------- 계산 ---------- */
+function parseHolidays(text){
+  var map=new Map(),bad=[];
+  String(text).split(/\r?\n/).forEach(function(line){
+    var t=line.trim(); if(!t) return;
+    var m=/^(\d{4})[-./](\d{1,2})[-./](\d{1,2})\s*(.*)$/.exec(t);
+    var n=m?parse(m[1]+'-'+m[2]+'-'+m[3]):null;
+    if(n==null){bad.push(t);return;}
+    map.set(n,m[4].trim());
+  });
+  return {map:map,bad:bad};
+}
+
+function compute(){
+  var open=new Set(settings.open), H=parseHolidays(settings.holidays), hol=H.map;
+  var N=child.weekly, daySet=new Set(child.days), fixed=child.mode==='fixed';
+  function isOpen(d){return open.has(wd(d))&&!hol.has(d);}
+  function monOf(d){return d-((wd(d)+6)%7);}
+  var weekCache=new Map();
+  function weekClass(mon){
+    if(!weekCache.has(mon)){
+      var arr=[];for(var k=0;k<7;k++){if(isOpen(mon+k))arr.push(mon+k);}
+      weekCache.set(mon,new Set(arr.slice(0,N)));
+    }
+    return weekCache.get(mon);
+  }
+  function isClass(d){return fixed?(isOpen(d)&&daySet.has(wd(d))):weekClass(monOf(d)).has(d);}
+
+  var R={warns:[],infos:[],rowNotes:[],badHol:H.bad,hol:hol,isClass:isClass,ready:false,notReady:''};
+
+  /* 쉰 기간 */
+  var periods=[];
+  child.periods.forEach(function(p,i){
+    var f=parse(p.from),t=parse(p.to),note='';
+    if(f==null&&t==null){R.rowNotes[i]='';return;}
+    if(f==null){note='처음 빠진 날을 넣어 주세요.';}
+    else if(t==null){note='아이가 돌아온 날 넣으면 계산돼요';}
+    else if(t<f){note='다시 등원한 날이 처음 빠진 날보다 앞이에요. 날짜를 확인해 주세요.';R.warns.push((i+1)+'번째 쉰 기간: 다시 등원한 날이 처음 빠진 날보다 앞이에요. 이 줄은 계산에서 뺐어요.');}
+    else if(t-f>1500){note='기간이 너무 길어요. 날짜를 확인해 주세요.';}
+    else{periods.push({f:f,e:t-1,t:t});}
+    R.rowNotes[i]=note;
+  });
+  periods.sort(function(a,b){return a.f-b.f;});
+  var merged=[];
+  periods.forEach(function(p){
+    var last=merged[merged.length-1];
+    if(last&&p.f<=last.e){last.e=Math.max(last.e,p.e);last.rets.push(p.t);}
+    else merged.push({f:p.f,e:p.e,rets:[p.t]});
+  });
+  var inRange=new Set();
+  merged.forEach(function(r){for(var d=r.f;d<=r.e;d++){if(isOpen(d))inRange.add(d);}});
+  var absentDays=[];
+  if(fixed){inRange.forEach(function(d){if(daySet.has(wd(d)))absentDays.push(d);});}
+  else{
+    var wk=new Map();
+    Array.from(inRange).sort(function(a,b){return a-b;}).forEach(function(d){
+      var k=monOf(d);if(!wk.has(k))wk.set(k,[]);wk.get(k).push(d);
+    });
+    wk.forEach(function(a){a.slice(0,N).forEach(function(d){absentDays.push(d);});});
+  }
+  absentDays.sort(function(a,b){return a-b;});
+  var paid=parse(child.paid),next=parse(child.next);
+  var afterNext=0;
+  if(child.method==='deduct'&&next!=null){
+    afterNext=absentDays.filter(function(d){return d>=next;}).length;
+    absentDays=absentDays.filter(function(d){return d<next;});
+  }
+  var autoAbsent=absentDays.length;
+  var manual=toInt(child.manual);
+  var useManual=String(child.manual).trim()!==''&&manual!=null;
+  var absent=useManual?manual:autoAbsent;
+  var makeup=toInt(child.makeup)||0;
+  var settle=Math.max(0,absent-makeup);
+  Object.assign(R,{absent:absent,makeup:makeup,settle:settle,useManual:useManual,autoAbsent:autoAbsent});
+
+  /* 안내 문구 */
+  if(paid!=null&&next!=null&&next<paid) R.warns.push('다음 납부일이 원비 낸 날보다 앞이에요. 날짜를 확인해 주세요.');
+  if(fixed&&child.days.length!==N) R.warns.push('주 '+N+'회인데 고른 요일이 '+child.days.length+'개예요. 주 횟수와 요일 개수를 맞춰 주세요.');
+  if(makeup>absent) R.warns.push('보강 횟수('+makeup+'회)가 빠진 횟수('+absent+'회)보다 많아요. 정산할 횟수는 0회로 계산했어요.');
+  if(child.method==='deduct'&&next!=null&&merged.some(function(r){return r.e>=next;})) R.warns.push('쉰 기간이 다음 납부일 이후까지 이어져요. 다음 납부일 전까지의 수업만 차감했어요.'+(afterNext?' 납부일 이후 '+afterNext+'회는 다음 정산에서 따로 계산해 주세요.':''));
+
+  /* 준비 확인 */
+  if(settings.open.length===0){R.notReady='학원 설정에서 문 여는 요일을 골라 주세요.';return R;}
+  if(fixed&&child.days.length===0){R.notReady='수업 요일을 골라 주세요.';return R;}
+  if(paid==null||next==null){R.notReady='원비 낸 날과 다음 납부 예정일을 넣어 주세요.';return R;}
+
+  /* 이번 달 수업 횟수 */
+  var monthCount=0;
+  if(next>paid&&next-paid<800){for(var d=paid;d<next;d++){if(isClass(d))monthCount++;}}
+  R.monthCount=monthCount;R.paid=paid;R.next=next;
+
+  /* 결석·등원 표시용 */
+  var absentSet=new Set(absentDays),retSet=new Set();
+  merged.forEach(function(r){r.rets.forEach(function(t){retSet.add(t);});});
+  R.absentSet=absentSet;R.retSet=retSet;
+
+  /* 문자용 기간 */
+  R.spans=[];
+  merged.forEach(function(r){
+    var ds=absentDays.filter(function(d){return d>=r.f&&d<=r.e;});
+    if(ds.length)R.spans.push([ds[0],ds[ds.length-1]]);
+  });
+
+  /* 납부일 연기 */
+  var newDue=next,ext=new Set();
+  if(settle>0){
+    var passed=0,found=false;
+    for(var x=next,guard=0;guard<6000;x++,guard++){
+      if(isClass(x)){
+        if(passed===settle){newDue=x;found=true;break;}
+        passed++;ext.add(x);
+      }
+    }
+    if(!found){R.notReady='수업일을 찾지 못했어요. 요일 설정을 확인해 주세요.';return R;}
+  }
+  R.newDue=newDue;R.ext=ext;
+
+  /* 원비 차감 */
+  var fee=toInt(child.fee);R.fee=fee;
+  if(child.method==='deduct'){
+    var base=child.unit==='actual'?monthCount:N*4;R.base=base;
+    if(fee==null){R.notReady='한 달 원비를 넣어 주세요.';return R;}
+    if(base<=0){R.notReady='이번 달 수업 횟수가 0회라 1회 수업료를 계산할 수 없어요. 날짜를 확인해 주세요.';return R;}
+    R.unitPrice=fee/base;
+    R.deduct=Math.floor(fee*settle/base/child.round+1e-9)*child.round;
+    R.nextFee=Math.max(0,fee-R.deduct);
+  }
+  R.endDay=child.method==='postpone'?newDue:next;
+  R.ready=true;
+  return R;
+}
+
+/* ---------- 문자 ---------- */
+function buildMessage(R){
+  var acad=settings.name||'학원',nm=child.name.trim()||'○○';
+  var head='안녕하세요, '+acad+'입니다. ';
+  var tail=' 늘 믿고 맡겨 주셔서 감사합니다.';
+  var range='';
+  if(R.spans.length){range=R.spans.map(function(s){return mdw(s[0])+'부터 '+mdw(s[1])+'까지';}).join(', ')+' ';}
+  var postpone=child.method==='postpone';
+  if(R.settle===0){
+    var why=R.absent===0?'빠진 수업이 없어':('빠진 수업 '+R.absent+'회를 보강 '+R.makeup+'회로 모두 채워 주셔서');
+    if(postpone) return head+nm+' 학생은 '+range+why+' 교육비 납부일과 금액 모두 변동 없습니다. 다음 교육비 납부일은 '+mdw(R.next)+'입니다.'+tail;
+    return head+nm+' 학생은 '+range+why+' 교육비 납부일과 금액 모두 변동 없습니다. '+mdw(R.next)+' 납부하실 교육비는 '+(R.fee!=null?won(R.fee):'○○원')+'입니다.'+tail;
+  }
+  var part=R.makeup>0?('빠진 수업 '+R.absent+'회 중 보강 '+R.makeup+'회를 제외한 '+R.settle+'회'):('빠진 수업 '+R.settle+'회');
+  var lead=head+nm+' 학생이 '+range+'수업에 참여하지 못해 '+part;
+  if(postpone) return lead+'만큼 교육비 납부일을 연기해 드렸습니다. 다음 교육비 납부일은 '+mdw(R.newDue)+'입니다.'+tail;
+  return lead+'분('+won(R.deduct)+')을 다음 교육비에서 차감해 드렸습니다. '+mdw(R.next)+' 납부하실 교육비는 '+won(R.nextFee)+'입니다.'+tail;
+}
+
+/* ---------- 달력 ---------- */
+function calendarHTML(R){
+  var s=ymd(R.paid),e=ymd(R.endDay);
+  if(R.endDay<R.paid) return '<p class="sub">날짜를 확인하면 달력이 나타나요.</p>';
+  var html='',y=s.y,m=s.m,count=0;
+  while((y<e.y||(y===e.y&&m<=e.m))&&count<48){
+    var first=Date.UTC(y,m-1,1)/DAY,days=new Date(Date.UTC(y,m,0)).getUTCDate();
+    var lead=(wd(first)+6)%7;
+    html+='<div class="month"><h3>'+y+'년 '+m+'월</h3><div class="grid7">';
+    ['월','화','수','목','금','토','일'].forEach(function(w){html+='<div class="dow">'+w+'</div>';});
+    for(var b=0;b<lead;b++)html+='<div class="cell blank"></div>';
+    for(var dd=1;dd<=days;dd++){
+      var d=first+dd-1,inside=d>=R.paid&&d<=R.endDay,cls='',tag='',title='';
+      if(inside){
+        var postpone=child.method==='postpone';
+        if(d===R.endDay){cls='st-new';tag=(postpone&&R.settle>0)?'새 납부':'납부';}
+        else if(d===R.next&&postpone){cls='st-orig';tag='원래납부';}
+        else if(R.retSet.has(d)){cls='st-return';tag='등원';}
+        else if(R.absentSet.has(d)){cls='st-absent';tag='결석';}
+        else if(R.hol.has(d)){cls='st-hol';tag='휴무';title=R.hol.get(d);}
+        else if(R.ext.has(d)){cls='st-ext';tag='연장';}
+        else if(R.isClass(d)){cls='st-class';tag='수업';}
+      }
+      html+='<div class="cell '+cls+(inside?'':' out')+'" title="'+title.replace(/"/g,'&quot;')+'"><b>'+dd+'</b>'+(tag?'<i>'+tag+'</i>':'')+'</div>';
+    }
+    html+='</div></div>';
+    m++;if(m>12){m=1;y++;}count++;
+  }
+  return html;
+}
+
+/* ---------- 화면 ---------- */
+function $(id){return document.getElementById(id);}
+var currentMsg='';
+
+function render(){
+  var R=compute();
+  $('hName').textContent=settings.name||'학원';
+  document.title=(settings.name||'학원')+' 결석 원비 계산기';
+  /* 버튼 상태 */
+  document.querySelectorAll('[data-set]').forEach(function(b){
+    b.setAttribute('aria-pressed',String(String(child[b.dataset.set])===b.dataset.val));
+  });
+  document.querySelectorAll('[data-weekly]').forEach(function(b){
+    b.setAttribute('aria-pressed',String(child.weekly===+b.dataset.weekly));
+  });
+  $('fixedBox').hidden=child.mode!=='fixed';
+  $('anyNote').hidden=child.mode!=='any';
+  $('deductBox').hidden=child.method!=='deduct';
+  $('holNote').textContent=R.badHol.length?('읽지 못한 줄: '+R.badHol.join(' / ')+' (2026-10-09 형식으로 써 주세요)'):'';
+  /* 쉰 기간 안내 */
+  document.querySelectorAll('.pnote').forEach(function(el){
+    var i=+el.dataset.i,t=R.rowNotes[i]||'';el.textContent=t;el.hidden=!t;
+  });
+  /* 경고·안내 */
+  var w='';
+  R.warns.forEach(function(t){w+='<div class="msgbox warn">⚠ '+esc(t)+'</div>';});
+  if(R.useManual)w+='<div class="msgbox info">빠진 횟수를 직접 입력한 '+R.absent+'회로 계산하고 있어요. (자동 계산은 '+R.autoAbsent+'회)</div>';
+  $('warns').innerHTML=w;
+
+  var hero=$('hero'),stats=$('stats'),mini=$('mini');
+  if(!R.ready){
+    hero.innerHTML='<div class="k">결과</div><div class="v" style="font-size:26px">'+esc(R.notReady)+'</div><div class="s">입력하면 바로바로 계산돼요.</div>';
+    stats.innerHTML='';mini.hidden=true;
+    $('months').innerHTML='<p class="sub">입력하면 달력이 나타나요.</p>';
+    currentMsg='';$('msg').textContent='입력하면 안내 문자가 만들어져요.';
+    $('barK').textContent='결과';$('barV').textContent=R.notReady;
+    return;
+  }
+  var postpone=child.method==='postpone',main,sub='',k,tag='';
+  if(postpone){
+    k='새 납부일';main=mdw(R.newDue);
+    sub=ymd(R.newDue).y+'년 · 이후 매월 '+ymd(R.newDue).d+'일 기준으로 안내하세요.';
+    if(R.settle===0){tag='변동 없습니다';sub='원래 납부일 그대로예요. '+sub;}
+    else sub='원래 납부일 '+mdw(R.next)+' → '+sub;
+    $('barK').textContent='새 납부일';$('barV').textContent=main;
+  }else{
+    k='다음 달 원비';main=R.fee==null?'-':won(R.nextFee);
+    sub=mdw(R.next)+' 납부 · 원비 '+won(R.fee)+' − 차감 '+won(R.deduct);
+    if(R.settle===0)tag='변동 없습니다';
+    $('barK').textContent='다음 달 원비';$('barV').textContent=main;
+  }
+  hero.innerHTML='<div class="k">'+k+'</div><div class="v">'+esc(main)+'</div>'+(tag?'<div class="tag">'+tag+'</div>':'')+'<div class="s">'+esc(sub)+'</div>';
+  stats.innerHTML=
+    stat('빠진 수업',R.absent+'회')+stat('보강 완료',R.makeup+'회')+stat('정산할 수업',R.settle+'회',true)+stat('이번 달 수업',R.monthCount+'회');
+  if(!postpone){
+    mini.hidden=false;
+    mini.innerHTML=stat('1회 수업료',won(R.unitPrice)+' ('+(child.unit==='actual'?R.monthCount+'회':(child.weekly*4)+'회')+' 기준)')+stat('차감액',won(R.deduct),true);
+  }else mini.hidden=true;
+  $('months').innerHTML=calendarHTML(R);
+  currentMsg=buildMessage(R);$('msg').textContent=currentMsg;
+}
+function stat(l,n,em){return '<div class="stat'+(em?' em':'')+'"><span class="l">'+l+'</span><span class="n">'+esc(n)+'</span></div>';}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+/* ---------- 입력 영역 그리기 ---------- */
+function renderOpenChips(){
+  var h='';
+  ORDER.forEach(function(d){h+='<button type="button" class="chip" data-open="'+d+'" aria-pressed="'+(settings.open.indexOf(d)>=0)+'">'+WD[d]+'</button>';});
+  $('openChips').innerHTML=h;
+}
+function renderDayChips(){
+  var h='';
+  ORDER.forEach(function(d){
+    var closed=settings.open.indexOf(d)<0;
+    h+='<button type="button" class="chip" data-day="'+d+'"'+(closed?' disabled':'')+' aria-pressed="'+(child.days.indexOf(d)>=0)+'">'+WD[d]+'</button>';
+  });
+  $('dayChips').innerHTML=h;
+}
+function renderPeriods(){
+  var h='';
+  child.periods.forEach(function(p,i){
+    h+='<div class="period" data-i="'+i+'">'+
+      '<div class="ph">'+
+        '<div><span class="big">처음 빠진 날<small>이날부터 결석</small></span><input type="date" data-pf="from" value="'+p.from+'" aria-label="처음 빠진 날"></div>'+
+        '<div class="arrow" aria-hidden="true">→</div>'+
+        '<div><span class="big">다시 등원한 날<small>이날은 출석</small></span><input type="date" data-pf="to" value="'+p.to+'" aria-label="다시 등원한 날"></div>'+
+      '</div>'+
+      '<div class="pnote" data-i="'+i+'" hidden></div>'+
+      (child.periods.length>1?'<div class="pfoot"><button type="button" class="btn small ghost" data-del="'+i+'">이 줄 삭제</button></div>':'')+
+    '</div>';
+  });
+  $('periods').innerHTML=h;
+}
+function syncForm(){
+  $('academyName').value=settings.name;
+  $('holidays').value=settings.holidays;
+  $('childName').value=child.name;
+  $('fee').value=child.fee;
+  $('paid').value=child.paid;
+  $('next').value=child.next;
+  $('makeup').value=child.makeup;
+  $('manual').value=child.manual;
+  renderOpenChips();renderDayChips();renderPeriods();
+}
+function defaultDays(n){return DEFAULT_DAYS[n].filter(function(d){return settings.open.indexOf(d)>=0;});}
+
+/* ---------- 이벤트 ---------- */
+document.addEventListener('click',function(ev){
+  var t=ev.target.closest('button');if(!t)return;
+  if(t.dataset.open!==undefined){
+    var d=+t.dataset.open,i=settings.open.indexOf(d);
+    if(i>=0)settings.open.splice(i,1);else settings.open.push(d);
+    child.days=child.days.filter(function(x){return settings.open.indexOf(x)>=0;});
+    saveSettings();renderOpenChips();renderDayChips();render();return;
+  }
+  if(t.dataset.day!==undefined){
+    var dd=+t.dataset.day,j=child.days.indexOf(dd);
+    if(j>=0)child.days.splice(j,1);else child.days.push(dd);
+    renderDayChips();render();return;
+  }
+  if(t.dataset.weekly!==undefined){
+    child.weekly=+t.dataset.weekly;
+    if(child.mode==='fixed'){child.days=defaultDays(child.weekly);renderDayChips();}
+    render();return;
+  }
+  if(t.dataset.set){
+    var key=t.dataset.set,val=t.dataset.val;
+    child[key]=(key==='round')?+val:val;
+    if(key==='mode'&&val==='fixed'&&child.days.length===0){child.days=defaultDays(child.weekly);renderDayChips();}
+    render();return;
+  }
+  if(t.dataset.del!==undefined){child.periods.splice(+t.dataset.del,1);renderPeriods();render();return;}
+  if(t.id==='addPeriod'){child.periods.push({from:'',to:''});renderPeriods();render();return;}
+  if(t.id==='btnCopy'){copyMsg();return;}
+  if(t.id==='btnSample'){loadSample(false);return;}
+});
+document.addEventListener('input',function(ev){
+  var t=ev.target,id=t.id;
+  if(t.dataset&&t.dataset.pf){var i=+t.closest('.period').dataset.i;child.periods[i][t.dataset.pf]=t.value;render();return;}
+  if(id==='academyName'){settings.name=t.value;saveSettings();render();}
+  else if(id==='holidays'){settings.holidays=t.value;saveSettings();render();}
+  else if(id==='childName'){child.name=t.value;render();}
+  else if(id==='fee'){child.fee=t.value;render();}
+  else if(id==='paid'){
+    child.paid=t.value;
+    var p=parse(t.value);
+    if(p!=null){child.next=iso(addMonth(p));$('next').value=child.next;}
+    render();
+  }
+  else if(id==='next'){child.next=t.value;render();}
+  else if(id==='makeup'){child.makeup=t.value;render();}
+  else if(id==='manual'){child.manual=t.value;render();}
+});
+function copyMsg(){
+  if(!currentMsg)return;
+  var done=function(){var c=$('copied');c.hidden=false;setTimeout(function(){c.hidden=true;},1800);};
+  var fallback=function(){
+    var ta=document.createElement('textarea');ta.value=currentMsg;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');done();}catch(e){}
+    document.body.removeChild(ta);
+  };
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(currentMsg).then(done,fallback);}
+  else fallback();
+}
+function loadSample(initial){
+  if(!(initial&&hadSaved)){
+    settings.open=[1,2,3,4,5];
+    if(settings.holidays.indexOf('2026-10-09')<0)settings.holidays=(settings.holidays.trim()?settings.holidays.trim()+'\n':'')+'2026-10-09 한글날';
+    saveSettings();
+  }
+  child={name:'서윤',fee:'160000',weekly:5,mode:'fixed',days:[1,2,3,4,5],paid:'2026-10-06',next:'2026-11-06',
+    periods:[{from:'2026-10-12',to:'2026-10-26'}],makeup:'1',manual:'',method:'postpone',unit:'actual',round:100};
+  syncForm();render();
+}
+
+/* 처음 열면 예시 값으로 보여 줌 (학원 설정은 저장된 값을 존중) */
+syncForm();
+loadSample(true);
+window.__calc={compute:compute,child:function(){return child;},settings:function(){return settings;}};
+})();
+</script>
+
+</body></html>
