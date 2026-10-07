@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+:root {
+  --accent: #2563eb;
+  --accent-soft: #dbeafe;
+  --accent-ink: #1e3a8a;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: #f8fafc;
+  color: #0f172a;
+  overscroll-behavior-y: none;
+}
+
+/* 아이 손가락 기준. 모든 탭 영역은 최소 48px, 쭈2(lg)는 56px 이상 */
+.tap {
+  min-height: 48px;
+}
+.tap-lg {
+  min-height: 60px;
+}
+
+/* 체크했을 때 눌린 느낌만 주고 애니메이션은 짧게 */
+button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}

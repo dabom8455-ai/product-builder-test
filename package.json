@@ -1,0 +1,34 @@
+{
+  "name": "juju-manager",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "db:push": "tsx db/push.ts",
+    "db:seed": "tsx db/seed.ts",
+    "db:reset": "tsx db/push.ts --reset && tsx db/seed.ts",
+    "test": "node --import tsx --test test/*.test.ts"
+  },
+  "dependencies": {
+    "next": "15.5.4",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "pg": "^8.13.1",
+    "jose": "^5.9.6"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "@types/node": "^22.10.1",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.2",
+    "@types/pg": "^8.11.10",
+    "tailwindcss": "^4.0.0",
+    "@tailwindcss/postcss": "^4.0.0",
+    "tsx": "^4.19.2",
+    "dotenv": "^16.4.7"
+  }
+}
