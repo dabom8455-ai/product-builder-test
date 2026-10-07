@@ -323,6 +323,7 @@ LaborRule        (id, year, min_wage, ... )                            -- 법 �
 | 2 근태·급여 | ✅ | 매장 태블릿 PIN 출퇴근(GPS/Wi-Fi 확인은 백엔드 연동 후), 주휴·가산·명세서 |
 | 3 리뷰·메뉴 분석 | ✅ | 붙여넣기 방식 답글(Claude API 선택), 매트릭스·원클릭 조정·효과 추적 |
 | 4 홍보 포스터 | ✅ | 캔버스 렌더링 3스타일×3사이즈, Puzzle 메뉴 추천 연결 |
-| 5 연동 확장 | ⏳ | 백엔드(멀티 기기·로그인), POS API, 배달앱 정산 자동 수집 |
+| 배포 | ✅ | claude.ai 아티팩트: https://claude.ai/artifact/DztAEwpTGpFLEe1RW91g2k — 데이터 claude.ai 저장(여러 기기 공유), AI는 사용자 Claude 계정 |
+| 5 연동 확장 | ⏳ | 알바 개인 폰 출퇴근, POS API, 배달앱 정산 자동 수집 |
 
 **설계 변경**: 계획의 Supabase 백엔드는 계정·비용이 필요해 MVP에서는 브라우저 저장소로 대체했다. 저장 로직은 `app/src/lib/store.ts` 한 곳에 모아 두어 백엔드 전환 시 이 파일만 교체하면 된다.

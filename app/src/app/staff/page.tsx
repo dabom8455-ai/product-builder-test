@@ -8,6 +8,8 @@ import { calcShift, type PayrollResult } from "@/lib/domain/payroll";
 import { addMonths, DOW_LABEL, dayOfWeek, nowLocal, todayLocal } from "@/lib/dates";
 import { Badge, Button, Card, Empty, Field, NumInput, PageHeader, Segmented, Stat, ic, inputCls } from "@/components/ui";
 import { num, won } from "@/lib/format";
+import { platform } from "@/lib/platform";
+import { askConfirm } from "@/components/Confirm";
 
 type Tab = "clock" | "records" | "payroll" | "people";
 const TAX: Record<TaxType, string> = { insurance: "4대보험", freelance: "3.3%", none: "공제 없음" };
@@ -201,7 +203,7 @@ function Records() {
                     </td>
                     <td className="text-right">{s ? `${num(s.workMin / 60, 2)}h` : <Badge tone="warn">근무 중</Badge>}</td>
                     <td className="pl-2 text-right">
-                      <button className="text-ink-2 hover:text-bad" aria-label="삭제" onClick={() => confirm("기록을 삭제할까요?") && remove("attendance", a.id)}>
+                      <button className="text-ink-2 hover:text-bad" aria-label="삭제" onClick={async () => (await askConfirm("근무 기록을 삭제할까요?", { confirmLabel: "삭제", danger: true })) && remove("attendance", a.id)}>
                         ✕
                       </button>
                     </td>
@@ -315,9 +317,11 @@ function Payslip({ employee, p, onClose }: { employee: Employee; p: PayrollResul
       title={`임금명세서 — ${employee.name} (${p.month})`}
       right={
         <div className="no-print flex gap-2">
-          <Button size="sm" onClick={() => window.print()}>
-            인쇄 / PDF
-          </Button>
+          {platform().canPrint && (
+            <Button size="sm" onClick={() => window.print()}>
+              인쇄 / PDF
+            </Button>
+          )}
           <Button size="sm" variant="ghost" onClick={onClose}>
             닫기
           </Button>
@@ -427,9 +431,10 @@ function People() {
               <Button
                 size="sm"
                 variant="danger"
-                onClick={() => {
+                onClick={async () => {
                   const n = attendance.filter((a: Attendance) => a.employeeId === e.id).length;
-                  if (confirm(n ? `근무 기록 ${n}건이 있습니다. 삭제 대신 ‘퇴사’ 처리를 권장합니다. 그래도 삭제할까요?` : "삭제할까요?")) remove("employees", e.id);
+                  const msg = n ? `근무 기록 ${n}건이 있습니다. 삭제 대신 ‘퇴사’ 처리를 권장합니다. 그래도 삭제할까요?` : `${e.name} 직원을 삭제할까요?`;
+                  if (await askConfirm(msg, { confirmLabel: "삭제", danger: true })) remove("employees", e.id);
                 }}
               >
                 삭제

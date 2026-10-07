@@ -4,6 +4,10 @@ import { useState } from "react";
 import { useApp, type AppData } from "@/lib/store";
 import { CHANNELS, type Tone, type VatMode } from "@/lib/types";
 import { Button, Card, Field, NumInput, PageHeader, Segmented, inputCls } from "@/components/ui";
+import { platform } from "@/lib/platform";
+import { askConfirm } from "@/components/Confirm";
+import { usePersistStatus } from "@/lib/persistence";
+import { todayLocal } from "@/lib/dates";
 
 const pctIn = (r: number) => Math.round(r * 10000) / 100;
 
@@ -111,8 +115,9 @@ function DataCard() {
   const resetEmpty = useApp((s) => s.resetEmpty);
   const importAll = useApp((s) => s.importAll);
   const [msg, setMsg] = useState<string | null>(null);
+  const label = usePersistStatus((s) => s.label);
 
-  const exportJson = () => {
+  const exportJson = async () => {
     const s = useApp.getState();
     const data: AppData = {
       store: s.store,
@@ -129,11 +134,7 @@ function DataCard() {
       actions: s.actions,
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `cafedam-backup-${new Date().toISOString().slice(0, 10)}.json`;
-    a.click();
-    URL.revokeObjectURL(a.href);
+    if (await platform().saveFile(`cafedam-backup-${todayLocal()}.json`, blob)) setMsg("백업 파일을 저장했습니다.");
   };
 
   const importJson = async (f: File) => {
@@ -149,17 +150,19 @@ function DataCard() {
 
   return (
     <Card title="데이터">
-      <p className="mb-3 text-sm text-ink-2">지금은 데이터가 이 기기의 브라우저에만 저장됩니다. 기기를 바꾸거나 브라우저 데이터를 지우기 전에 백업하세요.</p>
+      <p className="mb-3 text-sm text-ink-2">
+        저장 위치: <b>{label}</b>. 변경 내용은 자동으로 저장됩니다. 중요한 시점에는 백업 파일도 받아 두세요.
+      </p>
       <div className="flex flex-wrap gap-2">
         <Button onClick={exportJson}>백업 내보내기(JSON)</Button>
         <label className="cursor-pointer rounded-lg border border-line px-4 py-2 text-sm font-medium hover:bg-surface-2">
           백업 불러오기
           <input type="file" accept="application/json" className="hidden" onChange={(e) => e.target.files?.[0] && importJson(e.target.files[0])} />
         </label>
-        <Button variant="ghost" onClick={() => confirm("현재 데이터를 지우고 샘플 카페 데이터를 불러올까요?") && (loadDemo(), setMsg("샘플 데이터를 불러왔습니다."))}>
+        <Button variant="ghost" onClick={async () => (await askConfirm("현재 데이터를 지우고 샘플 카페 데이터를 불러올까요?", { confirmLabel: "샘플 불러오기", danger: true })) && (loadDemo(), setMsg("샘플 데이터를 불러왔습니다."))}>
           샘플 데이터 불러오기
         </Button>
-        <Button variant="danger" onClick={() => confirm("모든 데이터를 지우고 빈 상태로 시작할까요? 되돌릴 수 없습니다.") && (resetEmpty(), setMsg("초기화했습니다."))}>
+        <Button variant="danger" onClick={async () => (await askConfirm("모든 데이터를 지우고 빈 상태로 시작할까요? 되돌릴 수 없습니다.", { confirmLabel: "모두 지우기", danger: true })) && (resetEmpty(), setMsg("초기화했습니다."))}>
           모두 지우고 시작
         </Button>
       </div>

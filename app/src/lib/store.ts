@@ -1,8 +1,7 @@
 "use client";
 
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
-import { useMemo, useSyncExternalStore } from "react";
+import { useMemo } from "react";
 import type {
   Attendance,
   Employee,
@@ -22,7 +21,7 @@ import { todayLocal } from "./dates";
 import { menuCost } from "./domain/cost";
 import { analyzeReview } from "./domain/review";
 
-// 단일 매장용 로컬 저장소(브라우저 localStorage). 백엔드(Supabase) 연동 시 이 모듈만 교체한다.
+// 단일 매장용 앱 상태. 어디에 저장할지는 persistence.ts 의 어댑터가 정한다(브라우저 저장소 / claude.ai db).
 
 export interface AppData {
   store: Store;
@@ -39,6 +38,21 @@ export interface AppData {
   actions: MenuActionLog[];
 }
 
+export const APP_KEYS = [
+  "store",
+  "laborRule",
+  "ingredients",
+  "priceHistory",
+  "menus",
+  "sales",
+  "employees",
+  "attendance",
+  "expenses",
+  "recurring",
+  "reviews",
+  "actions",
+] as const satisfies readonly (keyof AppData)[];
+
 interface Actions {
   setStore: (patch: Partial<Store>) => void;
   setLaborRule: (patch: Partial<LaborRule>) => void;
@@ -51,7 +65,7 @@ interface Actions {
   importSales: (lines: SaleLine[]) => void;
   loadDemo: () => void;
   resetEmpty: () => void;
-  importAll: (data: AppData) => void;
+  importAll: (data: Partial<AppData>) => void;
 }
 
 type ListKey = {
@@ -74,7 +88,7 @@ export function demoData(): AppData {
   };
 }
 
-function emptyData(): AppData {
+export function emptyData(): AppData {
   return {
     store: { ...DEFAULT_STORE, name: "내 카페" },
     laborRule: DEFAULT_LABOR_RULE,
@@ -91,69 +105,63 @@ function emptyData(): AppData {
   };
 }
 
-export const useApp = create<AppData & Actions>()(
-  persist(
-    (set) => ({
-      ...demoData(),
-      setStore: (patch) => set((s) => ({ store: { ...s.store, ...patch } })),
-      setLaborRule: (patch) => set((s) => ({ laborRule: { ...s.laborRule, ...patch } })),
-      upsert: (key, item) =>
-        set((s) => {
-          const list = s[key] as { id: string }[];
-          const idx = list.findIndex((x) => x.id === item.id);
-          const next = idx >= 0 ? list.map((x, i) => (i === idx ? item : x)) : [...list, item];
-          return { [key]: next } as Partial<AppData>;
-        }),
-      remove: (key, id) =>
-        set((s) => ({ [key]: (s[key] as { id: string }[]).filter((x) => x.id !== id) }) as Partial<AppData>),
-      updateIngredientPrice: (id, packPrice, packSize) =>
-        set((s) => {
-          const today = todayLocal();
-          return {
-            ingredients: s.ingredients.map((i) =>
-              i.id === id ? { ...i, packPrice, packSize: packSize ?? i.packSize, updatedAt: today } : i,
-            ),
-            priceHistory: [
-              ...s.priceHistory.filter((p) => !(p.ingredientId === id && p.date === today)),
-              { ingredientId: id, packPrice, date: today },
-            ],
-          };
-        }),
-      replaceSales: (date, channel, lines) =>
-        set((s) => ({
-          sales: [
-            ...s.sales.filter((l) => !(l.date === date && l.channel === channel)),
-            ...lines
-              .filter((l) => l.qty > 0)
-              .map((l) => ({ id: `sl-${date}-${l.menuId}-${channel}`, date, channel, menuId: l.menuId, qty: l.qty })),
-          ],
-        })),
-      importSales: (lines) =>
-        set((s) => {
-          const keys = new Set(lines.map((l) => `${l.date}|${l.channel}`));
-          return { sales: [...s.sales.filter((l) => !keys.has(`${l.date}|${l.channel}`)), ...lines] };
-        }),
-      loadDemo: () => set(demoData()),
-      resetEmpty: () => set(emptyData()),
-      importAll: (data) => set(data),
-    }),
-    {
-      name: "cafedam-v1",
-      version: 1,
-      storage: createJSONStorage(() => localStorage),
-      skipHydration: true,
-    },
-  ),
-);
-
-/** 클라이언트에서 저장소 복원이 끝났는지. 서버 렌더와 첫 렌더를 일치시키기 위해 사용한다. */
-export function useHydrated(): boolean {
-  return useSyncExternalStore(
-    (cb) => useApp.persist.onFinishHydration(cb),
-    () => useApp.persist.hasHydrated(),
-    () => false,
-  );
+/** 저장된 일부 데이터를 기본값 위에 얹어 완전한 AppData 로 만든다 (필드가 추가돼도 옛 데이터가 깨지지 않게) */
+export function completeData(partial: Partial<AppData>): AppData {
+  const base = emptyData();
+  return {
+    ...base,
+    ...partial,
+    store: { ...DEFAULT_STORE, ...partial.store },
+    laborRule: { ...DEFAULT_LABOR_RULE, ...partial.laborRule },
+  };
 }
+
+export function pickData(s: AppData): AppData {
+  return Object.fromEntries(APP_KEYS.map((k) => [k, s[k]])) as unknown as AppData;
+}
+
+// 저장소에서 불러오기 전에는 빈 데이터다. 화면은 useHydrated() 가 true 가 된 뒤에 그린다.
+export const useApp = create<AppData & Actions>()((set) => ({
+  ...emptyData(),
+  setStore: (patch) => set((s) => ({ store: { ...s.store, ...patch } })),
+  setLaborRule: (patch) => set((s) => ({ laborRule: { ...s.laborRule, ...patch } })),
+  upsert: (key, item) =>
+    set((s) => {
+      const list = s[key] as { id: string }[];
+      const idx = list.findIndex((x) => x.id === item.id);
+      const next = idx >= 0 ? list.map((x, i) => (i === idx ? item : x)) : [...list, item];
+      return { [key]: next } as Partial<AppData>;
+    }),
+  remove: (key, id) => set((s) => ({ [key]: (s[key] as { id: string }[]).filter((x) => x.id !== id) }) as Partial<AppData>),
+  updateIngredientPrice: (id, packPrice, packSize) =>
+    set((s) => {
+      const today = todayLocal();
+      return {
+        ingredients: s.ingredients.map((i) => (i.id === id ? { ...i, packPrice, packSize: packSize ?? i.packSize, updatedAt: today } : i)),
+        priceHistory: [
+          ...s.priceHistory.filter((p) => !(p.ingredientId === id && p.date === today)),
+          { ingredientId: id, packPrice, date: today },
+        ],
+      };
+    }),
+  replaceSales: (date, channel, lines) =>
+    set((s) => ({
+      sales: [
+        ...s.sales.filter((l) => !(l.date === date && l.channel === channel)),
+        ...lines
+          .filter((l) => l.qty > 0)
+          .map((l) => ({ id: `sl-${date}-${l.menuId}-${channel}`, date, channel, menuId: l.menuId, qty: l.qty })),
+      ],
+    })),
+  importSales: (lines) =>
+    set((s) => {
+      const keys = new Set(lines.map((l) => `${l.date}|${l.channel}`));
+      return { sales: [...s.sales.filter((l) => !keys.has(`${l.date}|${l.channel}`)), ...lines] };
+    }),
+  loadDemo: () => set(demoData()),
+  resetEmpty: () => set(emptyData()),
+  importAll: (data) => set(completeData(data)),
+}));
 
 export function useMaps() {
   const ingredients = useApp((s) => s.ingredients);

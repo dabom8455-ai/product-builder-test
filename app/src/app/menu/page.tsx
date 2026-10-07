@@ -8,6 +8,7 @@ import { costRatio, menuCost, priceForTargetRatio, unitCost, unitMargin } from "
 import { Badge, Button, Card, Empty, Explain, Field, NumInput, PageHeader, Segmented, ic, inputCls } from "@/components/ui";
 import { num, pct, won } from "@/lib/format";
 import { addDays, todayLocal } from "@/lib/dates";
+import { askConfirm } from "@/components/Confirm";
 
 type Tab = "menus" | "ingredients" | "simulate";
 
@@ -331,8 +332,8 @@ function MenuEditor({ menu, onClose }: { menu: Menu; onClose: () => void }) {
         <Button
           size="sm"
           variant="danger"
-          onClick={() => {
-            if (confirm(`${menu.name}을(를) 삭제할까요? 판매 기록의 원가 계산에서도 빠집니다.`)) {
+          onClick={async () => {
+            if (await askConfirm(`${menu.name}을(를) 삭제할까요? 판매 기록의 원가 계산에서도 빠집니다.`, { confirmLabel: "삭제", danger: true })) {
               remove("menus", menu.id);
               onClose();
             }
@@ -409,9 +410,9 @@ function IngredientsTab() {
                     <button
                       className="text-ink-2 hover:text-bad"
                       aria-label="삭제"
-                      onClick={() => {
-                        if (used > 0 && !confirm(`${used}개 메뉴의 레시피에서 쓰고 있습니다. 삭제할까요?`)) return;
-                        remove("ingredients", i.id);
+                      onClick={async () => {
+                        const msg = used > 0 ? `${i.name}은(는) ${used}개 메뉴의 레시피에서 쓰고 있습니다. 삭제할까요?` : `${i.name}을(를) 삭제할까요?`;
+                        if (await askConfirm(msg, { confirmLabel: "삭제", danger: true })) remove("ingredients", i.id);
                       }}
                     >
                       ✕

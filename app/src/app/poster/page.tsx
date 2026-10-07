@@ -6,6 +6,7 @@ import { useMenuAnalysis } from "@/lib/hooks";
 import { PURPOSES, templateCopies, type PosterCopy, type PosterPurpose } from "@/lib/domain/poster";
 import { Badge, Button, Card, Field, PageHeader, Segmented, ic, inputCls } from "@/components/ui";
 import { won } from "@/lib/format";
+import { platform, takeRouteParam } from "@/lib/platform";
 
 type Size = "feed" | "story" | "a4";
 type Style = "classic" | "bold" | "minimal";
@@ -23,7 +24,7 @@ export default function PosterPage() {
   const puzzles = analysis.stats.filter((s) => s.quadrant === "puzzle");
 
   const [menuId, setMenuId] = useState(() => {
-    const q = new URLSearchParams(window.location.search).get("menu");
+    const q = takeRouteParam("menu");
     return q && menus.some((m) => m.id === q) ? q : (puzzles[0]?.menu.id ?? menus[0]?.id ?? "");
   });
   const menu = menus.find((m) => m.id === menuId);
@@ -54,17 +55,7 @@ export default function PosterPage() {
   const suggest = async () => {
     if (!menu) return;
     setLoading(true);
-    let copies: PosterCopy[] | null = null;
-    try {
-      const res = await fetch("/api/ai/copy", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ storeName: store.name, menuName: menu.name, description: menu.description, price: menu.price, purpose, praise }),
-      });
-      if (res.ok) copies = (await res.json()).copies;
-    } catch {
-      // 템플릿으로 대체
-    }
+    const copies = await platform().posterCopies({ storeName: store.name, menuName: menu.name, description: menu.description, price: menu.price, purpose, praise });
     const list = copies ?? templateCopies(menu.name, purpose, praise);
     setEdited({ key: copyKey, copy: list[0], options: list, source: copies ? "ai" : "template" });
     setLoading(false);
@@ -89,25 +80,23 @@ export default function PosterPage() {
     img.src = url;
   };
 
-  const download = () => {
-    canvasRef.current?.toBlob((b) => {
-      if (!b) return;
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(b);
-      a.download = `${store.name}_${menu?.name}_${size}.png`;
-      a.click();
-      URL.revokeObjectURL(a.href);
-    }, "image/png");
+  const toBlob = () => new Promise<Blob | null>((r) => (canvasRef.current ? canvasRef.current.toBlob(r, "image/png") : r(null)));
+
+  const download = async () => {
+    const blob = await toBlob();
+    if (blob) await platform().saveFile(`${store.name}_${menu?.name}_${SIZES[size].label.split(" ")[0]}.png`, blob);
   };
 
   const share = async () => {
-    const c = canvasRef.current;
-    if (!c) return;
-    const blob = await new Promise<Blob | null>((r) => c.toBlob(r, "image/png"));
+    const blob = await toBlob();
     if (!blob) return;
     const file = new File([blob], "poster.png", { type: "image/png" });
-    if (navigator.canShare?.({ files: [file] })) await navigator.share({ files: [file], title: copy.headline });
-    else download();
+    try {
+      if (navigator.canShare?.({ files: [file] })) return await navigator.share({ files: [file], title: copy.headline });
+    } catch {
+      // 공유 취소 또는 미지원: 저장으로 대체
+    }
+    await download();
   };
 
   if (!menu) return <p className="text-sm text-ink-2">메뉴를 먼저 등록하세요.</p>;
@@ -178,7 +167,7 @@ export default function PosterPage() {
                   </button>
                 ))}
               </div>
-              {copySource && <p className="mt-1 text-[11px] text-ink-2">{copySource === "ai" ? "AI 추천 문구" : "템플릿 문구 (AI 키 미설정 또는 응답 실패)"}</p>}
+              {copySource && <p className="mt-1 text-[11px] text-ink-2">{copySource === "ai" ? "AI 추천 문구" : "기본 문구 (AI를 쓸 수 없어 템플릿으로 작성)"}</p>}
               <input className={ic("mt-2")} value={copy.headline} onChange={(e) => setCopy({ ...copy, headline: e.target.value })} aria-label="헤드라인" />
               <input className={ic("mt-2")} value={copy.sub} onChange={(e) => setCopy({ ...copy, sub: e.target.value })} aria-label="서브 문구" />
             </div>
@@ -191,9 +180,11 @@ export default function PosterPage() {
           title="미리보기"
           right={
             <div className="flex gap-2">
-              <Button size="sm" variant="ghost" onClick={share}>
-                공유
-              </Button>
+              {platform().canShareFiles && (
+                <Button size="sm" variant="ghost" onClick={share}>
+                  공유
+                </Button>
+              )}
               <Button size="sm" onClick={download}>
                 PNG 저장
               </Button>
@@ -219,7 +210,7 @@ interface DrawArgs {
   photo: HTMLImageElement | null;
 }
 
-const FONT = '"Pretendard Variable", Pretendard, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif';
+const FONT = '"IBM Plex Sans KR", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif';
 
 function drawPoster(c: HTMLCanvasElement, a: DrawArgs) {
   const { w, h } = SIZES[a.size];

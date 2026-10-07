@@ -14,8 +14,9 @@
   --warn: #b7791f;
 }
 
+/* 다크 테마: OS 설정(테마 미지정 시) 또는 data-theme="dark" 둘 다 지원 */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #17130f;
     --surface: #211b16;
     --surface-2: #2b241e;
@@ -27,7 +28,23 @@
     --good: #5fbf85;
     --bad: #ef7768;
     --warn: #e0b057;
+    color-scheme: dark;
   }
+}
+
+:root[data-theme="dark"] {
+  --bg: #17130f;
+  --surface: #211b16;
+  --surface-2: #2b241e;
+  --line: #3a3129;
+  --ink: #f1ebe4;
+  --ink-2: #b3a597;
+  --brand: #c99a72;
+  --brand-ink: #1b140f;
+  --good: #5fbf85;
+  --bad: #ef7768;
+  --warn: #e0b057;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -42,7 +59,7 @@
   --color-good: var(--good);
   --color-bad: var(--bad);
   --color-warn: var(--warn);
-  --font-sans: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+  --font-sans: "IBM Plex Sans KR", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
 }
 
 body {
@@ -50,6 +67,18 @@ body {
   color: var(--ink);
   font-family: var(--font-sans);
   -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
 }
 
 input,

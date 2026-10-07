@@ -1,11 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { newId, useApp } from "@/lib/store";
 import type { Review, ReviewPlatform } from "@/lib/types";
 import { analyzeReview, templateReply, type ReplyInput } from "@/lib/domain/review";
 import { todayLocal } from "@/lib/dates";
 import { Badge, Button, Card, Empty, Field, PageHeader, Segmented, ic, inputCls } from "@/components/ui";
+import { platform } from "@/lib/platform";
+import { askConfirm } from "@/components/Confirm";
 
 const PLATFORM: Record<ReviewPlatform, string> = { naver: "네이버", baemin: "배민", coupang: "쿠팡이츠", etc: "기타" };
 const SENT = { positive: { label: "긍정", tone: "good" }, neutral: { label: "중립", tone: "warn" }, negative: { label: "부정", tone: "bad" } } as const;
@@ -165,6 +167,7 @@ function ReviewCard({ review }: { review: Review }) {
   const [loading, setLoading] = useState(false);
   const [source, setSource] = useState<"ai" | "template" | null>(null);
   const [copied, setCopied] = useState(false);
+  const replyRef = useRef<HTMLTextAreaElement>(null);
   const menuNames = review.menuIds.map((id) => menus.find((m) => m.id === id)?.name).filter((x): x is string => !!x);
   const s = SENT[review.sentiment];
 
@@ -181,13 +184,7 @@ function ReviewCard({ review }: { review: Review }) {
       menuNames,
       recentReplies: reviews.filter((r) => r.reply && r.id !== review.id).map((r) => r.reply!).slice(-5),
     };
-    let reply: string | null = null;
-    try {
-      const res = await fetch("/api/ai/reply", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(input) });
-      if (res.ok) reply = (await res.json()).reply;
-    } catch {
-      // 네트워크 오류 시 템플릿으로 대체
-    }
+    const reply = await platform().reviewReply(input);
     setSource(reply ? "ai" : "template");
     upsert("reviews", { ...review, reply: reply ?? templateReply(input), status: "drafted" });
     setLoading(false);
@@ -195,7 +192,13 @@ function ReviewCard({ review }: { review: Review }) {
 
   const copy = async () => {
     if (!review.reply) return;
-    await navigator.clipboard.writeText(review.reply);
+    try {
+      await navigator.clipboard.writeText(review.reply);
+    } catch {
+      // 클립보드 접근이 막힌 환경: 답글 칸을 선택해 직접 복사하도록 한다
+      replyRef.current?.select();
+      return;
+    }
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
@@ -222,12 +225,13 @@ function ReviewCard({ review }: { review: Review }) {
       {review.reply !== undefined && (
         <div className="mt-3">
           <textarea
+            ref={replyRef}
             className={ic("h-28")}
             value={review.reply}
             onChange={(e) => upsert("reviews", { ...review, reply: e.target.value })}
             aria-label="답글"
           />
-          {source && <p className="mt-1 text-[11px] text-ink-2">{source === "ai" ? "AI 초안" : "템플릿 초안 (AI 키 미설정 또는 응답 실패)"} · 수정 후 복사하세요.</p>}
+          {source && <p className="mt-1 text-[11px] text-ink-2">{source === "ai" ? "AI 초안" : "기본 문장 초안 (AI를 쓸 수 없어 템플릿으로 작성)"} · 수정 후 복사하세요.</p>}
           {review.sentiment === "negative" && review.status !== "posted" && (
             <p className="mt-1 text-xs text-bad">부정 리뷰입니다. 사실관계(누락·이물질 등)를 확인하고, 보상 여부는 사장님이 직접 판단해 덧붙이세요.</p>
           )}
@@ -248,7 +252,7 @@ function ReviewCard({ review }: { review: Review }) {
             게시 완료로 표시
           </Button>
         )}
-        <Button size="sm" variant="ghost" className="ml-auto" onClick={() => confirm("리뷰를 삭제할까요?") && remove("reviews", review.id)}>
+        <Button size="sm" variant="ghost" className="ml-auto" onClick={async () => (await askConfirm("리뷰를 삭제할까요?", { confirmLabel: "삭제", danger: true })) && remove("reviews", review.id)}>
           삭제
         </Button>
       </div>

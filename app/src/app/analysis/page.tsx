@@ -9,6 +9,7 @@ import { linePrice } from "@/lib/domain/pnl";
 import { addDays, todayLocal } from "@/lib/dates";
 import { Badge, Button, Card, Empty, PageHeader, Segmented } from "@/components/ui";
 import { num, pct, won } from "@/lib/format";
+import { askConfirm } from "@/components/Confirm";
 
 const COLORS: Record<Quadrant, string> = { star: "#d4a017", plowhorse: "#8a6d55", puzzle: "#2f7d9a", dog: "#a0a0a0" };
 
@@ -191,8 +192,8 @@ function Suggestions({ suggestions, stats }: { suggestions: Suggestion[]; stats:
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={() => {
-                    if (!confirm(`${menu.name} 가격을 ${won(menu.price)} → ${won(menu.price + 300)}(배달 ${won(menu.deliveryPrice + 300)})으로 올릴까요?`))
+                  onClick={async () => {
+                    if (!(await askConfirm(`${menu.name} 가격을 ${won(menu.price)} → ${won(menu.price + 300)}(배달 ${won(menu.deliveryPrice + 300)})으로 올릴까요?`, { confirmLabel: "인상 적용" })))
                       return;
                     upsert("menus", { ...menu, price: menu.price + 300, deliveryPrice: menu.deliveryPrice + 300 });
                     log(menu.id, `가격 300원 인상 (${won(menu.price)} → ${won(menu.price + 300)})`);
@@ -212,8 +213,8 @@ function Suggestions({ suggestions, stats }: { suggestions: Suggestion[]; stats:
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={() => {
-                    if (!confirm(`${menu.name}을(를) 판매중지할까요? (메뉴·원가에서 다시 켤 수 있습니다)`)) return;
+                  onClick={async () => {
+                    if (!(await askConfirm(`${menu.name}을(를) 판매중지할까요? 메뉴·원가에서 다시 켤 수 있습니다.`, { confirmLabel: "판매중지" }))) return;
                     upsert("menus", { ...menu, active: false });
                     log(menu.id, "판매중지");
                   }}

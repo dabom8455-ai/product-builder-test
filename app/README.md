@@ -2,7 +2,17 @@
 
 기획서: [`../docs/PLAN.md`](../docs/PLAN.md)
 
-## 실행
+## 배포된 앱
+
+**https://claude.ai/artifact/DztAEwpTGpFLEe1RW91g2k** (claude.ai 아티팩트, 기본 비공개 — 공유는 페이지의 Share 메뉴에서)
+
+- 데이터는 claude.ai 에 저장되어 휴대폰·태블릿·PC 어디서 열어도 같습니다(로그인 필요).
+- 리뷰 답글·포스터 문구는 보는 사람의 Claude 계정으로 작성합니다(첫 사용 시 허용 요청). API 키가 필요 없습니다.
+- 포스터 PNG·백업 JSON 은 저장 확인창을 거쳐 내려받습니다. 아티팩트에서는 인쇄 버튼이 숨겨집니다.
+
+재배포: `npm run build:artifact` → `dist-artifact/cafedam.html` 을 같은 아티팩트 URL 로 다시 게시합니다.
+
+## 로컬 실행
 
 ```bash
 cd app
@@ -45,10 +55,14 @@ src/
       menuEngineering.ts 메뉴 매트릭스·조정 제안
       review.ts         리뷰 분석·답글 템플릿·AI 프롬프트
       poster.ts         포스터 문구
-    store.ts            로컬 저장소(zustand + localStorage) — 백엔드 연동 시 이 파일만 교체
+    store.ts            앱 상태(zustand)
+    persistence.ts      저장 엔진 + 브라우저 저장소 어댑터 (어댑터만 바꾸면 저장 위치 변경)
+    platform.ts         실행 환경별 기능(AI·파일 저장·인쇄) 주입 지점
     seed.ts             샘플 카페 데이터
     server/claude.ts    Claude API 호출 (서버 전용)
   app/                  화면 + /api/ai/{reply,copy}
+  artifact/             claude.ai 아티팩트 빌드: 해시 라우팅, db 어댑터(월별 분할 저장), sample·downloads 플랫폼
+scripts/build-artifact.mjs  단일 HTML 빌드 (React 18 UMD + 인라인 번들·CSS)
 ```
 
 ```bash
@@ -59,6 +73,7 @@ npm run build
 
 ## 현재 한계 (다음 단계)
 
-- 데이터는 브라우저(localStorage)에만 저장됩니다. 여러 기기·알바 개인 폰 출퇴근을 위해서는 백엔드(Supabase 등) 연동이 필요합니다.
+- 로컬 실행(`npm run dev`) 버전은 데이터를 브라우저에만 저장합니다. 여러 기기 공유는 배포된 아티팩트 버전을 쓰세요.
+- 알바 개인 폰 출퇴근(GPS·Wi-Fi 확인)은 아직 없습니다. 매장 태블릿 PIN 방식입니다.
 - 네이버·배민 리뷰는 공식 답글 API가 없어 붙여넣기 방식입니다.
 - 4대보험 요율·간이과세 부가세는 근사치입니다. 실제 신고 전 세무사·노무사 확인을 권장합니다.
