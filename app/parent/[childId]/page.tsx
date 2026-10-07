@@ -59,7 +59,7 @@ export default async function ChildDetail({
     ]);
 
   const parentOnly = parentTasks;
-  const weights = rows.filter((r) => r.weight !== null).reverse();
+  const weights = rows.filter((r) => r.weight !== null);
 
   return (
     <main className="pt-4">

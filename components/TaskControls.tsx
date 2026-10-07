@@ -142,6 +142,46 @@ export function NumTask({ task, value, date, childId, size }: Common) {
   );
 }
 
+/** 체중·키처럼 소수점이 필요한 값. ±버튼 대신 숫자 입력칸. */
+export function DecimalTask({ task, value, date, childId, size }: Common) {
+  const [v, setV] = useState(value?.num === null || value?.num === undefined ? "" : String(value.num));
+  const [saved, setSaved] = useState(false);
+  const [, start] = useTransition();
+
+  return (
+    <Row
+      task={task}
+      size={size}
+      right={
+        <div className="flex items-center gap-1.5">
+          <input
+            type="number"
+            inputMode="decimal"
+            step="0.1"
+            min="0"
+            value={v}
+            aria-label={task.label}
+            onChange={(e) => { setV(e.target.value); setSaved(false); }}
+            onBlur={() => {
+              const n = v.trim() === "" ? null : Number(v);
+              if (n !== null && !Number.isFinite(n)) return;
+              start(async () => {
+                await actSetNum(task.task_key, n, date, childId);
+                setSaved(true);
+              });
+            }}
+            placeholder="0.0"
+            className="tap w-24 rounded-xl border-2 border-slate-200 bg-slate-50 px-3 text-right text-lg tabular-nums"
+          />
+          <span className="w-6 text-sm text-slate-400">{task.unit}</span>
+        </div>
+      }
+    >
+      {saved && <p className="mt-0.5 text-xs text-emerald-600">저장됨</p>}
+    </Row>
+  );
+}
+
 export function TimeTask({ task, value, date, childId, size }: Common) {
   const [t, setT] = useState(value?.text ?? "");
   const [, start] = useTransition();
@@ -228,7 +268,10 @@ export function TextTask({ task, value, date, childId, size }: Common) {
 
 export function TaskItem(props: Common) {
   switch (props.task.value_type) {
-    case "num": return <NumTask {...props} />;
+    case "num":
+      return props.task.unit === "kg" || props.task.unit === "cm"
+        ? <DecimalTask {...props} />
+        : <NumTask {...props} />;
     case "time": return <TimeTask {...props} />;
     case "mood": return <MoodTask {...props} />;
     case "text": return <TextTask {...props} />;

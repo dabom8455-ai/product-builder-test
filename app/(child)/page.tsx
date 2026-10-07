@@ -10,7 +10,8 @@ export default async function WinsPage() {
   const [wins, p] = await Promise.all([winsFor(u.id), progressFor(u.id)]);
 
   return (
-    <main className="px-4 pt-5">
+    <main className="pt-5">
+      <div className="px-4">
       <h1 className="text-xl font-bold">
         {u.displayName}가 해낸 것
       </h1>
@@ -28,6 +29,7 @@ export default async function WinsPage() {
           가장 길게 이어간 기록 {p.bestStreak}일 — 끊겨도 0으로 돌아가지 않아
         </p>
       )}
+      </div>
 
       <div className="mt-5">
         <Section title={`🏆 승리 장부 ${wins.length}개`}>
@@ -50,7 +52,7 @@ export default async function WinsPage() {
 
       <Link
         href="/today"
-        className="tap-lg mb-8 flex items-center justify-center rounded-2xl bg-blue-600 text-base font-bold text-white shadow-sm active:scale-[0.98]"
+        className="tap-lg mx-4 mb-8 flex items-center justify-center rounded-2xl bg-blue-600 text-base font-bold text-white shadow-sm active:scale-[0.98]"
       >
         오늘 체크하기 ({p.todayChecks}/{p.todayTotal})
       </Link>

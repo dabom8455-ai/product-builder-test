@@ -5,7 +5,7 @@ export function Section({
     <section className="mb-6">
       <h2 className="px-4 pb-2 text-sm font-bold text-slate-500">{title}</h2>
       {note && <p className="px-4 pb-2 text-xs leading-relaxed text-slate-400">{note}</p>}
-      <div className="divide-y divide-slate-100 overflow-hidden rounded-2xl bg-white shadow-sm">
+      <div className="mx-4 divide-y divide-slate-100 overflow-hidden rounded-2xl bg-white shadow-sm">
         {children}
       </div>
     </section>

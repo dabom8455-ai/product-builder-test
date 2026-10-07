@@ -119,7 +119,7 @@ export async function setLog(
     (v.text === null || v.text === undefined || v.text === "");
 
   // 체크를 해제하면 행을 지운다. "못 한 날"은 빈칸이어야 하고 0 이 아니다.
-  if (empty && v.bool === false) {
+  if (empty) {
     await raw(
       `DELETE FROM daily_logs WHERE child_id=$1 AND log_date=$2 AND task_key=$3`,
       [childId, date, taskKey]
