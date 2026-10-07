@@ -397,6 +397,12 @@ function compute(){
     wk.forEach(function(a){a.slice(0,N).forEach(function(d){absentDays.push(d);});});
   }
   absentDays.sort(function(a,b){return a-b;});
+  var paid=parse(child.paid),next=parse(child.next);
+  var afterNext=0;
+  if(child.method==='deduct'&&next!=null){
+    afterNext=absentDays.filter(function(d){return d>=next;}).length;
+    absentDays=absentDays.filter(function(d){return d<next;});
+  }
   var autoAbsent=absentDays.length;
   var manual=toInt(child.manual);
   var useManual=String(child.manual).trim()!==''&&manual!=null;
@@ -406,11 +412,10 @@ function compute(){
   Object.assign(R,{absent:absent,makeup:makeup,settle:settle,useManual:useManual,autoAbsent:autoAbsent});
 
   /* 안내 문구 */
-  var paid=parse(child.paid),next=parse(child.next);
   if(paid!=null&&next!=null&&next<paid) R.warns.push('다음 납부일이 원비 낸 날보다 앞이에요. 날짜를 확인해 주세요.');
   if(fixed&&child.days.length!==N) R.warns.push('주 '+N+'회인데 고른 요일이 '+child.days.length+'개예요. 주 횟수와 요일 개수를 맞춰 주세요.');
   if(makeup>absent) R.warns.push('보강 횟수('+makeup+'회)가 빠진 횟수('+absent+'회)보다 많아요. 정산할 횟수는 0회로 계산했어요.');
-  if(child.method==='deduct'&&next!=null&&merged.some(function(r){return r.e>=next;})) R.warns.push('쉰 기간이 다음 납부일 이후까지 이어져요. 다음 납부일 이후에 쉰 수업은 그 다음 달 정산에서 따로 계산해 주세요.');
+  if(child.method==='deduct'&&next!=null&&merged.some(function(r){return r.e>=next;})) R.warns.push('쉰 기간이 다음 납부일 이후까지 이어져요. 다음 납부일 전까지의 수업만 차감했어요.'+(afterNext?' 납부일 이후 '+afterNext+'회는 다음 정산에서 따로 계산해 주세요.':''));
 
   /* 준비 확인 */
   if(settings.open.length===0){R.notReady='학원 설정에서 문 여는 요일을 골라 주세요.';return R;}
