@@ -1,0 +1,529 @@
+<title>도현컴퍼니 사업회의</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --ground:#F5F7F6; --surface:#FFFFFF; --surface-2:#EFF3F1;
+    --ink:#15201D; --ink-2:#35423E; --muted:#5C6B66; --faint:#8A9791;
+    --line:#E1E7E4; --line-2:#D2DAD6;
+    --teal:#0F766E; --teal-hi:#0D9488; --teal-soft:#D6EEEA; --teal-ink:#0B4F49;
+    --purple:#7C3AED; --purple-soft:#EDE6FB;
+    --good:#059669; --warn:#B45309; --warn-soft:#FBEEDC; --crit:#DC2626; --crit-soft:#FBE3E3;
+    --shadow:0 1px 2px rgba(15,32,29,.04), 0 8px 24px rgba(15,32,29,.06);
+    --shadow-lift:0 2px 4px rgba(15,32,29,.05), 0 16px 40px rgba(15,32,29,.10);
+    --serif:"Sora","Noto Sans KR",sans-serif;
+    --sans:"Noto Sans KR",system-ui,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,monospace;
+    --r:12px; --r-sm:8px;
+  }
+  :root:not([data-theme="light"]){}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0D1412; --surface:#141F1C; --surface-2:#1A2724;
+      --ink:#E9EFED; --muted:#9DAAA5; --faint:#6F7C77;
+      --line:#243330; --line-2:#2E3F3B;
+      --teal:#2DD4BF; --teal-hi:#5EEAD4; --teal-soft:#123733; --teal-ink:#9EF2E6;
+      --purple:#A78BFA; --purple-soft:#241a3d;
+      --good:#34D399; --warn:#FBBF24; --warn-soft:#332913; --crit:#F87171; --crit-soft:#3a1d1d;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+      --shadow-lift:0 2px 4px rgba(0,0,0,.35), 0 16px 40px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0D1412; --surface:#141F1C; --surface-2:#1A2724;
+    --ink:#E9EFED; --muted:#9DAAA5; --faint:#6F7C77;
+    --line:#243330; --line-2:#2E3F3B;
+    --teal:#2DD4BF; --teal-hi:#5EEAD4; --teal-soft:#123733; --teal-ink:#9EF2E6;
+    --purple:#A78BFA; --purple-soft:#241a3d;
+    --good:#34D399; --warn:#FBBF24; --warn-soft:#332913; --crit:#F87171; --crit-soft:#3a1d1d;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+    --shadow-lift:0 2px 4px rgba(0,0,0,.35), 0 16px 40px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--ground); color:var(--ink); font-family:var(--sans); font-weight:300; line-height:1.65; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1080px; margin:0 auto; padding-inline:20px; padding-block:28px 72px;}
+  h1,h2,h3{font-family:var(--serif); font-weight:600; letter-spacing:-.01em; text-wrap:balance; margin:0;}
+  button{font-family:var(--sans); cursor:pointer;}
+  .mono{font-family:var(--mono);}
+  :focus-visible{outline:2px solid var(--teal); outline-offset:2px; border-radius:4px;}
+
+  /* Topbar */
+  .top{display:flex; flex-wrap:wrap; align-items:center; gap:14px 18px; margin-bottom:6px;}
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand .dot{width:34px; height:34px; border-radius:9px; flex:none; background:linear-gradient(135deg,var(--teal-hi),var(--teal)); display:grid; place-items:center; color:#fff; font-family:var(--serif); font-weight:700; font-size:15px; box-shadow:var(--shadow);}
+  .brand b{font-family:var(--serif); font-weight:700; font-size:17px; display:block; line-height:1.2;}
+  .brand span{font-size:11.5px; color:var(--muted); letter-spacing:.02em;}
+  .top .spacer{flex:1 1 40px;}
+  .timer{display:flex; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--line); border-radius:999px; padding:6px 8px 6px 14px; box-shadow:var(--shadow);}
+  .timer .t{font-family:var(--mono); font-weight:500; font-size:16px; font-variant-numeric:tabular-nums; min-width:52px;}
+  .timer button{border:none; background:var(--surface-2); color:var(--ink); width:30px; height:30px; border-radius:50%; font-size:13px; display:grid; place-items:center;}
+  .timer button:hover{background:var(--teal-soft); color:var(--teal-ink);}
+  .theme-btn{border:1px solid var(--line); background:var(--surface); color:var(--muted); border-radius:999px; width:38px; height:38px; font-size:16px; box-shadow:var(--shadow);}
+
+  .lede{color:var(--muted); font-size:14px; margin:2px 0 20px; max-width:64ch;}
+  .titlebar{display:flex; flex-wrap:wrap; gap:10px 14px; align-items:baseline; margin-bottom:18px;}
+  .titlebar input{flex:1 1 320px; min-width:0; font-family:var(--serif); font-weight:600; font-size:clamp(20px,3.4vw,27px); color:var(--ink); background:transparent; border:none; border-bottom:2px solid var(--line-2); padding:4px 2px;}
+  .titlebar input:focus{outline:none; border-color:var(--teal);}
+
+  /* Stepper */
+  .stepper{display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; margin-bottom:22px; scrollbar-width:thin;}
+  .step{flex:1 0 auto; display:flex; align-items:center; gap:9px; padding:11px 15px; border-radius:var(--r-sm); border:1px solid var(--line); background:var(--surface); color:var(--muted); font-size:13.5px; white-space:nowrap; transition:.16s;}
+  .step:hover{border-color:var(--line-2);}
+  .step .n{width:22px; height:22px; flex:none; border-radius:50%; background:var(--surface-2); color:var(--faint); display:grid; place-items:center; font-family:var(--mono); font-size:12px; font-weight:500;}
+  .step.active{background:var(--teal); border-color:var(--teal); color:#fff; box-shadow:var(--shadow);}
+  .step.active .n{background:rgba(255,255,255,.24); color:#fff;}
+  .step.done .n{background:var(--teal-soft); color:var(--teal-ink);}
+
+  .layout{display:grid; grid-template-columns:1fr; gap:22px;}
+  @media(min-width:860px){ .layout{grid-template-columns:1fr 260px;} }
+
+  .panel{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); padding:22px;}
+  .phase{display:none;} .phase.on{display:block; animation:rise .25s ease;}
+  @keyframes rise{from{opacity:.4; transform:translateY(4px);} to{opacity:1; transform:none;}}
+  @media (prefers-reduced-motion: reduce){ .phase.on{animation:none;} }
+  .phase h2{font-size:19px; margin-bottom:3px;}
+  .phase .hint{color:var(--muted); font-size:13px; margin-bottom:18px;}
+  .phase .hint b{color:var(--teal); font-weight:500;}
+
+  label.field{display:block; font-size:12px; font-weight:500; color:var(--muted); letter-spacing:.01em; margin-bottom:6px;}
+  input.tin, textarea.tin, select.tin{width:100%; background:var(--ground); border:1px solid var(--line-2); border-radius:var(--r-sm); padding:10px 12px; font-family:var(--sans); font-size:14.5px; color:var(--ink); line-height:1.55;}
+  textarea.tin{resize:vertical; min-height:64px;}
+  .tin:focus{outline:none; border-color:var(--teal); box-shadow:0 0 0 3px var(--teal-soft);}
+  .grid2{display:grid; gap:14px;} @media(min-width:560px){.grid2{grid-template-columns:1fr 1fr;}}
+
+  .btn{border:none; border-radius:var(--r-sm); padding:10px 16px; font-size:14px; font-weight:500;}
+  .btn-p{background:var(--teal); color:#fff;} .btn-p:hover{background:var(--teal-hi);}
+  .btn-s{background:var(--surface-2); color:var(--ink); border:1px solid var(--line-2);} .btn-s:hover{border-color:var(--teal); color:var(--teal-ink);}
+  .btn-row{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;}
+
+  /* Round robin */
+  .who-list{display:flex; flex-direction:column; gap:10px;}
+  .who{display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:start; padding:12px; border:1px solid var(--line); border-radius:var(--r-sm); background:var(--ground);}
+  .who.spoke{border-color:var(--teal); background:var(--teal-soft);}
+  .who .av{width:34px; height:34px; border-radius:9px; flex:none; display:grid; place-items:center; font-size:12px; font-weight:500; font-family:var(--mono); color:#fff; margin-top:2px;}
+  .who .nm{font-size:13.5px; font-weight:500; margin-bottom:5px; display:flex; align-items:center; gap:7px;}
+  .who .role{font-size:11px; color:var(--faint); font-weight:400;}
+  .who textarea{width:100%; background:var(--surface); border:1px solid var(--line-2); border-radius:6px; padding:8px 10px; font-family:var(--sans); font-size:13.5px; color:var(--ink); resize:vertical; min-height:38px;}
+  .who textarea:focus{outline:none; border-color:var(--teal);}
+  .who .mark{align-self:center; border:1px solid var(--line-2); background:var(--surface); border-radius:999px; width:30px; height:30px; font-size:13px; color:var(--faint);}
+  .who.spoke .mark{background:var(--teal); border-color:var(--teal); color:#fff;}
+  .rr-meta{display:flex; justify-content:space-between; align-items:center; margin-top:14px; font-size:12.5px; color:var(--muted);}
+
+  /* Brainstorm */
+  .add-idea{display:flex; gap:10px; margin-bottom:16px;}
+  .add-idea input{flex:1;}
+  .ideas{display:flex; flex-direction:column; gap:10px;}
+  .idea{display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:center; padding:12px 14px; border:1px solid var(--line); border-radius:var(--r-sm); background:var(--ground);}
+  .idea .vote{display:flex; flex-direction:column; align-items:center; gap:2px;}
+  .idea .vote button{border:1px solid var(--line-2); background:var(--surface); color:var(--purple); width:34px; height:30px; border-radius:7px; font-size:15px; font-weight:600; line-height:1;}
+  .idea .vote button:hover{background:var(--purple-soft);}
+  .idea .vcount{font-family:var(--mono); font-weight:500; font-size:13px; color:var(--purple); font-variant-numeric:tabular-nums;}
+  .idea .txt{font-size:14px;}
+  .idea .by{font-size:11px; color:var(--faint); margin-top:2px;}
+  .idea .del{border:none; background:transparent; color:var(--faint); font-size:16px; padding:4px;}
+  .idea .del:hover{color:var(--crit);}
+  .idea.top{border-color:var(--purple); box-shadow:0 0 0 1px var(--purple) inset;}
+  .idea.top .rankbadge{display:inline-block;}
+  .rankbadge{display:none; font-family:var(--mono); font-size:10px; font-weight:500; color:#fff; background:var(--purple); border-radius:5px; padding:1px 6px; margin-left:8px; vertical-align:middle;}
+
+  /* Decision */
+  .daci{display:grid; gap:12px;} @media(min-width:560px){.daci{grid-template-columns:1fr 1fr;}}
+  .daci .full{grid-column:1/-1;}
+  .commit{display:flex; gap:11px; align-items:flex-start; margin-top:16px; padding:13px 15px; border:1px dashed var(--line-2); border-radius:var(--r-sm); background:var(--ground);}
+  .commit input{margin-top:3px; width:18px; height:18px; accent-color:var(--teal); flex:none;}
+  .commit label{font-size:13px; color:var(--ink);}
+  .commit label b{color:var(--teal); font-weight:600;}
+
+  /* Actions */
+  .act-head, .act-row{display:grid; grid-template-columns:1fr 120px 128px 92px 34px; gap:10px; align-items:center;}
+  .act-head{font-size:11px; font-weight:500; color:var(--faint); letter-spacing:.03em; padding:0 4px 8px; text-transform:uppercase;}
+  .act-row{padding:8px 4px; border-top:1px solid var(--line);}
+  .act-row input, .act-row select{background:var(--ground); border:1px solid var(--line-2); border-radius:6px; padding:8px 9px; font-family:var(--sans); font-size:13px; color:var(--ink); width:100%;}
+  .act-row .dri{font-family:var(--mono);}
+  .act-row select.st-todo{color:var(--warn);} .act-row select.st-doing{color:var(--teal);} .act-row select.st-done{color:var(--good);}
+  .act-row .del{border:none; background:transparent; color:var(--faint); font-size:16px;} .act-row .del:hover{color:var(--crit);}
+  @media(max-width:640px){ .act-head{display:none;} .act-row{grid-template-columns:1fr 1fr; gap:8px;} .act-row .del{grid-column:2; justify-self:end;} }
+
+  /* Aside */
+  aside .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); padding:18px; margin-bottom:16px;}
+  aside h3{font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--teal); margin-bottom:12px; font-family:var(--sans); font-weight:700;}
+  .rules{display:flex; flex-direction:column; gap:12px;}
+  .rule{font-size:12.5px; color:var(--muted); line-height:1.5;}
+  .rule b{display:block; color:var(--ink); font-weight:500; font-size:13px; margin-bottom:1px;}
+  .exp-note{font-size:11.5px; color:var(--faint); margin-top:10px; line-height:1.5;}
+
+  .example-tag{display:inline-flex; align-items:center; gap:6px; font-size:11px; color:var(--warn); background:var(--warn-soft); border-radius:999px; padding:3px 10px; font-weight:500; margin-left:8px;}
+  .foot{margin-top:26px; text-align:center; font-size:11.5px; color:var(--faint);}
+  .toast{position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(20px); background:var(--ink); color:var(--ground); padding:11px 20px; border-radius:999px; font-size:13px; box-shadow:var(--shadow-lift); opacity:0; pointer-events:none; transition:.25s;}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <div class="brand">
+      <div class="dot">道</div>
+      <div><b>도현컴퍼니 사업회의</b><span>Business Sync · 모두의 목소리로 결정한다</span></div>
+    </div>
+    <div class="spacer"></div>
+    <div class="timer">
+      <span class="t mono" id="clock">15:00</span>
+      <button id="tStart" title="시작/일시정지">▶</button>
+      <button id="tReset" title="리셋">↺</button>
+    </div>
+    <button class="theme-btn" id="theme" title="테마 전환" aria-label="테마 전환">◐</button>
+  </div>
+  <p class="lede">왕도, 옥좌도 없습니다. 퍼실리테이터(클부장)가 진행하고 <b style="color:var(--teal)">모든 팀이 한마디씩</b> 낸 뒤, 조용히 아이디어를 쌓고(브레인라이팅) → 점 투표로 좁히고 → <b style="color:var(--teal)">DACI</b>로 정하고 → <b style="color:var(--teal)">DRI</b>가 실행합니다. 실리콘밸리 팀이 일하는 방식 그대로.</p>
+
+  <div class="titlebar">
+    <input id="topic" value="" aria-label="회의 안건">
+    <span class="example-tag" id="exTag">● 예시 회의 — 지우고 우리 안건으로</span>
+  </div>
+
+  <div class="stepper" id="stepper"></div>
+
+  <div class="layout">
+    <div>
+      <!-- 1. 안건 -->
+      <section class="phase panel" data-phase="0">
+        <h2>1 · 안건 & 사전자료</h2>
+        <p class="hint">아마존식 원칙: <b>말보다 글이 먼저.</b> 회의 시작 5분은 다 같이 조용히 읽습니다. 목표 한 줄과 배경을 미리 적어두면 회의가 반으로 짧아집니다.</p>
+        <div class="grid2" style="margin-bottom:14px;">
+          <div><label class="field" for="goal">이 회의의 목표 (한 줄)</label><input class="tin" id="goal"></div>
+          <div><label class="field" for="tbox">타임박스 (분)</label><input class="tin" id="tbox" type="number" min="5" max="120" step="5"></div>
+        </div>
+        <label class="field" for="preread">사전자료 · 배경 (Pre-read)</label>
+        <textarea class="tin" id="preread" style="min-height:120px"></textarea>
+        <div class="btn-row"><button class="btn btn-p" data-next="1">다음 · 라운드로빈 →</button></div>
+      </section>
+
+      <!-- 2. 라운드로빈 -->
+      <section class="phase panel" data-phase="1">
+        <h2>2 · 라운드로빈 체크인</h2>
+        <p class="hint">가장 <b>직급 높은 사람(HiPPO)</b>이 먼저 말하면 나머지는 눈치를 봅니다. 그래서 <b>한 명씩 돌아가며</b> 먼저 각자 생각을 답니다 — 이 안건에 대한 관점·우려·기회. 발언하면 체크.</p>
+        <div class="who-list" id="whoList"></div>
+        <div class="rr-meta"><span id="rrCount">0 / 0 발언</span><button class="btn btn-s" id="rrClear">발언 초기화</button></div>
+        <div class="btn-row"><button class="btn btn-s" id="rrAI">🤖 빈자리 팀 관점 채우기</button><button class="btn btn-p" data-next="2">다음 · 브레인스토밍 →</button></div>
+        <p class="exp-note" id="rrAInote" hidden>혼자 회의할 때, 각 팀이 뭐라고 말할지 AI가 초안을 채워줍니다. 검토하고 고쳐 쓰세요.</p>
+      </section>
+
+      <!-- 3. 브레인스토밍 -->
+      <section class="phase panel" data-phase="2">
+        <h2>3 · 브레인스토밍 <span style="font-family:var(--sans);font-weight:400;font-size:13px;color:var(--muted)">발산 → 수렴</span></h2>
+        <p class="hint">먼저 <b>양(量)</b>으로 쏟아냅니다 — 나쁜 아이디어는 없습니다(Yes, and…). 다 모이면 각자 <b>점 투표</b>로 좋은 것에 점을 찍어 위로 올립니다.</p>
+        <div class="add-idea">
+          <input class="tin" id="ideaText" placeholder="아이디어 한 줄 (Enter로 추가)">
+          <select class="tin" id="ideaBy" style="max-width:150px"></select>
+          <button class="btn btn-p" id="ideaAdd">추가</button>
+        </div>
+        <div class="ideas" id="ideas"></div>
+        <div class="btn-row"><button class="btn btn-s" id="ideaAI">🤖 아이디어 씨앗 5개</button><button class="btn btn-s" id="sortVotes">▼ 득표순 정렬</button><button class="btn btn-p" data-next="3">다음 · 결정 →</button></div>
+      </section>
+
+      <!-- 4. 결정 -->
+      <section class="phase panel" data-phase="3">
+        <h2>4 · 결정 (DACI)</h2>
+        <p class="hint">누가 <b>모는지(Driver)</b>, 누가 <b>승인(Approver)</b>하는지 분명히 합니다. 완벽한 합의를 기다리지 않습니다 — <b>반대해도 일단 실행에 힘을 싣는다(Disagree &amp; Commit).</b></p>
+        <div class="daci">
+          <div><label class="field">Driver · 추진 책임</label><select class="tin" id="dDriver"></select></div>
+          <div><label class="field">Approver · 최종 승인</label><select class="tin" id="dApprover"></select></div>
+          <div class="full"><label class="field">결정 사항 (무엇을 하기로 했나)</label><textarea class="tin" id="dDecision" style="min-height:80px"></textarea></div>
+          <div class="full"><label class="field">Contributors · 협의 · Informed · 공유 대상</label><input class="tin" id="dCI"></div>
+        </div>
+        <div class="commit">
+          <input type="checkbox" id="dCommit">
+          <label for="dCommit"><b>Disagree &amp; Commit</b> — 이견이 있었더라도, 결정된 이상 모두가 실행에 온전히 힘을 싣는다.</label>
+        </div>
+        <div class="btn-row"><button class="btn btn-p" data-next="4">다음 · 액션 →</button></div>
+      </section>
+
+      <!-- 5. 액션 -->
+      <section class="phase panel" data-phase="4">
+        <h2>5 · 액션 아이템</h2>
+        <p class="hint">회의의 성패는 여기서 갈립니다. 모든 항목엔 <b>단 한 명의 책임자(DRI)</b>와 <b>마감</b>이 붙습니다. "다 같이 하자"는 아무도 안 하는 것.</p>
+        <div class="act-head"><span>할 일</span><span>DRI · 책임자</span><span>마감</span><span>상태</span><span></span></div>
+        <div id="actList"></div>
+        <div class="btn-row"><button class="btn btn-s" id="actAdd">+ 액션 추가</button><button class="btn btn-p" id="exportBtn">📋 회의록 복사 (노션용)</button></div>
+        <p class="exp-note">복사한 회의록은 노션 「의사결정 로그」 DB나 팀 페이지에 붙여 넣어 자산으로 쌓으세요.</p>
+      </section>
+    </div>
+
+    <aside>
+      <div class="card">
+        <h3>회의 원칙 8</h3>
+        <div class="rules">
+          <div class="rule"><b>심리적 안전</b>누구도 질문·반대로 벌받지 않는다.</div>
+          <div class="rule"><b>강한 의견, 느슨한 확신</b>주장하되 근거 앞에 바꾼다.</div>
+          <div class="rule"><b>HiPPO 금지</b>직급이 아니라 근거가 이긴다.</div>
+          <div class="rule"><b>Yes, and…</b>먼저 얹고, 판단은 나중에.</div>
+          <div class="rule"><b>타임박스</b>시간을 정하고 지킨다.</div>
+          <div class="rule"><b>글이 말보다 먼저</b>사전자료로 시작한다.</div>
+          <div class="rule"><b>Disagree &amp; Commit</b>정해지면 온전히 힘을 싣는다.</div>
+          <div class="rule"><b>DRI</b>모든 액션엔 한 명의 책임자.</div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>진행 · 클부장</h3>
+        <p class="rule" style="margin:0">퍼실리테이터는 답을 정하지 않고 <b style="color:var(--ink)">모두가 말하게</b> 합니다. 조용한 팀에게 먼저 묻고, HiPPO는 마지막에.</p>
+        <div class="btn-row" style="margin-top:14px"><button class="btn btn-s" id="newMeeting" style="width:100%">＋ 새 회의 시작</button></div>
+      </div>
+    </aside>
+  </div>
+
+  <p class="foot">도현컴퍼니 사업회의 · 이 브라우저에 자동 저장됩니다</p>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+  var KEY="dohyeon.meeting.v1";
+  var PHASES=["안건","라운드로빈","브레인스토밍","결정","액션"];
+  var PEOPLE=[
+    {id:"rep",  n:"대표(원장)", r:"방향·최종결정", c:"#15201D"},
+    {id:"col",  n:"클부장", r:"퍼실리테이터·COO", c:"#0F766E"},
+    {id:"t1",   n:"① 학원운영", r:"운영 자동화", c:"#0D9488"},
+    {id:"t2",   n:"② 마케팅", r:"홍보·판매", c:"#0891B2"},
+    {id:"t3",   n:"③ 수익화", r:"재무·수익", c:"#059669"},
+    {id:"t4",   n:"④ 전자책", r:"지식 상품화", c:"#65A30D"},
+    {id:"t5",   n:"⑤ 인프라", r:"데이터", c:"#7C3AED"},
+    {id:"t6",   n:"⑥ 전략기획실", r:"경쟁·시장", c:"#9333EA"},
+    {id:"t7",   n:"⑦ 보안", r:"안정성", c:"#DC2626"},
+    {id:"t8",   n:"⑧ 홈페이지·CS", r:"구축·유지", c:"#2563EB"},
+    {id:"rov",  n:"🤖 로비서", r:"대표 비서", c:"#B45309"}
+  ];
+  var byId={}; PEOPLE.forEach(function(p){byId[p.id]=p;});
+
+  function sample(){
+    return {
+      topic:"2026 자동화 시스템, 첫 외부 판매 — 어떻게 물길을 틀까?",
+      goal:"9월 안에 '유료 관심 고객' 1명을 확보할 실행안을 정한다",
+      tbox:15, example:true,
+      preread:"현황: 홈페이지+운영 대시보드 MVP 배포 완료, 각 메뉴 직접 입력·노션 백업·보안 1차 완료.\n숫자: 재원 28명, 블로그 연재 진행 중.\n질문: 지금 있는 자산으로 '파는 행위'를 어떻게 시작할까? (완벽한 백엔드를 기다리지 않고)",
+      voices:{
+        col:"대시보드는 이미 실사용 단계. 지금은 '보여주고 반응 보기' 국면입니다.",
+        t2:"맘카페에 우리 학원 운영 화면을 '이렇게 관리해요' 콘텐츠로 노출하면 원장 문의가 붙습니다.",
+        t3:"첫 고객은 무료 베타로 받고 후기를 수익화 자산으로. 가격은 후기 쌓인 뒤.",
+        t6:"경쟁사는 등원·출결 위주. 우리는 '1인 원장 통합 운영'이 빈틈입니다."
+      },
+      spoke:{col:true,t2:true,t3:true,t6:true},
+      ideas:[
+        {t:"원장 커뮤니티에 '학원 운영 대시보드' 데모 영상 1개 게시", by:"t2", v:3},
+        {t:"무료 베타 원장 3명 모집 → 후기·개선 피드백 확보", by:"t3", v:4},
+        {t:"홈페이지에 '체험 신청' 버튼 + 상담 예약 폼 추가", by:"t8", v:2},
+        {t:"블로그 연재에 '이렇게 자동화했습니다' 사례편 삽입", by:"t2", v:1}
+      ],
+      sorted:false,
+      driver:"t2", approver:"rep", ci:"C: ③수익화·⑧홈페이지 / I: 전 팀",
+      decision:"무료 베타 원장 3명을 먼저 모집한다. ②마케팅이 맘카페·블로그로 모집 글을 올리고, 신청은 홈페이지 상담 폼으로 받는다. 가격 책정은 후기 확보 후로 미룬다.",
+      commit:true,
+      actions:[
+        {t:"맘카페·블로그에 무료 베타 3명 모집 글 게시", dri:"t2", due:"2026-09-15", st:"todo"},
+        {t:"홈페이지에 상담·체험 신청 폼 추가", dri:"t8", due:"2026-09-18", st:"todo"},
+        {t:"베타 온보딩·후기 수집 템플릿 준비", dri:"t3", due:"2026-09-20", st:"todo"}
+      ],
+      phase:0
+    };
+  }
+  var S=load();
+  function load(){ try{var r=localStorage.getItem(KEY); if(r) return JSON.parse(r);}catch(e){} return sample(); }
+  function save(){ try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} }
+
+  var $=function(s){return document.querySelector(s);};
+  function toast(m){var t=$("#toast"); t.textContent=m; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(function(){t.classList.remove("show");},1900);}
+  function esc(s){return (s||"").replace(/[<>&]/g,function(c){return {"<":"&lt;",">":"&gt;","&":"&amp;"}[c];});}
+
+  /* Theme */
+  var root=document.documentElement;
+  $("#theme").addEventListener("click",function(){
+    var cur=root.getAttribute("data-theme");
+    var isDark = cur==="dark" || (!cur && matchMedia("(prefers-color-scheme:dark)").matches);
+    root.setAttribute("data-theme", isDark?"light":"dark");
+  });
+
+  /* Stepper */
+  function renderStepper(){
+    var el=$("#stepper"); el.innerHTML="";
+    PHASES.forEach(function(name,i){
+      var b=document.createElement("button");
+      b.className="step"+(i===S.phase?" active":"")+(i<S.phase?" done":"");
+      b.innerHTML='<span class="n">'+(i<S.phase?"✓":(i+1))+'</span>'+name;
+      b.onclick=function(){ S.phase=i; save(); renderAll(); };
+      el.appendChild(b);
+    });
+  }
+  function showPhase(){
+    document.querySelectorAll(".phase").forEach(function(p){
+      p.classList.toggle("on", +p.getAttribute("data-phase")===S.phase);
+    });
+  }
+  document.querySelectorAll("[data-next]").forEach(function(b){
+    b.addEventListener("click",function(){ S.phase=+b.getAttribute("data-next"); save(); renderAll(); window.scrollTo({top:0,behavior:"smooth"}); });
+  });
+
+  /* Bindings: agenda */
+  function bind(id, key){ var el=$(id); el.value=S[key]!=null?S[key]:""; el.addEventListener("input",function(){ S[key]=el.value; if(key==="topic"&&S.example){S.example=false; $("#exTag").style.display="none";} if(key==="tbox"){clock.total=(+el.value||15)*60; if(!clock.running){clock.left=clock.total; paintClock();}} save(); }); }
+
+  /* Round robin */
+  function personSelect(sel, val){ sel.innerHTML=""; PEOPLE.forEach(function(p){var o=document.createElement("option"); o.value=p.id; o.textContent=p.n; if(p.id===val)o.selected=true; sel.appendChild(o);}); }
+  function renderWho(){
+    var host=$("#whoList"); host.innerHTML="";
+    S.voices=S.voices||{}; S.spoke=S.spoke||{};
+    PEOPLE.forEach(function(p){
+      var row=document.createElement("div"); row.className="who"+(S.spoke[p.id]?" spoke":"");
+      row.innerHTML='<div class="av" style="background:'+p.c+'">'+p.id.replace(/^t/,'').toUpperCase().slice(0,2)+'</div>'+
+        '<div><div class="nm">'+esc(p.n)+' <span class="role">'+esc(p.r)+'</span></div>'+
+        '<textarea placeholder="이 안건에 대한 한마디…">'+esc(S.voices[p.id]||"")+'</textarea></div>'+
+        '<button class="mark" title="발언 완료">'+(S.spoke[p.id]?"✓":"○")+'</button>';
+      var ta=row.querySelector("textarea");
+      ta.addEventListener("input",function(){ S.voices[p.id]=ta.value; save(); });
+      row.querySelector(".mark").addEventListener("click",function(){ S.spoke[p.id]=!S.spoke[p.id]; save(); renderWho(); });
+      host.appendChild(row);
+    });
+    var n=Object.keys(S.spoke).filter(function(k){return S.spoke[k];}).length;
+    $("#rrCount").textContent=n+" / "+PEOPLE.length+" 발언";
+  }
+  $("#rrClear").addEventListener("click",function(){ S.spoke={}; save(); renderWho(); });
+
+  /* Brainstorm */
+  function renderIdeas(){
+    var host=$("#ideas"); host.innerHTML=""; S.ideas=S.ideas||[];
+    var list=S.ideas.map(function(x,i){return {x:x,i:i};});
+    if(S.sorted) list.sort(function(a,b){return (b.x.v||0)-(a.x.v||0);});
+    var maxV=Math.max(1,Math.max.apply(null,S.ideas.map(function(x){return x.v||0;})));
+    list.forEach(function(o){
+      var x=o.x, i=o.i; var isTop=(x.v||0)>0 && (x.v||0)===maxV;
+      var p=byId[x.by];
+      var el=document.createElement("div"); el.className="idea"+(isTop?" top":"");
+      el.innerHTML='<div class="vote"><button aria-label="점 투표">＋</button><span class="vcount">'+(x.v||0)+'</span></div>'+
+        '<div><div class="txt">'+esc(x.t)+'<span class="rankbadge">TOP</span></div><div class="by">'+(p?esc(p.n):"")+'</div></div>'+
+        '<button class="del" aria-label="삭제">×</button>';
+      el.querySelector(".vote button").addEventListener("click",function(){ x.v=(x.v||0)+1; save(); renderIdeas(); });
+      el.querySelector(".del").addEventListener("click",function(){ S.ideas.splice(i,1); save(); renderIdeas(); });
+      host.appendChild(el);
+    });
+    if(!S.ideas.length) host.innerHTML='<p style="color:var(--faint);font-size:13px;padding:8px 2px">아직 아이디어가 없습니다. 위에 한 줄씩 쏟아내세요.</p>';
+  }
+  function addIdea(){
+    var t=$("#ideaText").value.trim(); if(!t)return;
+    S.ideas.push({t:t, by:$("#ideaBy").value, v:0}); $("#ideaText").value="";
+    if(S.example){/* keep */} save(); renderIdeas();
+  }
+  $("#ideaAdd").addEventListener("click",addIdea);
+  $("#ideaText").addEventListener("keydown",function(e){ if(e.key==="Enter") addIdea(); });
+  $("#sortVotes").addEventListener("click",function(){ S.sorted=!S.sorted; $("#sortVotes").textContent=(S.sorted?"↕ 입력순":"▼ 득표순 정렬"); save(); renderIdeas(); });
+
+  /* Decision */
+  function bindSel(id,key){ var el=$(id); personSelect(el,S[key]); el.addEventListener("change",function(){ S[key]=el.value; save(); }); }
+  function bindVal(id,key){ var el=$(id); el.value=S[key]||""; el.addEventListener("input",function(){ S[key]=el.value; save(); }); }
+
+  /* Actions */
+  function renderActions(){
+    var host=$("#actList"); host.innerHTML=""; S.actions=S.actions||[];
+    S.actions.forEach(function(a,i){
+      var row=document.createElement("div"); row.className="act-row";
+      var opts=PEOPLE.map(function(p){return '<option value="'+p.id+'"'+(p.id===a.dri?" selected":"")+'>'+esc(p.n)+'</option>';}).join("");
+      row.innerHTML='<input value="'+esc(a.t)+'" placeholder="할 일" aria-label="할 일">'+
+        '<select class="dri" aria-label="책임자">'+opts+'</select>'+
+        '<input type="date" value="'+(a.due||"")+'" aria-label="마감">'+
+        '<select class="st st-'+(a.st||"todo")+'" aria-label="상태"><option value="todo"'+(a.st==="todo"?" selected":"")+'>대기</option><option value="doing"'+(a.st==="doing"?" selected":"")+'>진행</option><option value="done"'+(a.st==="done"?" selected":"")+'>완료</option></select>'+
+        '<button class="del" aria-label="삭제">×</button>';
+      var ins=row.querySelectorAll("input"), sels=row.querySelectorAll("select");
+      ins[0].addEventListener("input",function(){a.t=ins[0].value; save();});
+      ins[1].addEventListener("input",function(){a.due=ins[1].value; save();});
+      sels[0].addEventListener("change",function(){a.dri=sels[0].value; save();});
+      sels[1].addEventListener("change",function(){a.st=sels[1].value; sels[1].className="st st-"+a.st; save();});
+      row.querySelector(".del").addEventListener("click",function(){ S.actions.splice(i,1); save(); renderActions(); });
+      host.appendChild(row);
+    });
+    if(!S.actions.length) host.innerHTML='<p style="color:var(--faint);font-size:13px;padding:10px 2px">액션이 없습니다. [+ 액션 추가]로 책임자와 마감을 붙이세요.</p>';
+  }
+  $("#actAdd").addEventListener("click",function(){ S.actions.push({t:"",dri:"col",due:"",st:"todo"}); save(); renderActions(); });
+
+  /* Export */
+  $("#exportBtn").addEventListener("click",function(){
+    var nm=function(id){return byId[id]?byId[id].n:id;};
+    var L=[];
+    L.push("# 사업회의 · "+(S.topic||""));
+    L.push("_"+new Date().toISOString().slice(0,10)+" · 목표: "+(S.goal||"-")+"_\n");
+    L.push("## 라운드로빈");
+    PEOPLE.forEach(function(p){ if(S.voices&&S.voices[p.id]) L.push("- **"+p.n+"**: "+S.voices[p.id]); });
+    L.push("\n## 브레인스토밍 (득표순)");
+    (S.ideas||[]).slice().sort(function(a,b){return (b.v||0)-(a.v||0);}).forEach(function(x){ L.push("- ("+(x.v||0)+"표) "+x.t+" — "+nm(x.by)); });
+    L.push("\n## 결정 (DACI)");
+    L.push("- **Driver**: "+nm(S.driver)+" · **Approver**: "+nm(S.approver));
+    L.push("- "+(S.ci||""));
+    L.push("- **결정**: "+(S.decision||"-"));
+    L.push("- Disagree & Commit: "+(S.commit?"✅ 동의":"⬜ 미확인"));
+    L.push("\n## 액션 아이템");
+    (S.actions||[]).forEach(function(a){ L.push("- [ ] "+(a.t||"")+" — **DRI "+nm(a.dri)+"** · 마감 "+(a.due||"-")+" · "+({todo:"대기",doing:"진행",done:"완료"}[a.st]||"대기")); });
+    var text=L.join("\n");
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){toast("회의록을 클립보드에 복사했습니다");},function(){fallback(text);}); }
+    else fallback(text);
+  });
+  function fallback(text){ var ta=document.createElement("textarea"); ta.value=text; document.body.appendChild(ta); ta.select(); try{document.execCommand("copy"); toast("회의록을 복사했습니다");}catch(e){toast("복사 실패 — 길게 눌러 복사하세요");} ta.remove(); }
+
+  /* New meeting */
+  $("#newMeeting").addEventListener("click",function(){
+    if(!confirm("새 회의를 시작할까요? 현재 회의 내용은 지워집니다. (먼저 회의록을 복사해 두세요.)")) return;
+    S={topic:"",goal:"",tbox:15,example:false,preread:"",voices:{},spoke:{},ideas:[],sorted:false,driver:"col",approver:"rep",ci:"",decision:"",commit:false,actions:[{t:"",dri:"col",due:"",st:"todo"}],phase:0};
+    save(); location.reload();
+  });
+
+  /* Timer */
+  var clock={total:(S.tbox||15)*60, left:(S.tbox||15)*60, running:false, h:null};
+  function paintClock(){ var m=Math.floor(Math.max(0,clock.left)/60), s=Math.max(0,clock.left)%60; $("#clock").textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s; }
+  $("#tStart").addEventListener("click",function(){
+    clock.running=!clock.running; $("#tStart").textContent=clock.running?"⏸":"▶";
+    if(clock.running){ clock.h=setInterval(function(){ clock.left--; if(clock.left<=0){clock.left=0; clock.running=false; clearInterval(clock.h); $("#tStart").textContent="▶"; toast("⏱ 타임박스 종료 — 결정으로 넘어가세요");} paintClock(); },1000); }
+    else clearInterval(clock.h);
+  });
+  $("#tReset").addEventListener("click",function(){ clock.running=false; clearInterval(clock.h); $("#tStart").textContent="▶"; clock.total=(+($("#tbox").value)||15)*60; clock.left=clock.total; paintClock(); });
+
+  /* AI assist (모두의 의견 활성화 · 혼자여도 팀처럼) */
+  var BRIEF="[도현컴퍼니] 경기 용인 모현읍 '도현피아노' 학원 운영을 AI로 자동화하고, 검증된 시스템을 상품으로 판매. 비전: 시간을 팔지 않고 시스템을 팔아 시간을 사는 회사. 세 수익기둥: ①학원 운영 자동화(현금흐름) ②시스템 판매(확장) ③지식상품(전자책). 운영 OS: 린 스타트업(견인 우선, 완벽보다 물길). 조직: 대표(원장 이보나)·클부장(COO)·①학원운영 ②마케팅 ③수익화 ④전자책 ⑤인프라 ⑥전략기획실 ⑦보안 ⑧홈페이지·CS.";
+  var _sample=null, _tried=false;
+  function getSample(){ if(_tried) return Promise.resolve(_sample); _tried=true; return (window.claude&&claude.use?claude.use("sample"):Promise.resolve(null)).then(function(s){_sample=s; return s;}).catch(function(){return null;}); }
+  function aiBusy(btn,on,label){ btn.disabled=on; btn.textContent=on?"🤖 생성 중…":label; }
+
+  var TEAMS_FOR_AI=[["t1","① 학원운영"],["t2","② 마케팅"],["t3","③ 수익화"],["t4","④ 전자책"],["t5","⑤ 인프라"],["t6","⑥ 전략기획실"],["t7","⑦ 보안"],["t8","⑧ 홈페이지·CS"]];
+  $("#rrAI").addEventListener("click",function(){
+    var btn=$("#rrAI"); if(btn.disabled) return; aiBusy(btn,true);
+    getSample().then(function(s){
+      if(!s){ aiBusy(btn,false,"🤖 빈자리 팀 관점 채우기"); $("#rrAInote").hidden=false; $("#rrAInote").textContent="이 화면에서는 AI 보조를 쓸 수 없습니다. 각 칸에 직접 적어주세요."; return; }
+      var empty=TEAMS_FOR_AI.filter(function(t){return !(S.voices&&S.voices[t[0]] && S.voices[t[0]].trim());});
+      var ask=empty.length?empty:TEAMS_FOR_AI;
+      var p=BRIEF+"\n\n안건: \""+(S.topic||"")+"\"\n목표: "+(S.goal||"")+"\n\n아래 각 팀의 '팀장'이 이 안건 회의에서 낼 한마디(관점·우려·기회)를 각 1문장, 구체적으로 써라. 팀 성격에 맞게. JSON만: {\"voices\":{"+ask.map(function(t){return '"'+t[0]+'":"..."';}).join(",")+"}}";
+      s.json(p,{modelTier:"default"}).then(function(d){
+        S.voices=S.voices||{}; S.spoke=S.spoke||{};
+        if(d&&d.voices){ ask.forEach(function(t){ if(d.voices[t[0]]){ S.voices[t[0]]=d.voices[t[0]]; S.spoke[t[0]]=true; } }); }
+        if(S.example)S.example=false; save(); renderWho(); aiBusy(btn,false,"🤖 빈자리 팀 관점 채우기"); toast("팀 관점 초안을 채웠습니다 — 검토하세요");
+      }).catch(function(e){ aiBusy(btn,false,"🤖 빈자리 팀 관점 채우기"); toast(e&&e.code==="rate_limited"?"잠시 후 다시":"생성 실패 — 직접 입력하세요"); });
+    });
+  });
+  $("#ideaAI").addEventListener("click",function(){
+    var btn=$("#ideaAI"); if(btn.disabled) return; aiBusy(btn,true);
+    getSample().then(function(s){
+      if(!s){ aiBusy(btn,false,"🤖 아이디어 씨앗 5개"); toast("이 화면에서는 AI 보조 불가 — 직접 추가하세요"); return; }
+      var p=BRIEF+"\n\n안건: \""+(S.topic||"")+"\"\n목표: "+(S.goal||"")+"\n\n이 안건에 대한 서로 다른 각도의 실행 아이디어 5개를, 각 한 줄로. 이번 주 착수 가능한 구체적인 것. JSON만: {\"ideas\":[\"...\",\"...\",\"...\",\"...\",\"...\"]}";
+      s.json(p,{modelTier:"default"}).then(function(d){
+        if(d&&d.ideas&&d.ideas.length){ d.ideas.slice(0,6).forEach(function(t){ if(t&&t.trim()) S.ideas.push({t:t.trim(),by:"rov",v:0}); }); if(S.example)S.example=false; save(); renderIdeas(); toast("아이디어 씨앗 "+Math.min(6,d.ideas.length)+"개 추가"); }
+        aiBusy(btn,false,"🤖 아이디어 씨앗 5개");
+      }).catch(function(e){ aiBusy(btn,false,"🤖 아이디어 씨앗 5개"); toast(e&&e.code==="rate_limited"?"잠시 후 다시":"생성 실패 — 직접 추가하세요"); });
+    });
+  });
+
+  function renderAll(){ renderStepper(); showPhase(); renderWho(); renderIdeas(); renderActions(); }
+
+  /* Init */
+  bind("#topic","topic"); bind("#goal","goal"); bind("#tbox","tbox"); bind("#preread","preread");
+  personSelect($("#ideaBy"), "col");
+  bindSel("#dDriver","driver"); bindSel("#dApprover","approver");
+  bindVal("#dDecision","decision"); bindVal("#dCI","ci");
+  $("#dCommit").checked=!!S.commit; $("#dCommit").addEventListener("change",function(){ S.commit=$("#dCommit").checked; save(); });
+  if(!S.example) $("#exTag").style.display="none";
+  if(!S.actions||!S.actions.length){ S.actions=[{t:"",dri:"col",due:"",st:"todo"}]; }
+  paintClock();
+  renderAll();
+})();
+</script>

@@ -1,0 +1,484 @@
+{
+  "workspace": {
+    "name": "이수한의 노션",
+    "id": "52aca2bf-c770-816a-974b-0003d268e04c",
+    "user_email": "dabom8455@gmail.com"
+  },
+  "parent_page": {
+    "title": "도현컴퍼니 — 회사 운영 매뉴얼",
+    "notion_page_id": "3d5ca2bf-c770-8166-ae68-fbc9a3094134",
+    "notion_url": "https://app.notion.com/p/3d5ca2bfc7708166ae68fbc9a3094134",
+    "maps_to_repo_file": "README.md"
+  },
+  "documents": [
+    {
+      "repo_file": "README.md",
+      "notion_page_id": "3d5ca2bf-c770-8166-ae68-fbc9a3094134",
+      "notion_title": "도현컴퍼니 — 회사 운영 매뉴얼",
+      "note": "부모 페이지. README 본문의 개요 섹션에 해당. 문서 지도 목록은 하위 페이지 구조로 대체됨."
+    },
+    {
+      "repo_file": "docs/00_company_charter.md",
+      "notion_page_id": "3d5ca2bf-c770-811d-95ac-f4afae3ae8ed",
+      "notion_title": "01 · 회사 헌장 (Company Charter)"
+    },
+    {
+      "repo_file": "docs/01_org_and_clbujang.md",
+      "notion_page_id": "3d5ca2bf-c770-8105-a20c-e69bcb840093",
+      "notion_title": "02 · 조직 구조 & 클부장 운영체계"
+    },
+    {
+      "repo_file": "docs/teams/00_team_operating_guidelines.md",
+      "notion_page_id": "3d5ca2bf-c770-81d0-8802-c6705e142c2e",
+      "notion_title": "팀별 업무 운영지침 (Team Operating Guidelines)"
+    },
+    {
+      "repo_file": "docs/02_roadmap_2026.md",
+      "notion_page_id": "3d5ca2bf-c770-8192-b6d5-f4f59f9abd16",
+      "notion_title": "03 · 2026 로드맵 — MVP 출시까지"
+    },
+    {
+      "repo_file": "docs/teams/team1_academy_ops.md",
+      "notion_page_id": "3d5ca2bf-c770-813d-bc1d-c71f1ce97f52",
+      "notion_title": "팀① · 학원운영팀"
+    },
+    {
+      "repo_file": "docs/teams/team2_marketing.md",
+      "notion_page_id": "3d5ca2bf-c770-8170-940d-f040ac4e028f",
+      "notion_title": "팀② · 마케팅팀"
+    },
+    {
+      "repo_file": "docs/teams/team3_monetization.md",
+      "notion_page_id": "3d5ca2bf-c770-8147-ac6a-fd109be52162",
+      "notion_title": "팀③ · 재무회계세무팀",
+      "note": "2026-09-11 수익화팀 → 재무·회계 수익화팀 → '재무회계세무팀' 확정(대표 지시), 팀장=재팀장. 재무 정립·회계 관리·세무 책임. 제목·본문 노션 동기화(하위 3개 보존 부분 치환)."
+    },
+    {
+      "repo_file": "docs/teams/team4_ebook.md",
+      "notion_page_id": "3d5ca2bf-c770-815e-947e-fdc5c4c856ac",
+      "notion_title": "팀④ · 지식·콘텐츠 수익화팀",
+      "note": "2026-09-11 구 '전자책·글쓰기팀' → '지식·콘텐츠 수익화팀' 재편(브리프 #001 대표 승인). 전자책 단독 X → 리드마그넷·템플릿·해외 영어 콘텐츠로 시스템 판매 퍼널 복무. 제목·본문 노션 동기화 완료(하위 문서 2개 보존 위해 부분 치환)."
+    },
+    {
+      "repo_file": "docs/teams/team5_data_infra.md",
+      "notion_page_id": "3d5ca2bf-c770-8195-b293-f8a6fc6f8987",
+      "notion_title": "팀⑤ · 시스템·데이터 인프라 (클부장 직속)"
+    },
+    {
+      "repo_file": "docs/teams/team6_strategy_intel.md",
+      "notion_page_id": "3d5ca2bf-c770-81d0-b38b-f815f8e30439",
+      "notion_title": "전략기획실 · 대표 직속 (전실장 · A팀/B팀)",
+      "note": "2026-09-11 구 ⑥(클부장 직속 인텔) → 대표 직속 전략기획실로 격상. 전실장=클부장 동급. A팀 수립·B팀 비판. 일일 인텔 루틴 승계."
+    },
+    {
+      "repo_file": "docs/teams/strategy/redteam_checklist.md",
+      "notion_page_id": "3d8ca2bf-c770-813a-b18f-c47ff476e7a7",
+      "notion_title": "전략 레드팀 체크리스트 — B팀 표준 질문 10",
+      "note": "전략기획실 하위. B팀이 A팀 전략안을 때리는 표준 10문항 + 판정규칙 + SOP. 2026-09-11 클부장 일일 기틀."
+    },
+    {
+      "repo_file": "docs/teams/team7_security.md",
+      "notion_page_id": "3d7ca2bf-c770-8198-a2f0-fc7eb83f2914",
+      "notion_title": "팀⑦ · 보안팀 (정보·시스템·법적 안정성 · 클부장 직속)",
+      "note": "2026-09-11 신설. 보팀장 지휘·클부장 직속. 신념: 수익·속도 최우선, 보안은 안전벨트. 보안 신호등(GO/조건부/보류)."
+    },
+    {
+      "repo_file": "docs/teams/team8_homepage_cs.md",
+      "notion_page_id": "3d7ca2bf-c770-8148-a2e2-dde1783b558a",
+      "notion_title": "팀⑧ · 홈페이지 구축·유지보수(CS)팀",
+      "note": "2026-09-11 신설. 홈팀장 지휘·정규 팀. 모든 홈페이지 구조설계·생성·관리·수리 + 백엔드 로드맵. OSS 도입은 대표 승인 게이트."
+    },
+    {
+      "repo_file": "docs/templates/weekly_report.md",
+      "notion_page_id": "3d5ca2bf-c770-81db-a006-d5aec6af53d7",
+      "notion_title": "04 · 주간 보고 템플릿 (클부장 → 대표)"
+    },
+    {
+      "repo_file": "docs/briefs/homepage_build_brief.md",
+      "notion_page_id": "3d5ca2bf-c770-8156-859a-e9cd1ed854a0",
+      "notion_title": "지시서 · 홈페이지 구축 (마케팅팀)"
+    },
+    {
+      "repo_file": "docs/infra/web_urls.md",
+      "notion_page_id": "3d8ca2bf-c770-81a4-ada9-da74001539c4",
+      "notion_title": "🌐 도현컴퍼니 웹페이지 URL 모음 (실시간 확인용)",
+      "note": "⑧ 홈페이지·CS팀 하위. 새 웹페이지 배포 시 한 줄 추가. 2026-09-11 전부 200 OK."
+    },
+    {
+      "repo_file": "docs/infra/data_registry.md",
+      "notion_page_id": "3d5ca2bf-c770-81be-afed-eb47936bb59d",
+      "notion_title": "데이터 레지스트리 (Data Registry)",
+      "note": "2026-09-11 조직진단 반영: 가동 DB 10개 전수 등록 + 거버넌스 4규칙. 빈 중복본 792b6d67은 삭제예정."
+    },
+    {
+      "repo_file": "docs/ops/org_diagnosis_2026-09-11.md",
+      "notion_page_id": "3d8ca2bf-c770-817c-80b0-d9da782b9560",
+      "notion_title": "조직진단 & 업무 재조정 (2026-09-11)",
+      "note": "⑤ 인프라 하위. 역할 지도·중복(D1 월별원생현황 2개/D2 대장 4→10)·경계(O1 리드/O2 원생표) 재조정."
+    },
+    {
+      "repo_file": "docs/playbook/README.md",
+      "notion_page_id": "3d5ca2bf-c770-81c0-bcbf-d526c07047c0",
+      "notion_title": "📚 지식 베이스 (Playbook Library)"
+    },
+    {
+      "repo_file": "docs/playbook/running_lean.md",
+      "notion_page_id": "3d5ca2bf-c770-819e-b5b4-de6912c81882",
+      "notion_title": "플레이북 #1 — 린 스타트업 적용서"
+    },
+    {
+      "repo_file": "docs/playbook/metascript_problem_interview.md",
+      "notion_page_id": "3d5ca2bf-c770-816f-a54e-e69539341532",
+      "notion_title": "메타스크립트 — 문제 파악 인터뷰 (학원 운영)"
+    },
+    {
+      "repo_file": "docs/mvp/consult_followup_kit.md",
+      "notion_page_id": "3d5ca2bf-c770-8187-bc4d-c7abb3db038a",
+      "notion_title": "상담 후속 관리 키트 (컨시어지 MVP v1)"
+    },
+    {
+      "repo_file": "docs/infra/business_profile.md",
+      "notion_page_id": "3d5ca2bf-c770-8105-91d5-d7c23b8a436c",
+      "notion_title": "회사 기본 정보 (Business Profile)"
+    },
+    {
+      "repo_file": "docs/mvp/operations_map.md",
+      "notion_page_id": "3d5ca2bf-c770-8124-a45c-cff37b9c41cc",
+      "notion_title": "운영 업무 지도 (Operations Map)"
+    },
+    {
+      "repo_file": "docs/mvp/cycle1_90day.md",
+      "notion_page_id": "3d5ca2bf-c770-8180-aa20-e0f7a2c34075",
+      "notion_title": "90일 1차 주기 — 상담 후속 관리 검증"
+    },
+    {
+      "repo_file": "docs/teams/reports/2026-09-08_마케팅_채널전략.md",
+      "notion_page_id": "3d5ca2bf-c770-8150-b8fe-f22bb7ab24c1",
+      "notion_title": "[마팀장] 첫 콘텐츠 채널 전략 (2026-09-08)"
+    },
+    {
+      "repo_file": "docs/teams/reports/2026-09-08_수익화_재무1장.md",
+      "notion_page_id": "3d5ca2bf-c770-8160-99db-e587da04192a",
+      "notion_title": "[수팀장] 학원 재무 1장 틀 + 데이터 요청 (2026-09-08)"
+    },
+    {
+      "repo_file": "docs/teams/reports/2026-09-08_전자책_상담노하우북_목차.md",
+      "notion_page_id": "3d5ca2bf-c770-8146-a5cf-d36a434d7da9",
+      "notion_title": "[전팀장] 첫 전자책 「상담 노하우북」 목차 (2026-09-08)"
+    },
+    {
+      "repo_file": "docs/strategy/competitor_analysis_2026-09.md",
+      "notion_page_id": "3d5ca2bf-c770-8133-98b9-e382b1a133d7",
+      "notion_title": "경쟁사·시장 분석 1차 (2026-09)"
+    },
+    {
+      "repo_file": "docs/finance/financials_snapshot.md",
+      "notion_page_id": "3d5ca2bf-c770-8102-a1ae-ce7f396a3d12",
+      "notion_title": "재무 1장 (Financial Snapshot)"
+    },
+    {
+      "repo_file": "docs/finance/accounting_plan.md",
+      "notion_page_id": "3d8ca2bf-c770-81a0-9ebb-dfab7bd7ff9f",
+      "notion_title": "📘 재무상태 정립 & 회계 관리 계획",
+      "note": "③ 재무·회계 수익화팀 하위. 2부문 분리 회계·월 마감·세무·지표. 2026-09-11 재팀장. 대표 3건 승인."
+    },
+    {
+      "repo_file": "docs/finance/tax_advisory_request.md",
+      "notion_page_id": "3d8ca2bf-c770-81f6-943c-ff917a051bd0",
+      "notion_title": "🧾 세무 자문 요청서 (세무사 전달용)",
+      "note": "③ 재무·회계 하위. 2026-09-11 대표 세무자문 진행 승인. 세무사 전달 후 답변 반영."
+    },
+    {
+      "repo_file": "docs/ebook/sangdam_followup_book_draft.md",
+      "notion_page_id": "3d5ca2bf-c770-8195-aba8-fe8b1b7ab6d2",
+      "notion_title": "전자책 초안 — 상담이 등록으로 이어지는 법 (v0.2)"
+    },
+    {
+      "repo_file": "docs/mvp/followup_action_card.md",
+      "notion_page_id": "3d5ca2bf-c770-8170-a728-dfd02d1288dd",
+      "notion_title": "상담 후속 실전 카드 (핸드폰 옆에 두기)"
+    },
+    {
+      "repo_file": "docs/ops/routines.md",
+      "notion_page_id": "3d5ca2bf-c770-819a-9a51-c4753164820f",
+      "notion_title": "자동 루틴 대장 (Routines)"
+    },
+    {
+      "repo_file": "docs/strategy/homepage_re_and_pagemap.md",
+      "notion_page_id": "3d5ca2bf-c770-8195-bd18-c3669d055220",
+      "notion_title": "홈페이지 역설계 분석 + 페이지맵"
+    },
+    {
+      "repo_file": "docs/external/company_work_manual.md",
+      "notion_page_id": "3d5ca2bf-c770-81cc-b730-c1e65ee89044",
+      "notion_title": "도현컴퍼니 업무매뉴얼 (외부 협력사용) v1.0"
+    },
+    {
+      "repo_file": "docs/roles/rovisor.md",
+      "notion_page_id": "3d5ca2bf-c770-813d-93c7-f4306c1659d6",
+      "notion_title": "로비서 — 대표 직속 AI 비서 운영지침"
+    },
+    {
+      "repo_file": "docs/brand/company_identity.md",
+      "notion_page_id": "3d6ca2bf-c770-8193-a097-d930252ba20b",
+      "notion_title": "도현컴퍼니 — 회사 아이덴티티 (Company Identity)"
+    },
+    {
+      "repo_file": "docs/teams/marketing/blog_sop.md",
+      "notion_page_id": "3d6ca2bf-c770-8198-a002-c2fd37509ce5",
+      "notion_title": "⭐ 블로그 글쓰기 SOP — 맘카페 상담전환 (② #1)",
+      "note": "구 페이지(3d6ca2bf-c770-8146-8f54-f3ece1525fbe) 휴지통 이동됨 → 2026-09-09 ② 하위에 재생성."
+    },
+    {
+      "repo_file": "docs/teams/marketing/writing_playbook.md",
+      "notion_page_id": "3d6ca2bf-c770-81f5-a8de-fd8005a0044e",
+      "notion_title": "마케팅 글쓰기 교본 — 블로그·스레드·인스타 (전자책 요약)"
+    },
+    {
+      "repo_file": "docs/teams/marketing/blog_guide.md",
+      "notion_page_id": "3d6ca2bf-c770-812c-87e0-f25e06c1ef2a",
+      "notion_title": "도현피아노 블로그 보이스 가이드 (실전 톤 고정판)"
+    },
+    {
+      "repo_file": "docs/teams/marketing/threads_guide.md",
+      "notion_page_id": "3d6ca2bf-c770-813d-a4b8-fe1292f6f0d5",
+      "notion_title": "스레드 동반 작성 가이드 — 블로그 1글 = 스레드 1글"
+    },
+    {
+      "repo_file": "docs/teams/marketing/team2_roles_kb.md",
+      "notion_page_id": "3d8ca2bf-c770-819b-b813-eae9377ffd13",
+      "notion_title": "🧑‍💻 마케팅 채널별 4담당 체제 & 사업화 지식 로드맵",
+      "note": "② 마케팅 하위. 2026-09-11 대표 지시. 블·유·릴·쥐 대리 + 지식 로드맵·수익 KPI·보고체계. 마팀장 일일보고 루틴 trig_016oHA."
+    },
+    {
+      "repo_file": "docs/teams/marketing/drafts/2026-09-09_블로그_01_우리아이제대로배우나.md",
+      "notion_page_id": "3d6ca2bf-c770-81da-b7fc-f71ac7eb868f",
+      "notion_title": "[블로그 발행본 01] 우리 아이, 피아노를 '외워서' 치고 있진 않나요?"
+    },
+    {
+      "repo_file": "docs/teams/marketing/drafts/2026-09-11_블로그_04_연습안하는아이.md",
+      "notion_page_id": "3d8ca2bf-c770-81d0-8189-d5b039495efa",
+      "notion_title": "[블로그 04·스레드] 피아노 연습 안 하는 아이 (2026-09-11)",
+      "note": "② 마케팅 하위. 04호 연습습관 공감형. 콘텐츠 로그 1행 기록."
+    },
+    {
+      "repo_file": "docs/teams/marketing/drafts/2026-09-10_블로그_02_몇살에시작.md",
+      "notion_page_id": "3d8ca2bf-c770-8122-bca2-d1d5366c28e2",
+      "notion_title": "[블로그 발행본 02] 피아노, 몇 살에 시작하는 게 좋을까요? (2026-09-10)",
+      "note": "② 마케팅 하위. 2026-09-11 뒤늦게 노션 동기화(초기 누락분)."
+    },
+    {
+      "repo_file": "docs/teams/marketing/drafts/2026-09-11_블로그_03_학원고르는체크리스트.md",
+      "notion_page_id": "3d8ca2bf-c770-8173-a206-f86d4c5bfb86",
+      "notion_title": "[블로그 발행본 03] 피아노 학원 고르는 체크리스트 5가지 (2026-09-11)",
+      "note": "② 마케팅 하위. 2026-09-11 뒤늦게 노션 동기화(초기 누락분)."
+    },
+    {
+      "repo_file": "docs/mvp/lead_status_sop.md",
+      "notion_page_id": "3d6ca2bf-c770-81bd-9158-c23d12d43e37",
+      "notion_title": "리드 상태 전이 규칙 (Lead Status SOP)"
+    },
+    {
+      "repo_file": "docs/finance/tuition_pricing.md",
+      "notion_page_id": "3d6ca2bf-c770-81bf-89bb-e8f0f220e1e2",
+      "notion_title": "교습비 가격표 — 확정본 (③수익화)"
+    },
+    {
+      "repo_file": "docs/finance/students_roster_analysis.md",
+      "notion_page_id": null,
+      "notion_title": "(집계만 저장소 · 개별 데이터는 노션 「원생 명단」 DB)"
+    },
+    {
+      "repo_file": "docs/mvp/monthly_progress_report.md",
+      "notion_page_id": "3d6ca2bf-c770-81bc-8d0c-df2b50856b1f",
+      "notion_title": "⭐ 월말 학부모 진도 리포트 자동화 (#1 최우선)",
+      "note": "2026-09-11 §6-1 연속 사이클·역할분담 추가."
+    },
+    {
+      "repo_file": "docs/mvp/parent_feedback_guide.md",
+      "notion_page_id": "3d8ca2bf-c770-8199-b858-d3b0c704760d",
+      "notion_title": "월말 「원장 피드백」 작성지침 (학부모께 드리는 글)",
+      "note": "① 학원운영 하위. AI가 학부모 원장피드백 작성 시 준수. 공손+전문, 연속성(지난달 참조). 25일 루틴 연결."
+    },
+    {
+      "repo_file": "docs/knowledge/sein2_reward_pack/00_index.md",
+      "notion_page_id": "3d7ca2bf-c770-8121-8711-f962bed1448a",
+      "notion_title": "🎁 세인투 AI 수익화 풀패키지 — 리워드 모음 (도현컴퍼니 적용판)",
+      "note": "허브 페이지. 하위: 도구가이드 / 템플릿60선(유튜브·블로그·인스타·쓰레드·이메일) / 전자책 1~4권. 원본: laced-uranium-1ee.notion.site 리워드 모음. 2026-09-10 클부장 임포트."
+    },
+    {
+      "repo_file": "docs/knowledge/sein2_reward_pack/tools.md",
+      "notion_page_id": "3d7ca2bf-c770-81b7-94e4-f7c89a08b32b",
+      "notion_title": "AI 도구 가이드 (2026.09 기준, 77종)"
+    },
+    {
+      "repo_file": "docs/knowledge/sein2_reward_pack/templates.md",
+      "notion_page_id": "3d7ca2bf-c770-811c-ab34-eb354b38bb28",
+      "notion_title": "플랫폼 프롬프트 템플릿 60선 (서브허브)",
+      "note": "하위 5페이지: 유튜브/블로그/인스타그램/쓰레드/이메일 각 12선. ② 마케팅 데일리 프롬프트 엔진."
+    },
+    {
+      "repo_file": "docs/knowledge/sein2_reward_pack/ebook1.md",
+      "notion_page_id": "3d7ca2bf-c770-8189-b74f-dc9869f3d49a",
+      "notion_title": "1권 · AI 활용의 기본기 (GPT~에이전트)",
+      "note": "부모: 전자책 프롬프트 모음집 3d7ca2bf-c770-810c-a30f-dab764e3ecea"
+    },
+    {
+      "repo_file": "docs/knowledge/sein2_reward_pack/ebook2.md",
+      "notion_page_id": "3d7ca2bf-c770-816a-80c9-dd332c21c036",
+      "notion_title": "2권 · 인플루언서 AI 글쓰기 자동화"
+    },
+    {
+      "repo_file": "docs/knowledge/sein2_reward_pack/ebook3.md",
+      "notion_page_id": "3d7ca2bf-c770-81fe-b886-f09cdd36d1a9",
+      "notion_title": "3권 · 월천 수익 챗GPT 활용"
+    },
+    {
+      "repo_file": "docs/knowledge/sein2_reward_pack/ebook4.md",
+      "notion_page_id": "3d7ca2bf-c770-81df-a8ef-c2dcf3d9e213",
+      "notion_title": "4권 · 30일 전자책 출판 & 판매"
+    },
+    {
+      "repo_file": "docs/meetings/business_meeting_system.md",
+      "notion_page_id": "3d7ca2bf-c770-8142-aba0-d95684e4aee7",
+      "notion_title": "도현컴퍼니 사업회의 (Business Sync) — 운영 시스템",
+      "note": "2026-09-11 '왕궁 어전회의' → 실리콘밸리식 '사업회의' 개편. 진행 도구(아티팩트 v2): claude.ai/code/artifact/dcecbfcf-b7e2-44c3-92cc-e0d68b33d6cf (라운드로빈·브레인스토밍·DACI·DRI, AI 보조)."
+    },
+    {
+      "repo_file": "docs/roles/jegal_advisor.md",
+      "notion_page_id": "3d7ca2bf-c770-81ba-ac61-f7f230255746",
+      "notion_title": "🏰 왕궁 어전회의 & 軍師 제갈량 (전략 참모 제도)",
+      "note": "⚠️ 2026-09-11 대표 지시로 노션 페이지를 「🗑️ 삭제예정(휴지통)」으로 이동함(영구삭제 대기) — sync-docs 재동기화 금지. 전략 기능은 전략기획실로, 회의는 사업회의로 이관 완료. (제갈량 daily 계책 루틴은 repo 문서 기준으로 잔존)"
+    },
+    {
+      "repo_file": "docs/roles/royal_court.md",
+      "notion_page_id": "3d7ca2bf-c770-81ba-ac61-f7f230255746",
+      "notion_title": "(↑ 왕궁 어전회의 허브에 통합)"
+    },
+    {
+      "repo_file": "docs/roles/jegal_onboarding_action_plan.md",
+      "notion_page_id": "3d7ca2bf-c770-81ba-ac61-f7f230255746",
+      "notion_title": "(↑ 왕궁 어전회의 허브에 통합 · 대표 실행서)"
+    },
+    {
+      "repo_file": "docs/teams/strategy/brief_001_수익화_해외전략.md",
+      "notion_page_id": "3d8ca2bf-c770-8139-9e1a-d618ec5b3f06",
+      "notion_title": "📑 전략 브리프 #001 — 수익화·해외 판매 전략",
+      "note": "전략기획실 하위. 2026-09-11 대표 승인(39만원·Gumroad·④팀 재편)."
+    },
+    {
+      "repo_file": "docs/teams/strategy/brief_002_북극성_큰그림.md",
+      "notion_page_id": "3d8ca2bf-c770-81aa-b9b4-d3dd4970b8c2",
+      "notion_title": "🧭 전략 브리프 #002 — 북극성(큰그림)",
+      "note": "전략기획실 하위. 겉 뾰족(음악교육)·속 범용(교습 OS), 교두보 B1→B2→B3 대표 승인."
+    },
+    {
+      "repo_file": "docs/teams/strategy/brief_003_GTM_리드마그넷_퍼널.md",
+      "notion_page_id": "3d8ca2bf-c770-81ba-a0c9-d850e54ad511",
+      "notion_title": "🎯 전략 브리프 #003 — GTM 설계: 리드마그넷→첫 수익화 퍼널",
+      "note": "전략기획실 하위. 가치 사다리 4층·원장 ICP·카페/스레드 채널·가격 앵커."
+    },
+    {
+      "repo_file": "docs/teams/strategy/brief_004_운영확장_플레이북.md",
+      "notion_page_id": "3d8ca2bf-c770-81d4-be5c-dfa2b55065db",
+      "notion_title": "⚙️ 전략 브리프 #004 — 운영·확장 플레이북(팔리면 어떻게 관리)",
+      "note": "전략기획실 하위. 노트북→관리형 서버리스, 고객규모 Tier A~D, 팀장별 역할."
+    },
+    {
+      "repo_file": "docs/teams/reports/2026-09-11_클부장_종합계획_일요일까지.md",
+      "notion_page_id": "3d8ca2bf-c770-818d-8117-eec3f4bb90dd",
+      "notion_title": "🗓️ 클부장 종합계획 — 일요일까지(후반부) 2026-09-11",
+      "note": "클부장 보고(최상위 부모 하위). 금요일 특례 선발행."
+    },
+    {
+      "repo_file": "docs/strategy/idea_scan/2026-W37.md",
+      "notion_page_id": "3d8ca2bf-c770-81dc-9fc2-d32ae769ec48",
+      "notion_title": "📈 주간 트렌드·아이디어 스캔 — 2026-W37",
+      "note": "전략기획실 하위. 주간 스캔 TOP3. 상세 5건은 아이디어뱅크 DB."
+    },
+    {
+      "repo_file": "docs/teams/marketing/leadmagnet/리드마그넷_잡무탈출7단계_초안.md",
+      "notion_page_id": "3d8ca2bf-c770-8195-9c97-c6901599d03a",
+      "notion_title": "[리드마그넷 초안] 잡무 탈출 7단계 체크리스트",
+      "note": "④ 지식·콘텐츠 하위. 퍼널 0층 무료 PDF 초안."
+    },
+    {
+      "repo_file": "docs/teams/marketing/tripwire/트립와이어_노션운영키트_기획안.md",
+      "notion_page_id": "3d8ca2bf-c770-8107-825f-d72e14b567f2",
+      "notion_title": "[트립와이어 기획안] 노션 피아노학원 운영 키트",
+      "note": "④ 지식·콘텐츠 하위. 퍼널 1층 9,900원 상품 기획."
+    }
+  ],
+  "team_pages": {
+    "note": "새 팀 관련 문서는 최상위가 아니라 해당 팀 페이지 하위에 만든다 (sync-docs SKILL §2-B).",
+    "①_academy_ops": "3d5ca2bf-c770-813d-bc1d-c71f1ce97f52",
+    "②_marketing": "3d5ca2bf-c770-8170-940d-f040ac4e028f",
+    "③_monetization": "3d5ca2bf-c770-8147-ac6a-fd109be52162",
+    "④_ebook": "3d5ca2bf-c770-815e-947e-fdc5c4c856ac",
+    "⑤_data_infra": "3d5ca2bf-c770-8195-b293-f8a6fc6f8987",
+    "⑥_strategy_intel": "3d5ca2bf-c770-81d0-b38b-f815f8e30439",
+    "⑦_security": "3d7ca2bf-c770-8198-a2f0-fc7eb83f2914",
+    "⑧_homepage_cs": "3d7ca2bf-c770-8148-a2e2-dde1783b558a"
+  },
+  "databases": [
+    {
+      "name": "① 리드 (Lead)",
+      "notion_url": "https://app.notion.com/p/fd3766edbddc47edb931ba8f69f34c06",
+      "data_source_id": "2a087e96-6c25-4032-bfe2-bd306ceb4d80"
+    },
+    {
+      "name": "② 상담 (Consultation)",
+      "notion_url": "https://app.notion.com/p/b357ac999eae4fc0b7411e02404f5717",
+      "data_source_id": "c62b2bf6-d152-4b5d-91c3-adcffa19e551"
+    },
+    {
+      "name": "⑪ 의사결정 로그 (Decision Log)",
+      "notion_url": "https://app.notion.com/p/d34fbaac99a145ab99e80d7da9109d4a",
+      "data_source_id": "8df0dcc8-f266-4e01-ae3d-a939a98c17cc"
+    },
+    {
+      "name": "트렌드·아이디어 뱅크 (Idea Bank) — ⑥ 전략기획실",
+      "notion_url": "https://app.notion.com/p/34e30fd1e8cf46d190ff8f3be4192767",
+      "data_source_id": "f0a10baa-4e0d-4a2d-a0af-b8dd3aa52e73"
+    },
+    {
+      "name": "인사이트 노트 (Insight Notes) — 로비서",
+      "notion_url": "https://app.notion.com/p/d1037663c7eb409986dcb64ef67679a0",
+      "data_source_id": "7632c586-8967-4447-a499-fb36087977d6"
+    },
+    {
+      "name": "원생 명단 (Students) — 9월 출석부 기반 · ① 학원운영",
+      "notion_url": "https://app.notion.com/p/e614e5318ed34b88a4938f55412a4d22",
+      "data_source_id": "fd6a0c10-d0f8-48d8-b457-66dfa7c17b5f"
+    },
+    {
+      "name": "월간 진도 리포트 (Progress Reports) — ① 학원운영",
+      "notion_url": "https://app.notion.com/p/2e484c196851424db9ff541754289d57",
+      "data_source_id": "ecfad058-1fcd-41ab-a180-af93e256b22e"
+    },
+    {
+      "name": "월별 원생 현황 (Monthly Roster Snapshot) — ① 학원운영",
+      "notion_url": "https://app.notion.com/p/fc70e8ca6888451e88657711da6f6d6c",
+      "data_source_id": "a83b4210-7e60-4a3e-9b98-ee8d5f81f752",
+      "mirror_repo_file": "docs/mvp/roster_monthly_snapshot.md"
+    },
+    {
+      "name": "일일 인텔 로그 (Daily Intel Log) — ⑥ 전략기획실",
+      "notion_url": "https://app.notion.com/p/4029b63a4ba84aa5a894f2e151a1bc87",
+      "data_source_id": "725768a5-af4f-4455-97fa-8a408e1efe16",
+      "note": "매일 07:30 인텔 브리핑 기록. SOP: docs/roles/intel_daily_brief.md"
+    },
+    {
+      "name": "콘텐츠 발행·성과 로그 (Content Log) — ② 마케팅",
+      "notion_url": "https://app.notion.com/p/60c81dc1fae94e00b06633d84be70ada",
+      "data_source_id": "81d1a75d-5b14-40a4-b38a-09427be60c60",
+      "note": "블로그·스레드 발행마다 1행. 유입·상담 채워 견인 측정. blog_sop §7."
+    },
+    {
+      "name": "🤝 고객 관리 (제품 판매 CRM) — 클부장 총괄",
+      "notion_url": "https://app.notion.com/p/df3dd10d76974a88a09d9b317066b281",
+      "data_source_id": "947fa84c-5d01-4c2b-be96-747d34054293",
+      "note": "2026-09-11 신설. 우리 제품 구매 원장 고객 파이프라인(리드→구매자→구독자). 원생명단과 별개. 연락처 최소수집·⑦보안 경계."
+    }
+  ]
+}

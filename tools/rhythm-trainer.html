@@ -1,0 +1,288 @@
+<title>도현 리듬 연습기</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Fredoka:wght@500;600;700&display=swap">
+<style>
+  :root{
+    --bg:#FBF7EE; --card:#FFFFFF; --card2:#FFF8E9;
+    --ink:#2A2118; --ink-soft:#6B5D49; --muted:#9A8B72;
+    --line:#EADFC7; --line-strong:#DCC79B;
+    --gold:#C9A24B; --gold-hi:#E0BE6B; --gold-deep:#9A7A34;
+    --green:#2E7D5B; --green-hi:#3FA574;
+    --beat:#C4463A; --beat-soft:#F0C9C3;
+    --shadow:0 10px 30px rgba(120,95,40,.12);
+    --sans:'Noto Sans KR',system-ui,sans-serif;
+    --round:'Fredoka','Noto Sans KR',sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#16120C; --card:#211A10; --card2:#271F12; --ink:#F1E7D2; --ink-soft:#C6B695; --muted:#9C8B70;
+    --line:#33291a; --line-strong:#4a3a22; --beat-soft:#3a1f1b; --shadow:0 14px 36px rgba(0,0,0,.5);
+  }}
+  :root[data-theme="dark"]{
+    --bg:#16120C; --card:#211A10; --card2:#271F12; --ink:#F1E7D2; --ink-soft:#C6B695; --muted:#9C8B70;
+    --line:#33291a; --line-strong:#4a3a22; --beat-soft:#3a1f1b; --shadow:0 14px 36px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); font-weight:400; line-height:1.6; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:560px; margin:0 auto; padding-left:18px; padding-right:18px; padding-block:26px 60px;}
+
+  header{text-align:center; margin-bottom:18px;}
+  .brand{font-size:12px; letter-spacing:.34em; color:var(--gold-deep); font-weight:700; padding-left:.34em;}
+  h1{font-family:var(--round); font-weight:700; font-size:30px; margin:.15em 0 .1em; color:var(--ink); letter-spacing:-.01em;}
+  header p{margin:0; color:var(--ink-soft); font-size:14px;}
+
+  .tabs{display:flex; gap:8px; background:var(--card2); border:1px solid var(--line); border-radius:14px; padding:6px; margin:18px 0;}
+  .tab{flex:1; cursor:pointer; border:none; background:transparent; font-family:var(--round); font-weight:600; font-size:15px; color:var(--ink-soft);
+    padding:11px; border-radius:9px; transition:.15s;}
+  .tab[aria-selected="true"]{background:linear-gradient(135deg,var(--gold-hi),var(--gold)); color:#2a1e05; box-shadow:0 3px 10px rgba(201,162,75,.3);}
+
+  .card{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:22px 20px; box-shadow:var(--shadow);}
+
+  /* ── 메트로놈 ── */
+  .pulse-wrap{display:flex; justify-content:center; gap:12px; margin:6px 0 20px;}
+  .beat-dot{width:clamp(38px,13vw,54px); height:clamp(38px,13vw,54px); border-radius:50%; background:var(--card2);
+    border:2px solid var(--line-strong); transition:transform .06s, background .06s, border-color .06s;}
+  .beat-dot.on{background:var(--gold); border-color:var(--gold-deep); transform:scale(1.16);}
+  .beat-dot.accent.on{background:var(--beat); border-color:#8f2f26;}
+  .bpm-display{text-align:center; margin-bottom:6px;}
+  .bpm-num{font-family:var(--round); font-weight:700; font-size:64px; line-height:1; color:var(--ink); font-variant-numeric:tabular-nums;}
+  .bpm-label{font-size:13px; color:var(--muted); letter-spacing:.2em;}
+  .bpm-word{font-size:13px; color:var(--gold-deep); font-weight:700; margin-top:2px; min-height:18px;}
+  input[type=range]{width:100%; margin:16px 0 6px; accent-color:var(--gold);}
+  .row{display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; margin-top:6px;}
+  .step{width:44px;height:44px;border-radius:12px;border:1px solid var(--line-strong);background:var(--card2);color:var(--ink);
+    font-size:22px;font-family:var(--round);cursor:pointer;}
+  .step:active{transform:translateY(1px)}
+  .seg{display:inline-flex; border:1px solid var(--line-strong); border-radius:11px; overflow:hidden;}
+  .seg button{border:none;background:var(--card2);color:var(--ink-soft);font-family:var(--round);font-weight:600;font-size:14px;padding:9px 14px;cursor:pointer;}
+  .seg button[aria-pressed="true"]{background:var(--green);color:#fff;}
+  .play{margin-top:20px;width:100%;cursor:pointer;border:none;border-radius:14px;padding:17px;font-family:var(--round);font-weight:700;font-size:19px;
+    color:#2a1e05;background:linear-gradient(135deg,var(--gold-hi),var(--gold) 60%,var(--gold-deep));box-shadow:0 6px 18px rgba(201,162,75,.28);}
+  .play.stop{background:linear-gradient(135deg,#e58a7f,var(--beat));color:#fff;box-shadow:0 6px 18px rgba(196,70,58,.28);}
+  .tap{margin-top:10px;width:100%;cursor:pointer;background:transparent;border:1px dashed var(--line-strong);border-radius:12px;padding:12px;color:var(--ink-soft);font-family:var(--round);font-weight:600;font-size:15px;}
+
+  /* ── 리듬 카드 ── */
+  .levels{display:flex;gap:8px;justify-content:center;margin-bottom:16px;}
+  .lv{cursor:pointer;border:1px solid var(--line-strong);background:var(--card2);color:var(--ink-soft);border-radius:999px;padding:7px 16px;font-family:var(--round);font-weight:600;font-size:14px;}
+  .lv[aria-pressed="true"]{background:var(--green);color:#fff;border-color:var(--green);}
+  .card-title{font-family:var(--round);font-weight:700;font-size:19px;text-align:center;margin:2px 0 2px;}
+  .card-sub{text-align:center;color:var(--muted);font-size:13px;margin-bottom:16px;}
+  .measure{display:flex;gap:8px;justify-content:center;align-items:flex-end;background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:20px 12px 14px;min-height:120px;}
+  .note{display:flex;flex-direction:column;align-items:center;gap:8px;transition:transform .08s;}
+  .note .glyph{font-size:38px;line-height:1;color:var(--ink); font-family:Georgia,serif;}
+  .note .syl{font-family:var(--round);font-weight:600;font-size:15px;color:var(--ink-soft);}
+  .note.hit .glyph{color:var(--beat);transform:scale(1.2);}
+  .note.hit .syl{color:var(--beat);}
+  .note.rest .glyph{color:var(--muted);}
+  .cardnav{display:flex;gap:10px;margin-top:14px;}
+  .cardnav button{flex:1;cursor:pointer;border:1px solid var(--line-strong);background:var(--card2);color:var(--ink);border-radius:12px;padding:12px;font-family:var(--round);font-weight:600;font-size:15px;}
+  .hint{text-align:center;color:var(--ink-soft);font-size:13.5px;margin-top:14px;line-height:1.7;}
+  .hint b{color:var(--gold-deep);}
+
+  /* ── 학부모 안내(전환) ── */
+  .parent{margin-top:22px;background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line-strong);border-radius:16px;padding:20px;text-align:center;}
+  .parent .k{font-family:var(--round);font-weight:700;font-size:16px;color:var(--ink);}
+  .parent p{margin:8px 0 12px;color:var(--ink-soft);font-size:14px;}
+  .parent .tel{font-family:var(--round);font-weight:700;font-size:22px;color:var(--gold-deep);letter-spacing:.02em;}
+  .parent .addr{font-size:12.5px;color:var(--muted);margin-top:6px;}
+  footer{text-align:center;color:var(--muted);font-size:11.5px;margin-top:22px;line-height:1.8;}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
+  @media (prefers-reduced-motion:reduce){.beat-dot,.note{transition:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand">DOHYEON PIANO</div>
+    <h1>도현 리듬 연습기 🎵</h1>
+    <p>박자를 몸으로 익히는 우리 학원 연습 도구</p>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" id="tabM" role="tab" aria-selected="true" aria-controls="paneM">🥁 메트로놈</button>
+    <button class="tab" id="tabR" role="tab" aria-selected="false" aria-controls="paneR">🎴 리듬 카드</button>
+  </div>
+
+  <!-- 메트로놈 -->
+  <section class="card" id="paneM" role="tabpanel" aria-labelledby="tabM">
+    <div class="pulse-wrap" id="pulse"></div>
+    <div class="bpm-display">
+      <div class="bpm-num"><span id="bpmv">88</span></div>
+      <div class="bpm-label">BPM · 1분에 몇 박</div>
+      <div class="bpm-word" id="bpmword">보통 빠르기 (모데라토)</div>
+    </div>
+    <input type="range" id="bpm" min="40" max="200" value="88" step="1" aria-label="빠르기(BPM)">
+    <div class="row">
+      <button class="step" id="minus" aria-label="느리게">−</button>
+      <div class="seg" role="group" aria-label="박자표">
+        <button data-sig="2" aria-pressed="false">2/4</button>
+        <button data-sig="3" aria-pressed="false">3/4</button>
+        <button data-sig="4" aria-pressed="true">4/4</button>
+      </div>
+      <button class="step" id="plus" aria-label="빠르게">+</button>
+    </div>
+    <button class="play" id="playM">▶ 시작</button>
+    <button class="tap" id="taptempo">👆 탭으로 빠르기 맞추기 (박자에 맞춰 두드려요)</button>
+  </section>
+
+  <!-- 리듬 카드 -->
+  <section class="card" id="paneR" role="tabpanel" aria-labelledby="tabR" hidden>
+    <div class="levels" role="group" aria-label="난이도">
+      <button class="lv" data-lv="0" aria-pressed="true">1단계</button>
+      <button class="lv" data-lv="1" aria-pressed="false">2단계</button>
+      <button class="lv" data-lv="2" aria-pressed="false">3단계</button>
+    </div>
+    <div class="card-title" id="ctitle">따 따 따 따</div>
+    <div class="card-sub" id="csub">4분음표 — 한 박씩 또박또박</div>
+    <div class="measure" id="measure"></div>
+    <button class="play" id="playR" style="margin-top:16px">▶ 이 리듬 따라치기</button>
+    <div class="cardnav">
+      <button id="prev">← 이전</button>
+      <button id="next">다음 →</button>
+    </div>
+    <div class="hint">메트로놈 소리에 맞춰 <b>손뼉</b>으로 따라 쳐보세요.<br>빨갛게 켜지는 음표가 지금 칠 박이에요! 🎶</div>
+  </section>
+
+  <!-- 학부모 안내 -->
+  <div class="parent">
+    <div class="k">🎹 우리 아이 박자, 학원에서 더 잡아드려요</div>
+    <p>도현피아노는 진도보다 <b>기초(악보·리듬·박자)</b>를 먼저 쌓습니다.<br>이 연습기, 무료로 써보시고 궁금하면 편하게 상담 오세요.</p>
+    <div class="tel">☎ 010-5158-3613</div>
+    <div class="addr">도현피아노학원 · 경기 용인 모현읍 왕산로14 몬테로이 2단지 상가 · 상담 저녁 6시 이후 예약제</div>
+  </div>
+
+  <footer>도현피아노 리듬 연습기 · 소리가 안 나면 화면을 한 번 터치한 뒤 시작을 눌러주세요</footer>
+</div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+// ── 오디오 ──
+let ac=null;
+function audio(){ if(!ac) ac=new (window.AudioContext||window.webkitAudioContext)(); if(ac.state==="suspended")ac.resume(); return ac; }
+function click(time, kind){ // kind: 'accent'|'beat'|'note'|'rest'
+  if(kind==="rest") return;
+  const c=audio(); const o=c.createOscillator(), g=c.createGain();
+  const freq = kind==="accent"?1320 : kind==="note"?990 : 820;
+  o.frequency.value=freq; o.type="sine";
+  const vol = kind==="accent"?0.5:0.34;
+  g.gain.setValueAtTime(0.0001,time); g.gain.exponentialRampToValueAtTime(vol,time+0.004);
+  g.gain.exponentialRampToValueAtTime(0.0001,time+0.09);
+  o.connect(g).connect(c.destination); o.start(time); o.stop(time+0.1);
+}
+
+// ── 상태 ──
+let bpm=88, sig=4, running=false;
+const WORDS=[[50,"아주 느리게 (라르고)"],[66,"느리게 (아다지오)"],[82,"조금 느리게 (안단테)"],[100,"보통 빠르기 (모데라토)"],[120,"조금 빠르게 (알레그레토)"],[150,"빠르게 (알레그로)"],[999,"아주 빠르게 (프레스토)"]];
+function bpmWord(v){ for(const [t,w] of WORDS){ if(v<=t) return w; } return ""; }
+function setBpm(v){ bpm=Math.max(40,Math.min(200,v|0)); $("#bpm").value=bpm; $("#bpmv").textContent=bpm; $("#bpmword").textContent=bpmWord(bpm); }
+
+// 펄스 점 렌더
+function renderPulse(){ const p=$("#pulse"); p.innerHTML=""; for(let i=0;i<sig;i++){ const d=document.createElement("div"); d.className="beat-dot"+(i===0?" accent":""); p.appendChild(d);} }
+renderPulse(); setBpm(88);
+
+// ── 스케줄러(룩어헤드) ──
+let nextTime=0, beatIdx=0, timer=null;
+function scheduler(fn){ const c=audio(); while(nextTime < c.currentTime+0.1){ fn(nextTime, beatIdx); nextTime += 60/bpm; beatIdx++; } }
+function startLoop(onBeat){ const c=audio(); nextTime=c.currentTime+0.06; beatIdx=0; timer=setInterval(()=>scheduler(onBeat),25); }
+function stopLoop(){ clearInterval(timer); timer=null; }
+
+// ── 메트로놈 모드 ──
+function metroBeat(time, idx){
+  const b = idx % sig; click(time, b===0?"accent":"beat");
+  const delay=(time-audio().currentTime)*1000;
+  setTimeout(()=>{ const dots=$$("#pulse .beat-dot"); dots.forEach(d=>d.classList.remove("on")); if(dots[b])dots[b].classList.add("on"); }, Math.max(0,delay));
+}
+function toggleMetro(){
+  const btn=$("#playM");
+  if(running){ running=false; stopLoop(); btn.textContent="▶ 시작"; btn.classList.remove("stop"); $$("#pulse .beat-dot").forEach(d=>d.classList.remove("on")); }
+  else{ audio(); running=true; startLoop(metroBeat); btn.textContent="⏸ 정지"; btn.classList.add("stop"); }
+}
+$("#playM").addEventListener("click",toggleMetro);
+$("#bpm").addEventListener("input",e=>setBpm(+e.target.value));
+$("#plus").addEventListener("click",()=>setBpm(bpm+2));
+$("#minus").addEventListener("click",()=>setBpm(bpm-2));
+$$(".seg button").forEach(b=>b.addEventListener("click",()=>{ $$(".seg button").forEach(x=>x.setAttribute("aria-pressed","false")); b.setAttribute("aria-pressed","true"); sig=+b.dataset.sig; renderPulse(); }));
+
+// 탭 템포
+let taps=[];
+$("#taptempo").addEventListener("click",()=>{ const now=performance.now(); taps=taps.filter(t=>now-t<2500); taps.push(now);
+  if(taps.length>=2){ const gaps=[]; for(let i=1;i<taps.length;i++)gaps.push(taps[i]-taps[i-1]); const avg=gaps.reduce((a,b)=>a+b,0)/gaps.length; setBpm(Math.round(60000/avg)); }});
+
+// ── 리듬 카드 ──
+// 패턴: 4/4 한 마디, 각 박(4)을 subdivision 배열로. 'q'=4분,'e'=8분쌍,'h'=2분(2박),'r'=쉼표,'w'=온음표(4박)
+// 표현은 박 단위 토큰 배열 → 재생용 note 이벤트로 변환
+const CARDS=[
+  // 1단계
+  [{t:"따 따 따 따", s:"4분음표 — 한 박씩 또박또박", beats:[["q"],["q"],["q"],["q"]]},
+   {t:"따 따 따-아", s:"마지막은 두 박 길게", beats:[["q"],["q"],["h2"]]},
+   {t:"따 쉼 따 쉼", s:"치고 쉬고 — 쉼표 익히기", beats:[["q"],["r"],["q"],["r"]]}],
+  // 2단계
+  [{t:"따다 따 따다 따", s:"8분음표 — 한 박을 둘로", beats:[["e","e"],["q"],["e","e"],["q"]]},
+   {t:"따 따다 따 쉼", s:"섞어서 — 리듬 감각", beats:[["q"],["e","e"],["q"],["r"]]},
+   {t:"따다 따다 따 따", s:"앞은 촘촘, 뒤는 또박", beats:[["e","e"],["e","e"],["q"],["q"]]}],
+  // 3단계
+  [{t:"따다 따 따다다다 따", s:"16분 느낌까지", beats:[["e","e"],["q"],["s","s","s","s"],["q"]]},
+   {t:"따-아 따다 따", s:"긴 음+짧은 음", beats:[["h2"],["e","e"],["q"]]},
+   {t:"따 따다다다 따 쉼", s:"종합 — 집중해서!", beats:[["q"],["s","s","s","s"],["q"],["r"]]}],
+];
+let lv=0, ci=0;
+const SYL={q:"따",e:"따",s:"다","h2":"따-아",r:"쉼"};
+const GLYPH={q:"♩",e:"♪",s:"♬","h2":"𝅗𝅥",r:"𝄽"};
+// 재생 이벤트 만들기: 각 박을 나눠 시간 배분
+function eventsFor(beats){ // returns [{dur(beats), kind, glyph, syl}]
+  const ev=[];
+  beats.forEach(tok=>{
+    if(tok[0]==="h2"){ ev.push({dur:2,kind:"note",glyph:"𝅗𝅥",syl:"따-아"}); }
+    else if(tok[0]==="r"){ ev.push({dur:1,kind:"rest",glyph:"𝄽",syl:"쉼"}); }
+    else if(tok[0]==="q"){ ev.push({dur:1,kind:"note",glyph:"♩",syl:"따"}); }
+    else if(tok[0]==="e"){ tok.forEach((_,i)=>ev.push({dur:0.5,kind:"note",glyph:"♪",syl:i===0?"따":"다"})); }
+    else if(tok[0]==="s"){ tok.forEach((_,i)=>ev.push({dur:0.25,kind:"note",glyph:"♬",syl:i===0?"따":"다"})); }
+  });
+  return ev;
+}
+function renderCard(){
+  const card=CARDS[lv][ci]; $("#ctitle").textContent=card.t; $("#csub").textContent=card.s;
+  const m=$("#measure"); m.innerHTML=""; const ev=eventsFor(card.beats);
+  ev.forEach((e,i)=>{ const n=document.createElement("div"); n.className="note"+(e.kind==="rest"?" rest":""); n.dataset.i=i;
+    n.innerHTML=`<div class="glyph">${e.glyph}</div><div class="syl">${e.syl}</div>`; m.appendChild(n); });
+  m._ev=ev;
+}
+renderCard();
+$$(".lv").forEach(b=>b.addEventListener("click",()=>{ $$(".lv").forEach(x=>x.setAttribute("aria-pressed","false")); b.setAttribute("aria-pressed","true"); lv=+b.dataset.lv; ci=0; renderCard(); stopRhythm(); }));
+$("#prev").addEventListener("click",()=>{ ci=(ci-1+CARDS[lv].length)%CARDS[lv].length; renderCard(); stopRhythm(); });
+$("#next").addEventListener("click",()=>{ ci=(ci+1)%CARDS[lv].length; renderCard(); stopRhythm(); });
+
+let rRunning=false, rTimer=null;
+function stopRhythm(){ rRunning=false; if(rTimer){clearInterval(rTimer);rTimer=null;} const b=$("#playR"); if(b){b.textContent="▶ 이 리듬 따라치기"; b.classList.remove("stop");} $$("#measure .note").forEach(n=>n.classList.remove("hit")); }
+function playRhythm(){
+  const b=$("#playR");
+  if(rRunning){ stopRhythm(); return; }
+  audio(); rRunning=true; b.textContent="⏸ 정지"; b.classList.add("stop");
+  const ev=$("#measure")._ev; const spb=60/bpm; const c=audio();
+  function runBar(){
+    // 카운트인 1마디(4박, 딸깍)
+    let t=c.currentTime+0.08;
+    for(let i=0;i<4;i++){ click(t+i*spb, i===0?"accent":"beat"); }
+    let start=t+4*spb, acc=0;
+    ev.forEach((e,idx)=>{ const et=start+acc*spb;
+      if(e.kind!=="rest") click(et, "note");
+      const delay=(et-c.currentTime)*1000;
+      setTimeout(()=>{ if(!rRunning)return; $$("#measure .note").forEach(n=>n.classList.remove("hit")); const n=$(`#measure .note[data-i="${idx}"]`); if(n)n.classList.add("hit"); }, Math.max(0,delay));
+      acc+=e.dur;
+    });
+    const barLen=(4+acc)*spb;
+    setTimeout(()=>{ if(rRunning){ $$("#measure .note").forEach(n=>n.classList.remove("hit")); } }, barLen*1000-60);
+    return barLen;
+  }
+  const len=runBar();
+  rTimer=setInterval(()=>{ if(!rRunning)return; runBar(); }, len*1000);
+}
+$("#playR").addEventListener("click",playRhythm);
+
+// ── 탭 전환 ──
+function selectTab(which){
+  const m=which==="M";
+  $("#tabM").setAttribute("aria-selected",m); $("#tabR").setAttribute("aria-selected",!m);
+  $("#paneM").hidden=!m; $("#paneR").hidden=m;
+  if(m){ stopRhythm(); } else { if(running)toggleMetro(); }
+}
+$("#tabM").addEventListener("click",()=>selectTab("M"));
+$("#tabR").addEventListener("click",()=>selectTab("R"));
+</script>
