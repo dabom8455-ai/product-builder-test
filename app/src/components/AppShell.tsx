@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useApp, demoData, emptyData } from "@/lib/store";
 import { finishSetup, localAdapter, startPersistence, usePersistStatus } from "@/lib/persistence";
 import { ConfirmHost } from "./Confirm";
+import { ErrorBoundary } from "./ErrorBoundary";
 
 const NAV = [
   { href: "/", label: "홈", icon: "🏠" },
@@ -124,7 +125,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           ) : needsSetup ? (
             <Setup />
           ) : (
-            children
+            <ErrorBoundary key={pathname}>{children}</ErrorBoundary>
           )}
         </main>
       </div>

@@ -1,6 +1,5 @@
 // claude.ai 아티팩트 진입점: 해시 라우팅으로 모든 화면을 한 페이지에 담는다.
 import { createRoot } from "react-dom/client";
-import { useEffect } from "react";
 import { AppShell } from "@/components/AppShell";
 import { setPlatform } from "@/lib/platform";
 import { startPersistence } from "@/lib/persistence";
@@ -31,7 +30,6 @@ const ROUTES: Record<string, () => React.ReactElement> = {
 
 function Router() {
   const path = usePathname();
-  useEffect(() => window.scrollTo(0, 0), [path]);
   const Page = ROUTES[path] ?? Home;
   return <Page key={path} />;
 }

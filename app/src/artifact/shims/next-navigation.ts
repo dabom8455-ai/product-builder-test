@@ -1,16 +1,6 @@
-// 아티팩트 빌드에서 next/navigation 대신: 현재 경로를 location.hash 에서 읽는다.
-import { useSyncExternalStore } from "react";
-
-function subscribe(cb: () => void) {
-  window.addEventListener("hashchange", cb);
-  return () => window.removeEventListener("hashchange", cb);
-}
-
-export function currentPath() {
-  const token = window.location.hash.replace(/^#/, "");
-  return !token || token === "home" ? "/" : "/" + token;
-}
+// 아티팩트 빌드에서 next/navigation 대신: 현재 경로는 앱 안의 라우터 상태에서 읽는다.
+import { useRoute } from "../router";
 
 export function usePathname() {
-  return useSyncExternalStore(subscribe, currentPath, () => "/");
+  return useRoute((s) => s.path);
 }
