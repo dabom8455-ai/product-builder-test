@@ -2,17 +2,18 @@
 
 import { useMemo, useState } from "react";
 import { newId, useApp } from "@/lib/store";
-import type { Channel, Expense, SaleLine } from "@/lib/types";
-import { CHANNELS } from "@/lib/types";
+import type { Channel, DayNote, Expense, SaleLine, Weather } from "@/lib/types";
+import { CHANNELS, WEATHER } from "@/lib/types";
 import { linePrice } from "@/lib/domain/pnl";
-import { addDays, todayLocal } from "@/lib/dates";
+import { addDays, addMonths, daysInMonth, dayOfWeek, DOW_LABEL, todayLocal } from "@/lib/dates";
 import { Button, Card, Field, NumInput, PageHeader, Segmented, ic, inputCls } from "@/components/ui";
-import { won } from "@/lib/format";
+import { man, won } from "@/lib/format";
 
-type Tab = "close" | "csv" | "expense";
+type Tab = "close" | "calendar" | "csv" | "expense";
 
 export default function SalesPage() {
   const [tab, setTab] = useState<Tab>("close");
+  const [date, setDate] = useState(todayLocal());
   return (
     <div>
       <PageHeader
@@ -24,24 +25,25 @@ export default function SalesPage() {
             onChange={setTab}
             options={[
               { id: "close", label: "일 마감" },
+              { id: "calendar", label: "달력" },
               { id: "csv", label: "엑셀/CSV" },
               { id: "expense", label: "지출" },
             ]}
           />
         }
       />
-      {tab === "close" && <DailyClose />}
+      {tab === "close" && <DailyClose date={date} setDate={setDate} />}
+      {tab === "calendar" && <SalesCalendar onPick={(d) => (setDate(d), setTab("close"))} />}
       {tab === "csv" && <CsvImport />}
       {tab === "expense" && <Expenses />}
     </div>
   );
 }
 
-function DailyClose() {
+function DailyClose({ date, setDate }: { date: string; setDate: (d: string) => void }) {
   const menus = useApp((s) => s.menus);
   const sales = useApp((s) => s.sales);
   const replaceSales = useApp((s) => s.replaceSales);
-  const [date, setDate] = useState(todayLocal());
   const [channel, setChannel] = useState<Channel>("hall");
   const sellable = menus.filter((m) => !m.isSub && m.active);
 
@@ -64,6 +66,15 @@ function DailyClose() {
     [sales, date, menus],
   );
   const [saved, setSaved] = useState(false);
+  const store = useApp((s) => s.store);
+  const lastWeek = addDays(date, -7);
+  const lastWeekValues = useMemo(() => {
+    const map: Record<string, number> = {};
+    for (const l of sales) if (l.date === lastWeek && l.channel === channel) map[l.menuId] = (map[l.menuId] ?? 0) + l.qty;
+    return map;
+  }, [sales, lastWeek, channel]);
+  const hasLastWeek = Object.keys(lastWeekValues).length > 0;
+  const closed = store.closedDays.includes(dayOfWeek(date));
 
   const save = () => {
     replaceSales(
@@ -94,6 +105,21 @@ function DailyClose() {
           <Segmented value={channel} onChange={(c) => (setChannel(c), setDraft(null))} options={CHANNELS.map((c) => ({ id: c.id, label: c.label }))} />
         </Field>
       </div>
+      <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
+        <span className="text-ink-2">
+          {DOW_LABEL[dayOfWeek(date)]}요일{closed && " · 정기 휴무일"}
+        </span>
+        <Button
+          size="sm"
+          variant="ghost"
+          disabled={!hasLastWeek}
+          title={hasLastWeek ? undefined : "지난주 같은 요일·채널 기록이 없습니다"}
+          onClick={() => setDraft({ ...lastWeekValues })}
+        >
+          지난주 {DOW_LABEL[dayOfWeek(date)]}요일({lastWeek.slice(5)}) 수량 불러오기
+        </Button>
+      </div>
+      <DayNoteEditor key={date} date={date} />
       <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
         {sellable.map((m) => (
           <div key={m.id} className="flex items-center justify-between gap-2 rounded-lg border border-line px-3 py-2">
@@ -264,5 +290,141 @@ function Expenses() {
         </div>
       </Card>
     </div>
+  );
+}
+
+/** 날씨·메모: 매출의 맥락을 남긴다 */
+function DayNoteEditor({ date }: { date: string }) {
+  const note = useApp((s) => s.dayNotes.find((n) => n.date === date));
+  const upsert = useApp((s) => s.upsert);
+  const remove = useApp((s) => s.remove);
+  const [memo, setMemo] = useState(note?.memo ?? "");
+  const save = (patch: Partial<DayNote>) => {
+    const next: DayNote = { id: date, date, weather: note?.weather, memo: note?.memo, ...patch };
+    if (!next.weather && !next.memo?.trim()) remove("dayNotes", date);
+    else upsert("dayNotes", next);
+  };
+  return (
+    <div className="mt-3 flex flex-wrap items-center gap-2 rounded-lg bg-surface-2 p-2.5">
+      <span className="text-xs text-ink-2">날씨</span>
+      {(Object.keys(WEATHER) as Weather[]).map((w) => (
+        <button
+          key={w}
+          type="button"
+          aria-pressed={note?.weather === w}
+          onClick={() => save({ weather: note?.weather === w ? undefined : w })}
+          className={`rounded-full border px-2 py-0.5 text-xs ${note?.weather === w ? "border-brand bg-brand/10 font-semibold" : "border-line bg-surface"}`}
+        >
+          {WEATHER[w]}
+        </button>
+      ))}
+      <input
+        className={ic("min-w-40 flex-1 py-1")}
+        placeholder="메모 (행사, 공사, 단체 주문 등)"
+        value={memo}
+        onChange={(e) => setMemo(e.target.value)}
+        onBlur={() => memo !== (note?.memo ?? "") && save({ memo: memo.trim() || undefined })}
+        aria-label="날짜 메모"
+      />
+    </div>
+  );
+}
+
+/** 월 달력: 일매출·미입력·휴무·날씨를 한눈에. 날짜를 누르면 그날 마감 입력으로 이동 */
+function SalesCalendar({ onPick }: { onPick: (date: string) => void }) {
+  const sales = useApp((s) => s.sales);
+  const menus = useApp((s) => s.menus);
+  const notes = useApp((s) => s.dayNotes);
+  const closedDays = useApp((s) => s.store.closedDays);
+  const target = useApp((s) => s.store.monthlySalesTarget);
+  const today = todayLocal();
+  const [month, setMonth] = useState(today.slice(0, 7));
+
+  const totals = useMemo(() => {
+    const map = new Map<string, number>();
+    const menuById = new Map(menus.map((m) => [m.id, m]));
+    for (const l of sales) {
+      if (!l.date.startsWith(month)) continue;
+      const m = menuById.get(l.menuId);
+      if (m) map.set(l.date, (map.get(l.date) ?? 0) + linePrice(m, l.channel) * l.qty);
+    }
+    return map;
+  }, [sales, menus, month]);
+
+  const n = daysInMonth(month);
+  const first = dayOfWeek(`${month}-01`);
+  const cells: (string | null)[] = [...Array(first).fill(null), ...Array.from({ length: n }, (_, i) => `${month}-${String(i + 1).padStart(2, "0")}`)];
+  const max = Math.max(1, ...totals.values());
+  const sum = [...totals.values()].reduce((t, v) => t + v, 0);
+  const missing = cells.filter((d): d is string => !!d && d < today && !totals.has(d) && !closedDays.includes(dayOfWeek(d)));
+  const openDays = cells.filter((d): d is string => !!d && !closedDays.includes(dayOfWeek(d))).length;
+  const dailyTarget = target > 0 ? target / Math.max(1, openDays) : 0;
+
+  return (
+    <Card
+      title={
+        <span className="flex items-center gap-1">
+          <Button size="sm" variant="ghost" onClick={() => setMonth(addMonths(month, -1))} aria-label="이전 달">
+            ◀
+          </Button>
+          <span className="w-24 text-center tabular">{month}</span>
+          <Button size="sm" variant="ghost" onClick={() => setMonth(addMonths(month, 1))} aria-label="다음 달">
+            ▶
+          </Button>
+        </span>
+      }
+      right={
+        <span className="text-sm">
+          합계 <b className="tabular">{man(sum)}원</b>
+          {missing.length > 0 && <span className="ml-2 text-bad">미입력 {missing.length}일</span>}
+        </span>
+      }
+    >
+      <div className="grid grid-cols-7 gap-1 text-center text-xs text-ink-2">
+        {DOW_LABEL.map((d, i) => (
+          <div key={d} className={i === 0 ? "text-bad" : ""}>
+            {d}
+          </div>
+        ))}
+      </div>
+      <div className="mt-1 grid grid-cols-7 gap-1">
+        {cells.map((d, i) => {
+          if (!d) return <div key={`e${i}`} />;
+          const v = totals.get(d);
+          const closed = closedDays.includes(dayOfWeek(d));
+          const isMissing = missing.includes(d);
+          const note = notes.find((x) => x.date === d);
+          const hit = dailyTarget > 0 && v !== undefined && v >= dailyTarget;
+          return (
+            <button
+              key={d}
+              onClick={() => onPick(d)}
+              title={note?.memo}
+              className={`relative flex min-h-16 flex-col items-start rounded-lg border p-1.5 text-left ${
+                d === today ? "border-brand" : isMissing ? "border-bad/60 bg-bad/5" : "border-line"
+              } ${closed ? "bg-surface-2" : ""}`}
+            >
+              <span className={`text-[11px] ${dayOfWeek(d) === 0 ? "text-bad" : "text-ink-2"}`}>
+                {Number(d.slice(8))} {note?.weather && WEATHER[note.weather].split(" ")[0]}
+              </span>
+              {v !== undefined ? (
+                <>
+                  <span className={`mt-auto text-[11px] font-semibold tabular sm:text-xs ${hit ? "text-good" : ""}`}>{man(v)}</span>
+                  <span className="mt-0.5 h-1 w-full rounded-full bg-surface-2">
+                    <span className="block h-1 rounded-full bg-brand" style={{ width: `${(v / max) * 100}%` }} />
+                  </span>
+                </>
+              ) : (
+                <span className="mt-auto text-[10px] text-ink-2">{closed ? "휴무" : isMissing ? "미입력" : ""}</span>
+              )}
+              {note?.memo && <span aria-hidden className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-warn" />}
+            </button>
+          );
+        })}
+      </div>
+      <p className="mt-3 text-[11px] text-ink-2">
+        빨간 칸은 영업일인데 매출이 없는 날, 노란 점은 메모가 있는 날입니다{dailyTarget > 0 && `. 초록 숫자는 일 목표(${man(dailyTarget)}원) 달성`}. 날짜를 누르면 그날 마감을 입력·수정합니다.
+      </p>
+    </Card>
   );
 }

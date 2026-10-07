@@ -16,7 +16,7 @@ export function PageHeader({ title, desc, right }: { title: string; desc?: strin
 
 export function Card({ title, right, children, className = "" }: { title?: ReactNode; right?: ReactNode; children: ReactNode; className?: string }) {
   return (
-    <section className={`rounded-2xl border border-line bg-surface p-4 md:p-5 ${className}`}>
+    <section className={`min-w-0 rounded-2xl border border-line bg-surface p-4 md:p-5 ${className}`}>
       {(title || right) && (
         <div className="mb-3 flex items-center justify-between gap-2">
           {title && <h2 className="font-semibold">{title}</h2>}

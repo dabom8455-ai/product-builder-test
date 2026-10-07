@@ -148,6 +148,8 @@ export interface ReplyInput {
   analysis: ReviewAnalysis;
   menuNames: string[];
   recentReplies: string[];
+  /** 답글 끝에 붙일 가게 서명 */
+  signature?: string;
 }
 
 export function templateReply(input: ReplyInput): string {
@@ -176,7 +178,49 @@ export function templateReply(input: ReplyInput): string {
     if (analysis.sentiment === "neutral") parts.push("혹시 아쉬운 점이 있으셨다면 편하게 말씀해 주세요. 더 나아지도록 하겠습니다.");
     parts.push(fill(pick(t.close as unknown as string[], seed >> 3, input.recentReplies)));
   }
-  return parts.join(" ");
+  return withSignature(parts.join(" "), input.signature);
+}
+
+export function withSignature(reply: string, signature?: string): string {
+  const sig = signature?.trim();
+  if (!sig || reply.includes(sig)) return reply;
+  return `${reply}\n\n${sig}`;
+}
+
+export interface ParsedReview {
+  text: string;
+  rating: number;
+  /** 별점을 본문에서 찾았는지 */
+  ratingDetected: boolean;
+}
+
+/**
+ * 빈 줄로 구분해 붙여넣은 여러 리뷰를 나눈다. 별점은 "★★★★☆", "별점 4", "4점", "4/5" 표기를 인식하고
+ * 본문에서 지운다. 없으면 defaultRating.
+ */
+export function parseBulkReviews(raw: string, defaultRating = 5): ParsedReview[] {
+  return raw
+    .split(/\n\s*\n/)
+    .map((b) => b.trim())
+    .filter(Boolean)
+    .map((block) => {
+      let rating: number | null = null;
+      let text = block;
+      const stars = block.match(/[★⭐]{1,5}[☆]*/);
+      if (stars) {
+        rating = [...stars[0]].filter((c) => c === "★" || c === "⭐").length;
+        text = text.replace(stars[0], "");
+      } else {
+        const m = block.match(/별점\s*[:：]?\s*([1-5])(?:\.\d)?\s*점?|(?:^|\s)([1-5])\s*점(?!\S*수)|([1-5])\s*\/\s*5/);
+        if (m) {
+          rating = Number(m[1] ?? m[2] ?? m[3]);
+          text = text.replace(m[0], " ");
+        }
+      }
+      text = text.replace(/[ \t]+/g, " ").replace(/^\s+|\s+$/g, "");
+      return { text, rating: rating ?? defaultRating, ratingDetected: rating !== null };
+    })
+    .filter((r) => r.text.length > 0);
 }
 
 export function buildReplyPrompt(input: ReplyInput): { system: string; user: string } {
@@ -185,8 +229,11 @@ export function buildReplyPrompt(input: ReplyInput): { system: string; user: str
     `당신은 카페 "${input.storeName}"의 사장님을 대신해 배달앱/네이버 리뷰에 답글 초안을 쓰는 도우미입니다.`,
     `말투: ${toneDesc}. 부정 리뷰에는 말투 설정과 무관하게 정중하게 사과하고 구체적인 개선 의지를 밝히세요.`,
     "규칙: 2~4문장, 한국어. 리뷰에 언급된 메뉴나 구체적 내용을 자연스럽게 짚을 것. 할인·쿠폰·환불·보상을 약속하지 말 것(사장님 승인 필요). 고객을 탓하거나 변명하지 말 것. 최근 답글과 같은 문장을 반복하지 말 것.",
+    input.signature?.trim() ? `답글 마지막 줄에 서명 "${input.signature.trim()}"을 그대로 붙이세요.` : "",
     "답글 본문만 출력하세요.",
-  ].join("\n");
+  ]
+    .filter(Boolean)
+    .join("\n");
   const user = [
     `별점: ${input.rating}/5`,
     input.author ? `작성자: ${input.author}` : "",

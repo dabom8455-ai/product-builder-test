@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useMenuAnalysis } from "@/lib/hooks";
 import { newId, useApp, useMaps } from "@/lib/store";
-import { QUADRANT_INFO, type MenuStat, type Quadrant, type Suggestion } from "@/lib/domain/menuEngineering";
+import { QUADRANT_INFO, topMenus, weekdayMatrix, type MenuStat, type Quadrant, type Suggestion } from "@/lib/domain/menuEngineering";
 import { linePrice } from "@/lib/domain/pnl";
-import { addDays, todayLocal } from "@/lib/dates";
+import { addDays, DOW_LABEL, todayLocal } from "@/lib/dates";
 import { Badge, Button, Card, Empty, PageHeader, Segmented } from "@/components/ui";
 import { num, pct, won } from "@/lib/format";
 import { askConfirm } from "@/components/Confirm";
@@ -69,6 +69,10 @@ export default function AnalysisPage() {
                 <StatTable stats={a.stats.filter((s) => s.quadrant === q)} />
               </Card>
             ))}
+          </div>
+          <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
+            <WeekdayHeatmap days={Number(days)} />
+            <ChannelTop days={Number(days)} />
           </div>
           <EffectTracker />
         </>
@@ -317,3 +321,106 @@ function EffectTracker() {
     </Card>
   );
 }
+
+const WEEK_ORDER = [1, 2, 3, 4, 5, 6, 0]; // 월~일
+
+/** 메뉴 × 요일 평균 판매량: 진할수록 많이 팔림 (메뉴별 최대값 기준) */
+function WeekdayHeatmap({ days }: { days: number }) {
+  const sales = useApp((s) => s.sales);
+  const menus = useApp((s) => s.menus);
+  const sellable = menus.filter((m) => !m.isSub && m.active);
+  const today = todayLocal();
+  const from = addDays(today, -days);
+  const rows = weekdayMatrix(
+    sales,
+    sellable.map((m) => m.id),
+    from,
+    today,
+  );
+  return (
+    <Card title="요일별 평균 판매량">
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[480px] border-separate border-spacing-0.5 text-xs tabular">
+          <thead>
+            <tr className="text-ink-2">
+              <th className="text-left font-normal">메뉴</th>
+              {WEEK_ORDER.map((d) => (
+                <th key={d} className={`w-10 font-normal ${d === 0 ? "text-bad" : ""}`}>
+                  {DOW_LABEL[d]}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => {
+              const m = sellable.find((x) => x.id === r.menuId)!;
+              const max = Math.max(...r.avg, 0.0001);
+              const peak = r.avg.indexOf(Math.max(...r.avg));
+              return (
+                <tr key={r.menuId}>
+                  <td className="truncate pr-2">{m.name}</td>
+                  {WEEK_ORDER.map((d) => {
+                    const v = r.avg[d];
+                    const k = v / max;
+                    return (
+                      <td
+                        key={d}
+                        title={`${m.name} ${DOW_LABEL[d]}요일 평균 ${num(v, 1)}개`}
+                        className={`rounded py-1.5 text-center ${d === peak && v > 0 ? "font-bold" : ""}`}
+                        style={{ background: `color-mix(in oklab, var(--series-1) ${Math.round(8 + k * 62)}%, var(--surface))`, color: k > 0.6 ? "#fff" : "var(--ink)" }}
+                      >
+                        {num(v, 1)}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <p className="mt-2 text-[11px] text-ink-2">메뉴마다 가장 많이 팔린 요일을 진하게 표시합니다. 요일별 재료 준비량·요일 한정 메뉴를 정할 때 쓰세요.</p>
+    </Card>
+  );
+}
+
+/** 홀과 배달의 인기 메뉴 비교 */
+function ChannelTop({ days }: { days: number }) {
+  const sales = useApp((s) => s.sales);
+  const { menuMap } = useMaps();
+  const today = todayLocal();
+  const from = addDays(today, -days);
+  const inRange = useMemo(() => sales.filter((l) => l.date >= from && l.date < today), [sales, from, today]);
+  const groups = [
+    { label: "홀·포장·네이버", channels: ["hall", "naver"] },
+    { label: "배달앱", channels: ["baemin", "coupang", "yogiyo"] },
+  ];
+  return (
+    <Card title="채널별 인기 메뉴 Top 5">
+      <div className="grid grid-cols-2 gap-4">
+        {groups.map((g) => (
+          <div key={g.label} className="min-w-0">
+            <h3 className="mb-2 text-xs font-semibold text-ink-2">{g.label}</h3>
+            <ol className="space-y-2 text-sm">
+              {topMenus(inRange, g.channels).map((t, i) => (
+                <li key={t.menuId} className="min-w-0">
+                  <div className="flex justify-between gap-1">
+                    <span className="truncate">
+                      {i + 1}. {menuMap.get(t.menuId)?.name ?? "?"}
+                    </span>
+                    <span className="shrink-0 text-xs text-ink-2 tabular">{pct(t.share, 0)}</span>
+                  </div>
+                  <div className="mt-0.5 h-1.5 rounded-full bg-surface-2">
+                    <div className="h-1.5 rounded-full bg-series-1" style={{ width: `${t.share * 100}%` }} />
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        ))}
+      </div>
+      <p className="mt-3 text-[11px] text-ink-2">배달에서만 잘 팔리는 메뉴는 배달 전용 세트·포장 개선 후보입니다.</p>
+    </Card>
+  );
+}
+

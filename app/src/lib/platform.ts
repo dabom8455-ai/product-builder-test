@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReplyInput } from "./domain/review";
-import type { PosterCopy, PosterPurpose } from "./domain/poster";
+import type { CaptionRequest, PosterCopy, PosterPurpose } from "./domain/poster";
 
 // 실행 환경마다 다른 기능(AI 호출·파일 저장·인쇄)을 한 곳에 모은다.
 // 웹(Next.js) 버전은 아래 기본값을, claude.ai 아티팩트 버전은 src/artifact/platform.ts 를 쓴다.
@@ -19,6 +19,8 @@ export interface Platform {
   /** AI 답글. 사용할 수 없으면 null (화면은 템플릿으로 대체) */
   reviewReply(input: ReplyInput): Promise<string | null>;
   posterCopies(req: CopyRequest): Promise<PosterCopy[] | null>;
+  /** 인스타 게시글. 사용할 수 없으면 null */
+  instaCaption(req: CaptionRequest): Promise<string | null>;
   /** 파일 저장. 사용자가 취소하거나 불가능하면 false */
   saveFile(filename: string, data: Blob): Promise<boolean>;
   canPrint: boolean;
@@ -40,6 +42,9 @@ const webPlatform: Platform = {
   },
   async posterCopies(req) {
     return (await postJson<{ copies: PosterCopy[] }>("/api/ai/copy", req))?.copies ?? null;
+  },
+  async instaCaption(req) {
+    return (await postJson<{ caption: string }>("/api/ai/caption", req))?.caption ?? null;
   },
   async saveFile(filename, data) {
     const a = document.createElement("a");

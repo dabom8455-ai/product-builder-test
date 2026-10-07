@@ -80,3 +80,61 @@ export function parseCopies(text: string): PosterCopy[] | null {
     return null;
   }
 }
+
+export interface CaptionRequest {
+  storeName: string;
+  menuName: string;
+  description?: string;
+  price: number;
+  discountPrice?: number;
+  purpose: PosterPurpose;
+  copy: PosterCopy;
+  praise: string[];
+}
+
+function hashtag(s: string) {
+  return "#" + s.replace(/[^\p{L}\p{N}_]/gu, "");
+}
+
+/** 인스타그램 게시글 본문 + 해시태그 (AI 를 쓸 수 없을 때의 기본값) */
+export function templateCaption(r: CaptionRequest): string {
+  const priceLine =
+    r.discountPrice && r.discountPrice < r.price
+      ? `${r.menuName} ${r.price.toLocaleString()}원 → ${r.discountPrice.toLocaleString()}원`
+      : `${r.menuName} ${r.price.toLocaleString()}원`;
+  const lead = {
+    new: "새 메뉴가 나왔어요.",
+    season: "이 계절에만 만날 수 있어요.",
+    event: "기간 한정 혜택을 준비했어요.",
+    today: "오늘은 이 메뉴를 추천해요.",
+  }[r.purpose];
+  const lines = [
+    r.copy.headline,
+    "",
+    `${lead} ${r.description ? r.description + "." : ""}`.trim(),
+    r.praise.length ? `손님들이 먼저 알아본 ${r.praise.slice(0, 2).join(", ")}.` : "",
+    "",
+    `☕ ${priceLine}`,
+    `📍 ${r.storeName}`,
+    "",
+    [r.storeName, r.menuName, "카페", "카페추천", "동네카페", r.purpose === "new" ? "신메뉴" : r.purpose === "season" ? "시즌한정" : r.purpose === "event" ? "카페이벤트" : "오늘의메뉴", "커피스타그램"]
+      .map(hashtag)
+      .join(" "),
+  ];
+  return lines.filter((l, i, arr) => !(l === "" && arr[i - 1] === "")).join("\n").trim();
+}
+
+export function buildCaptionPrompt(r: CaptionRequest): string {
+  const purpose = PURPOSES.find((p) => p.id === r.purpose)?.label ?? "";
+  return [
+    `동네 카페 "${r.storeName}"의 인스타그램 게시글을 써 주세요.`,
+    "규칙: 한국어, 본문 3~5줄, 이모지 2~4개, 마지막 줄에 해시태그 8~12개(가게명·메뉴명 포함). 과장·허위 효능 표현 금지. 게시글 본문만 출력.",
+    `목적: ${purpose}`,
+    `메뉴: ${r.menuName}${r.description ? ` (${r.description})` : ""}`,
+    r.discountPrice && r.discountPrice < r.price ? `가격: 정가 ${r.price.toLocaleString()}원 → 할인가 ${r.discountPrice.toLocaleString()}원` : `가격: ${r.price.toLocaleString()}원`,
+    `포스터 문구: ${r.copy.headline} / ${r.copy.sub}`,
+    r.praise.length ? `리뷰에서 자주 나온 칭찬: ${r.praise.join(", ")}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+}

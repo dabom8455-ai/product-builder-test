@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { useApp, type AppData } from "@/lib/store";
+import { pickData, useApp, type AppData } from "@/lib/store";
 import { CHANNELS, type Tone, type VatMode } from "@/lib/types";
 import { Button, Card, Field, NumInput, PageHeader, Segmented, inputCls } from "@/components/ui";
 import { platform } from "@/lib/platform";
 import { askConfirm } from "@/components/Confirm";
 import { usePersistStatus } from "@/lib/persistence";
-import { todayLocal } from "@/lib/dates";
+import { DOW_LABEL, businessDays, todayLocal } from "@/lib/dates";
+import { won } from "@/lib/format";
 
 const pctIn = (r: number) => Math.round(r * 10000) / 100;
 
@@ -67,6 +68,37 @@ export default function SettingsPage() {
         </div>
       </Card>
 
+      <Card title="영업·목표">
+        <div className="grid gap-4 md:grid-cols-2">
+          <Field label="정기 휴무 요일" hint="손익분기 하루 매출, 월 목표, 매출 달력에 반영됩니다.">
+            <div className="flex flex-wrap gap-1.5">
+              {DOW_LABEL.map((d, i) => {
+                const on = store.closedDays.includes(i);
+                return (
+                  <button
+                    key={d}
+                    type="button"
+                    aria-pressed={on}
+                    onClick={() => setStore({ closedDays: on ? store.closedDays.filter((x) => x !== i) : [...store.closedDays, i].sort() })}
+                    className={`h-9 w-9 rounded-full border text-sm ${on ? "border-bad bg-bad/10 font-semibold text-bad" : "border-line"}`}
+                  >
+                    {d}
+                  </button>
+                );
+              })}
+            </div>
+          </Field>
+          <Field label="월 매출 목표(원)" hint={store.monthlySalesTarget ? `하루 평균 ${won(store.monthlySalesTarget / Math.max(1, businessDays(todayLocal().slice(0, 7), store.closedDays)))} (이번 달 영업일 기준)` : "0이면 홈에 목표가 표시되지 않습니다."}>
+            <NumInput value={store.monthlySalesTarget} step={100000} onChange={(n) => setStore({ monthlySalesTarget: Math.max(0, n) })} />
+          </Field>
+          <div className="md:col-span-2">
+            <Field label="리뷰 답글 서명" hint="모든 답글 마지막 줄에 붙습니다. 비워두면 붙이지 않습니다.">
+              <input className={inputCls} placeholder="예: — 카페 댐 사장 드림" value={store.replySignature} onChange={(e) => setStore({ replySignature: e.target.value })} />
+            </Field>
+          </div>
+        </div>
+      </Card>
+
       <Card title="원가·수수료">
         <div className="grid gap-3 md:grid-cols-3">
           <Field label="음료 목표 원가율(%)">
@@ -119,20 +151,7 @@ function DataCard() {
 
   const exportJson = async () => {
     const s = useApp.getState();
-    const data: AppData = {
-      store: s.store,
-      laborRule: s.laborRule,
-      ingredients: s.ingredients,
-      priceHistory: s.priceHistory,
-      menus: s.menus,
-      sales: s.sales,
-      employees: s.employees,
-      attendance: s.attendance,
-      expenses: s.expenses,
-      recurring: s.recurring,
-      reviews: s.reviews,
-      actions: s.actions,
-    };
+    const data: AppData = pickData(s);
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
     if (await platform().saveFile(`cafedam-backup-${todayLocal()}.json`, blob)) setMsg("백업 파일을 저장했습니다.");
   };

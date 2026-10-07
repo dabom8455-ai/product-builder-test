@@ -1,118 +1,142 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
 import { useApp, useMaps } from "@/lib/store";
-import { usePayrolls, usePnl, useMenuAnalysis } from "@/lib/hooks";
-import { addDays, addMonths, daysInMonth, DOW_LABEL, dayOfWeek, todayLocal } from "@/lib/dates";
+import { usePnl, useMenuAnalysis } from "@/lib/hooks";
+import { addDays, addMonths, businessDays, DOW_LABEL, dayOfWeek, todayLocal, weekStart } from "@/lib/dates";
 import { linePrice } from "@/lib/domain/pnl";
 import { QUADRANT_INFO } from "@/lib/domain/menuEngineering";
+import { buildTodos } from "@/lib/domain/todos";
+import { WEATHER } from "@/lib/types";
 import { Badge, Bar, Card, PageHeader, Stat } from "@/components/ui";
 import { man, pct, won } from "@/lib/format";
+
+const LEVEL = { urgent: { label: "지금", tone: "bad" }, normal: { label: "오늘", tone: "warn" }, info: { label: "참고", tone: undefined } } as const;
 
 export default function Home() {
   const today = todayLocal();
   const month = today.slice(0, 7);
   const lastMonth = addMonths(month, -1);
-  const sales = useApp((s) => s.sales);
-  const reviews = useApp((s) => s.reviews);
-  const attendance = useApp((s) => s.attendance);
-  const employees = useApp((s) => s.employees);
-  const store = useApp((s) => s.store);
+  const s = useApp();
   const { menuMap, unitCosts } = useMaps();
   const pnlThis = usePnl(month);
   const pnlLast = usePnl(lastMonth);
-  const payrolls = usePayrolls(month);
   const analysis = useMenuAnalysis(56);
 
-  const daily = useMemo(() => {
-    const days = Array.from({ length: 14 }, (_, i) => addDays(today, i - 13));
-    const totals = new Map(days.map((d) => [d, 0]));
-    for (const l of sales) {
-      if (!totals.has(l.date)) continue;
-      const m = menuMap.get(l.menuId);
-      if (m) totals.set(l.date, totals.get(l.date)! + linePrice(m, l.channel) * l.qty);
-    }
-    return days.map((d) => ({ date: d, total: totals.get(d)! }));
-  }, [sales, menuMap, today]);
+  const dayTotal = new Map<string, number>();
+  for (const l of s.sales) {
+    const m = menuMap.get(l.menuId);
+    if (m) dayTotal.set(l.date, (dayTotal.get(l.date) ?? 0) + linePrice(m, l.channel) * l.qty);
+  }
+  const total = (d: string) => dayTotal.get(d) ?? 0;
+
+  const daily = Array.from({ length: 14 }, (_, i) => addDays(today, i - 13)).map((d) => ({ date: d, total: total(d) }));
   const maxDaily = Math.max(...daily.map((d) => d.total), 1);
-  const yesterday = daily[daily.length - 2];
-  const todayTotal = daily[daily.length - 1].total;
+  const yesterday = addDays(today, -1);
 
-  const elapsed = Number(today.slice(8, 10)) - 1 || 1;
-  const projected = (pnlThis.grossSales / elapsed) * daysInMonth(month);
+  // 이번 주(월~어제) vs 지난주 같은 요일까지
+  const ws = weekStart(today);
+  const thisWeekDays = Array.from({ length: Math.max(0, (dayOfWeek(today) + 6) % 7) }, (_, i) => addDays(ws, i));
+  const thisWeek = thisWeekDays.reduce((t, d) => t + total(d), 0);
+  const lastWeek = thisWeekDays.reduce((t, d) => t + total(addDays(d, -7)), 0);
 
-  const pendingReviews = reviews.filter((r) => r.status !== "posted");
-  const negPending = pendingReviews.filter((r) => r.sentiment === "negative");
-  const working = attendance.filter((a) => !a.clockOut && a.clockIn.startsWith(today));
+  // 월 목표: 남은 영업일 기준 하루 필요 매출
+  const target = s.store.monthlySalesTarget;
+  const openDaysTotal = businessDays(month, s.store.closedDays);
+  let openDaysLeft = 0;
+  for (let d = today; d.startsWith(month); d = addDays(d, 1)) if (!s.store.closedDays.includes(dayOfWeek(d))) openDaysLeft++;
+  const remaining = Math.max(0, target - pnlThis.grossSales);
+  const elapsedOpen = Math.max(1, openDaysTotal - openDaysLeft);
+  const projected = (pnlThis.grossSales / elapsedOpen) * openDaysTotal;
 
-  const overCost = useMemo(
-    () =>
-      [...menuMap.values()]
-        .filter((m) => !m.isSub && m.active && m.price > 0)
-        .map((m) => ({ m, ratio: (unitCosts.get(m.id) ?? 0) / m.price }))
-        .filter(({ m, ratio }) => ratio > (m.category === "drink" ? store.targetCostRatio.drink : store.targetCostRatio.dessert)),
-    [menuMap, unitCosts, store.targetCostRatio],
-  );
-  const laborWarnings = payrolls.flatMap((p) => p.payroll.warnings.map((w) => `${p.employee.name}: ${w}`));
+  const todos = buildTodos({
+    today,
+    store: s.store,
+    sales: s.sales,
+    reviews: s.reviews,
+    attendance: s.attendance,
+    employees: s.employees,
+    shifts: s.shifts,
+    menus: s.menus,
+    unitCosts,
+  });
+  const working = s.attendance.filter((a) => !a.clockOut && a.clockIn.startsWith(today));
+  const todayNote = s.dayNotes.find((n) => n.date === today);
 
   return (
     <div className="space-y-5">
-      <PageHeader title="오늘의 카페" desc={`${today} (${DOW_LABEL[dayOfWeek(today)]}) · 매출 데이터가 들어오면 아래 숫자가 모두 자동으로 갱신됩니다.`} />
+      <PageHeader
+        title="오늘의 카페"
+        desc={`${today} (${DOW_LABEL[dayOfWeek(today)]})${s.store.closedDays.includes(dayOfWeek(today)) ? " · 정기 휴무일" : ""}${todayNote?.weather ? ` · ${WEATHER[todayNote.weather]}` : ""}`}
+      />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <Stat label="오늘 매출" value={won(todayTotal)} sub={todayTotal === 0 ? <Link className="underline" href="/sales">마감 입력하기 →</Link> : undefined} />
-        <Stat label="어제 매출" value={won(yesterday.total)} sub={`${DOW_LABEL[dayOfWeek(yesterday.date)]}요일`} />
-        <Stat label="이번 달 누적 매출" value={man(pnlThis.grossSales) + "원"} sub={`월말 예상 ${man(projected)}원`} />
+        <Stat label="오늘 매출" value={won(total(today))} sub={total(today) === 0 ? <Link className="underline" href="/sales">마감 입력하기 →</Link> : undefined} />
+        <Stat label="어제 매출" value={won(total(yesterday))} sub={`${DOW_LABEL[dayOfWeek(yesterday)]}요일 · 지난주 같은 요일 ${man(total(addDays(yesterday, -7)))}원`} />
         <Stat
-          label={`지난달(${lastMonth.slice(5)}월) 순수익`}
+          label={`이번 주 (월~어제)`}
+          value={man(thisWeek) + "원"}
+          tone={thisWeekDays.length === 0 || lastWeek === 0 ? undefined : thisWeek >= lastWeek ? "good" : "bad"}
+          sub={thisWeekDays.length === 0 ? "월요일: 지난주 결과는 손익에서" : lastWeek ? `지난주 같은 기간 대비 ${thisWeek >= lastWeek ? "+" : ""}${pct((thisWeek - lastWeek) / lastWeek)}` : "지난주 데이터 없음"}
+        />
+        <Stat
+          label={`지난달(${Number(lastMonth.slice(5))}월) 순수익`}
           value={won(pnlLast.operatingProfit)}
           tone={pnlLast.operatingProfit >= 0 ? "good" : "bad"}
           sub={pnlLast.grossSales > 0 ? `순이익률 ${pct(pnlLast.operatingProfit / pnlLast.grossSales)}` : "데이터 없음"}
         />
       </div>
 
-      <Card title="최근 14일 매출" right={<Link href="/pnl" className="text-sm text-brand">손익 보기 →</Link>}>
-        <div className="flex h-36 items-end gap-1">
-          {daily.map((d) => (
-            <div key={d.date} className="flex h-full flex-1 flex-col items-center gap-1" title={`${d.date} ${won(d.total)}`}>
-              <div className="flex w-full flex-1 items-end">
-                <div className="w-full rounded-t bg-brand/80" style={{ height: `${(d.total / maxDaily) * 100}%`, minHeight: d.total ? 2 : 0 }} />
-              </div>
-              <span className={`text-[10px] ${dayOfWeek(d.date) === 0 ? "text-bad" : "text-ink-2"}`}>{d.date.slice(8)}</span>
-            </div>
-          ))}
-        </div>
-      </Card>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card title="오늘의 제안" right={<Link href="/analysis" className="text-sm text-brand">메뉴 분석 →</Link>}>
-          <ul className="space-y-3">
-            {analysis.suggestions
-              .filter((s) => s.action !== "keep")
-              .slice(0, 4)
-              .map((s) => (
-                <li key={s.menuId + s.action} className="text-sm">
-                  <div className="font-medium">
-                    {QUADRANT_INFO[s.quadrant].emoji} {s.title}
-                  </div>
-                  <div className="text-xs text-ink-2">{s.detail}</div>
-                  {s.action === "promote" && (
-                    <Link href={`/poster?menu=${s.menuId}`} className="mt-1 inline-block text-xs text-brand underline">
-                      포스터 만들기
-                    </Link>
-                  )}
+      <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
+        <Card title="오늘 할 일" right={<span className="text-xs text-ink-2">{todos.filter((t) => t.level !== "info").length}건</span>}>
+          {todos.length === 0 ? (
+            <p className="text-sm text-ink-2">처리할 일이 없습니다.</p>
+          ) : (
+            <ul className="divide-y divide-line">
+              {todos.map((t) => (
+                <li key={t.id}>
+                  <Link href={t.href} className="flex items-center gap-2 py-2 text-sm hover:text-brand">
+                    <Badge tone={LEVEL[t.level].tone}>{LEVEL[t.level].label}</Badge>
+                    <span className="min-w-0 flex-1">{t.text}</span>
+                    <span aria-hidden className="text-ink-2">
+                      ›
+                    </span>
+                  </Link>
                 </li>
               ))}
-          </ul>
+            </ul>
+          )}
         </Card>
 
         <div className="space-y-4">
-          <Card title="답글 대기 리뷰" right={<Link href="/reviews" className="text-sm text-brand">답글 달기 →</Link>}>
-            <div className="flex items-center gap-3">
-              <span className="text-3xl font-bold tabular">{pendingReviews.length}</span>
-              {negPending.length > 0 && <Badge tone="bad">부정 리뷰 {negPending.length}건 — 먼저 확인</Badge>}
-            </div>
+          <Card title={`${Number(month.slice(5))}월 목표`} right={<Link href="/settings" className="text-xs text-brand">목표 설정</Link>}>
+            {target > 0 ? (
+              <>
+                <div className="flex items-baseline justify-between gap-2">
+                  <span className="text-2xl font-bold tabular">{pct(pnlThis.grossSales / target, 0)}</span>
+                  <span className="text-xs text-ink-2 tabular">
+                    {man(pnlThis.grossSales)} / {man(target)}원
+                  </span>
+                </div>
+                <div className="mt-2">
+                  <Bar value={pnlThis.grossSales} max={target} tone={projected >= target ? "good" : "brand"} />
+                </div>
+                <p className="mt-2 text-sm">
+                  {remaining === 0 ? (
+                    <span className="text-good">이번 달 목표를 달성했습니다.</span>
+                  ) : (
+                    <>
+                      남은 영업일 {openDaysLeft}일, 하루 <b className="tabular">{won(remaining / Math.max(1, openDaysLeft))}</b> 필요
+                    </>
+                  )}
+                </p>
+                <p className="mt-1 text-xs text-ink-2">
+                  지금 속도면 월말 {man(projected)}원 ({projected >= target ? "달성 예상" : `${man(target - projected)}원 부족 예상`})
+                </p>
+              </>
+            ) : (
+              <p className="text-sm text-ink-2">설정에서 월 매출 목표를 정하면 진행률과 하루 필요 매출을 보여드립니다.</p>
+            )}
           </Card>
           <Card title="지금 근무 중" right={<Link href="/staff" className="text-sm text-brand">출퇴근 →</Link>}>
             {working.length === 0 ? (
@@ -121,7 +145,7 @@ export default function Home() {
               <ul className="text-sm">
                 {working.map((a) => (
                   <li key={a.id}>
-                    {employees.find((e) => e.id === a.employeeId)?.name} · {a.clockIn.slice(11)} 출근
+                    {s.employees.find((e) => e.id === a.employeeId)?.name} · {a.clockIn.slice(11)} 출근
                   </li>
                 ))}
               </ul>
@@ -130,26 +154,45 @@ export default function Home() {
         </div>
       </div>
 
-      {(overCost.length > 0 || laborWarnings.length > 0) && (
-        <Card title="⚠️ 확인 필요">
-          <ul className="space-y-2 text-sm">
-            {overCost.map(({ m, ratio }) => (
-              <li key={m.id}>
-                <Link href="/menu" className="underline">
-                  {m.name}
-                </Link>{" "}
-                원가율 {pct(ratio)} — 목표 {pct(m.category === "drink" ? store.targetCostRatio.drink : store.targetCostRatio.dessert, 0)} 초과
-                <div className="mt-1 max-w-xs">
-                  <Bar value={ratio} max={0.6} tone="bad" />
+      <Card title="최근 14일 매출" right={<Link href="/sales" className="text-sm text-brand">달력 보기 →</Link>}>
+        <div className="flex h-36 items-end gap-1">
+          {daily.map((d) => {
+            const note = s.dayNotes.find((n) => n.date === d.date);
+            return (
+              <div key={d.date} className="flex h-full flex-1 flex-col items-center gap-1" title={`${d.date} ${won(d.total)}${note?.memo ? ` · ${note.memo}` : ""}`}>
+                <div className="flex w-full flex-1 items-end">
+                  <div className="w-full rounded-t bg-series-1" style={{ height: `${(d.total / maxDaily) * 100}%`, minHeight: d.total ? 2 : 0 }} />
                 </div>
+                <span className={`text-[10px] ${dayOfWeek(d.date) === 0 ? "text-bad" : "text-ink-2"}`}>
+                  {d.date.slice(8)}
+                  {note?.weather && <span className="hidden sm:inline">{WEATHER[note.weather].split(" ")[0]}</span>}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </Card>
+
+      <Card title="오늘의 제안" right={<Link href="/analysis" className="text-sm text-brand">메뉴 분석 →</Link>}>
+        <ul className="grid gap-3 md:grid-cols-2">
+          {analysis.suggestions
+            .filter((x) => x.action !== "keep")
+            .slice(0, 4)
+            .map((x) => (
+              <li key={x.menuId + x.action} className="text-sm">
+                <div className="font-medium">
+                  {QUADRANT_INFO[x.quadrant].emoji} {x.title}
+                </div>
+                <div className="text-xs text-ink-2">{x.detail}</div>
+                {x.action === "promote" && (
+                  <Link href={`/poster?menu=${x.menuId}`} className="mt-1 inline-block text-xs text-brand underline">
+                    포스터 만들기
+                  </Link>
+                )}
               </li>
             ))}
-            {laborWarnings.map((w) => (
-              <li key={w}>👤 {w}</li>
-            ))}
-          </ul>
-        </Card>
-      )}
+        </ul>
+      </Card>
     </div>
   );
 }

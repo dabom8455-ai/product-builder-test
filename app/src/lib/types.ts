@@ -26,6 +26,12 @@ export interface Store {
   /** 배달 1건(메뉴 1개)당 추가 포장재비 */
   deliveryPackagingCost: number;
   targetCostRatio: { drink: number; dessert: number };
+  /** 월 매출 목표(원). 0이면 미설정 */
+  monthlySalesTarget: number;
+  /** 정기 휴무 요일 (0=일 … 6=토) */
+  closedDays: number[];
+  /** 리뷰 답글 맺음 서명 */
+  replySignature: string;
 }
 
 export interface LaborRule {
@@ -136,6 +142,8 @@ export interface Review {
   menuIds: string[];
   keywords: string[];
   reply?: string;
+  /** 답글 초안을 누가 썼나: AI 또는 기본 템플릿 */
+  replySource?: "ai" | "template";
   status: "pending" | "drafted" | "posted";
 }
 
@@ -144,4 +152,47 @@ export interface MenuActionLog {
   menuId: string;
   action: string;
   appliedAt: string; // YYYY-MM-DD
+}
+
+export interface PurchaseItem {
+  ingredientId: string;
+  /** 구매한 포장 단위 수 (예: 원두 1kg 봉지 3개 → 3) */
+  packs: number;
+  /** 포장 1개 가격 */
+  packPrice: number;
+}
+
+/** 재료 매입 영수증 1장 */
+export interface Purchase {
+  id: string;
+  date: string; // YYYY-MM-DD
+  items: PurchaseItem[];
+  memo?: string;
+}
+
+/** 근무 계획 (근무표의 한 칸) */
+export interface Shift {
+  id: string;
+  employeeId: string;
+  date: string; // YYYY-MM-DD
+  start: string; // HH:mm
+  end: string; // HH:mm (start 보다 작으면 다음 날)
+}
+
+export type Weather = "sunny" | "cloudy" | "rain" | "snow" | "hot" | "cold";
+
+export const WEATHER: Record<Weather, string> = {
+  sunny: "☀️ 맑음",
+  cloudy: "☁️ 흐림",
+  rain: "🌧️ 비",
+  snow: "❄️ 눈",
+  hot: "🥵 폭염",
+  cold: "🥶 한파",
+};
+
+export interface DayNote {
+  id: string; // = date
+  date: string;
+  weather?: Weather;
+  memo?: string;
 }

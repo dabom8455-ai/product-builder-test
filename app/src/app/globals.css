@@ -12,6 +12,9 @@
   --good: #2f7d4f;
   --bad: #c0392b;
   --warn: #b7791f;
+  /* 차트 계열색: 검증된 기준 팔레트 1·2번(파랑·주황). 텍스트에는 쓰지 않는다 */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
 }
 
 /* 다크 테마: OS 설정(테마 미지정 시) 또는 data-theme="dark" 둘 다 지원 */
@@ -28,6 +31,8 @@
     --good: #5fbf85;
     --bad: #ef7768;
     --warn: #e0b057;
+    --series-1: #3987e5;
+    --series-2: #d95926;
     color-scheme: dark;
   }
 }
@@ -44,6 +49,8 @@
   --good: #5fbf85;
   --bad: #ef7768;
   --warn: #e0b057;
+  --series-1: #3987e5;
+  --series-2: #d95926;
   color-scheme: dark;
 }
 
@@ -59,6 +66,8 @@
   --color-good: var(--good);
   --color-bad: var(--bad);
   --color-warn: var(--warn);
+  --color-series-1: var(--series-1);
+  --color-series-2: var(--series-2);
   --font-sans: "IBM Plex Sans KR", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
 }
 

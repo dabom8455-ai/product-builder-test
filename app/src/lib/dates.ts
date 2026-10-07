@@ -55,3 +55,12 @@ export function todayLocal(): string {
 }
 
 export const DOW_LABEL = ["일", "월", "화", "수", "목", "금", "토"];
+
+/** 그 달의 영업일 수 (정기 휴무 요일 제외) */
+export function businessDays(month: string, closedDays: number[]): number {
+  let n = 0;
+  for (let d = 1; d <= daysInMonth(month); d++) {
+    if (!closedDays.includes(dayOfWeek(`${month}-${String(d).padStart(2, "0")}`))) n++;
+  }
+  return n;
+}

@@ -5,7 +5,7 @@ import { useApp, useMaps } from "./store";
 import { calcPayroll } from "./domain/payroll";
 import { calcPnl } from "./domain/pnl";
 import { analyzeMenus } from "./domain/menuEngineering";
-import { addDays, todayLocal } from "./dates";
+import { addDays, businessDays, todayLocal } from "./dates";
 
 export function usePayrolls(month: string) {
   const employees = useApp((s) => s.employees);
@@ -19,16 +19,31 @@ export function usePayrolls(month: string) {
 }
 
 export function usePnl(month: string) {
+  return usePnlSeries([month])[0];
+}
+
+/** 여러 달의 손익 (추이 차트용). 인건비는 각 달의 급여 계산 + 사업주 보험 */
+export function usePnlSeries(months: string[]) {
   const sales = useApp((s) => s.sales);
   const store = useApp((s) => s.store);
   const expenses = useApp((s) => s.expenses);
   const recurring = useApp((s) => s.recurring);
+  const employees = useApp((s) => s.employees);
+  const attendance = useApp((s) => s.attendance);
+  const rule = useApp((s) => s.laborRule);
   const { menuMap, unitCosts } = useMaps();
-  const payrolls = usePayrolls(month);
-  return useMemo(() => {
-    const labor = payrolls.reduce((t, p) => t + p.payroll.gross + p.payroll.employerInsurance, 0);
-    return calcPnl({ month, sales, menus: menuMap, unitCosts, store, labor, expenses, recurring });
-  }, [month, sales, menuMap, unitCosts, store, expenses, recurring, payrolls]);
+  const key = months.join(",");
+  return useMemo(
+    () =>
+      key.split(",").map((month) => {
+        const labor = employees.reduce((t, e) => {
+          const p = calcPayroll(e, attendance, month, rule, store.over5Employees);
+          return t + p.gross + p.employerInsurance;
+        }, 0);
+        return calcPnl({ month, sales, menus: menuMap, unitCosts, store, labor, expenses, recurring, openDays: businessDays(month, store.closedDays) });
+      }),
+    [key, sales, menuMap, unitCosts, store, expenses, recurring, employees, attendance, rule],
+  );
 }
 
 export function useMenuAnalysis(days: number) {

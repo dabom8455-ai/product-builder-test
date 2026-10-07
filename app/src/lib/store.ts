@@ -9,11 +9,14 @@ import type {
   Ingredient,
   IngredientPrice,
   LaborRule,
+  DayNote,
   Menu,
   MenuActionLog,
+  Purchase,
   RecurringExpense,
   Review,
   SaleLine,
+  Shift,
   Store,
 } from "./types";
 import { DEFAULT_LABOR_RULE, DEFAULT_STORE, buildSeed, priceHistorySeed } from "./seed";
@@ -36,6 +39,9 @@ export interface AppData {
   recurring: RecurringExpense[];
   reviews: Review[];
   actions: MenuActionLog[];
+  purchases: Purchase[];
+  shifts: Shift[];
+  dayNotes: DayNote[];
 }
 
 export const APP_KEYS = [
@@ -51,6 +57,9 @@ export const APP_KEYS = [
   "recurring",
   "reviews",
   "actions",
+  "purchases",
+  "shifts",
+  "dayNotes",
 ] as const satisfies readonly (keyof AppData)[];
 
 interface Actions {
@@ -66,6 +75,9 @@ interface Actions {
   loadDemo: () => void;
   resetEmpty: () => void;
   importAll: (data: Partial<AppData>) => void;
+  /** 매입 저장: 기록을 남기고, 가장 최근 매입이면 재료 단가를 갱신한다 */
+  savePurchase: (p: Purchase) => void;
+  addShifts: (shifts: Shift[]) => void;
 }
 
 type ListKey = {
@@ -102,6 +114,9 @@ export function emptyData(): AppData {
     recurring: [],
     reviews: [],
     actions: [],
+    purchases: [],
+    shifts: [],
+    dayNotes: [],
   };
 }
 
@@ -161,6 +176,20 @@ export const useApp = create<AppData & Actions>()((set) => ({
   loadDemo: () => set(demoData()),
   resetEmpty: () => set(emptyData()),
   importAll: (data) => set(completeData(data)),
+  savePurchase: (p) =>
+    set((s) => {
+      const purchases = [...s.purchases.filter((x) => x.id !== p.id), p];
+      let ingredients = s.ingredients;
+      let priceHistory = s.priceHistory;
+      for (const it of p.items) {
+        const ing = ingredients.find((i) => i.id === it.ingredientId);
+        if (!ing || it.packPrice <= 0) continue;
+        priceHistory = [...priceHistory.filter((h) => !(h.ingredientId === ing.id && h.date === p.date)), { ingredientId: ing.id, packPrice: it.packPrice, date: p.date }];
+        if (p.date >= ing.updatedAt) ingredients = ingredients.map((i) => (i.id === ing.id ? { ...i, packPrice: it.packPrice, updatedAt: p.date } : i));
+      }
+      return { purchases, ingredients, priceHistory };
+    }),
+  addShifts: (shifts) => set((s) => ({ shifts: [...s.shifts, ...shifts] })),
 }));
 
 export function useMaps() {

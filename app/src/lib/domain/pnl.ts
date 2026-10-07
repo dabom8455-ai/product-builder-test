@@ -47,6 +47,8 @@ export function calcPnl(args: {
   labor: number;
   expenses: Expense[];
   recurring: RecurringExpense[];
+  /** 손익분기 하루 매출 계산에 쓰는 영업일 수 (기본: 그 달 전체 일수) */
+  openDays?: number;
 }): Pnl {
   const { month, store } = args;
   const lines = args.sales.filter((s) => s.date.startsWith(month));
@@ -111,6 +113,6 @@ export function calcPnl(args: {
     qty,
     byChannel: [...byChannel.values()].sort((a, b) => b.sales - a.sales),
     breakEvenSales,
-    breakEvenDailySales: breakEvenSales / daysInMonth(month),
+    breakEvenDailySales: breakEvenSales / Math.max(1, args.openDays ?? daysInMonth(month)),
   };
 }

@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useApp } from "@/lib/store";
 import { useMenuAnalysis } from "@/lib/hooks";
-import { PURPOSES, templateCopies, type PosterCopy, type PosterPurpose } from "@/lib/domain/poster";
-import { Badge, Button, Card, Field, PageHeader, Segmented, ic, inputCls } from "@/components/ui";
+import { PURPOSES, templateCaption, templateCopies, type CaptionRequest, type PosterCopy, type PosterPurpose } from "@/lib/domain/poster";
+import { Badge, Button, Card, Field, NumInput, PageHeader, Segmented, ic, inputCls } from "@/components/ui";
 import { won } from "@/lib/format";
 import { platform, takeRouteParam } from "@/lib/platform";
 
@@ -37,6 +37,7 @@ export default function PosterPage() {
   const [loading, setLoading] = useState(false);
   const [photo, setPhoto] = useState<HTMLImageElement | null>(null);
   const [showPrice, setShowPrice] = useState(true);
+  const [discount, setDiscount] = useState(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const praise = useMemo(() => {
@@ -66,12 +67,12 @@ export default function PosterPage() {
     if (!c || !menu) return;
     let cancelled = false;
     document.fonts.ready.then(() => {
-      if (!cancelled) drawPoster(c, { size, style, brand: store.brandColor, storeName: store.name, menuName: menu.name, price: showPrice ? menu.price : null, badge: PURPOSES.find((p) => p.id === purpose)!.badge, copy, photo });
+      if (!cancelled) drawPoster(c, { size, style, brand: store.brandColor, storeName: store.name, menuName: menu.name, price: showPrice ? menu.price : null, discountPrice: showPrice && discount > 0 && discount < menu.price ? discount : null, badge: PURPOSES.find((p) => p.id === purpose)!.badge, copy, photo });
     });
     return () => {
       cancelled = true;
     };
-  }, [size, style, store.brandColor, store.name, menu, showPrice, purpose, copy, photo]);
+  }, [size, style, store.brandColor, store.name, menu, showPrice, discount, purpose, copy, photo]);
 
   const onPhoto = (f: File) => {
     const url = URL.createObjectURL(f);
@@ -171,9 +172,19 @@ export default function PosterPage() {
               <input className={ic("mt-2")} value={copy.headline} onChange={(e) => setCopy({ ...copy, headline: e.target.value })} aria-label="헤드라인" />
               <input className={ic("mt-2")} value={copy.sub} onChange={(e) => setCopy({ ...copy, sub: e.target.value })} aria-label="서브 문구" />
             </div>
-            <label className="flex items-center gap-2 text-sm">
-              <input type="checkbox" checked={showPrice} onChange={(e) => setShowPrice(e.target.checked)} /> 가격 표시
-            </label>
+            <div className="flex flex-wrap items-center gap-3">
+              <label className="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked={showPrice} onChange={(e) => setShowPrice(e.target.checked)} /> 가격 표시
+              </label>
+              {showPrice && (
+                <label className="flex items-center gap-2 text-sm">
+                  할인가
+                  <NumInput className="w-28" value={discount} step={100} min={0} onChange={(n) => setDiscount(Math.max(0, n))} aria-label="할인가" />
+                  {discount > 0 && discount < menu.price && <span className="text-xs text-ink-2">{Math.round((1 - discount / menu.price) * 100)}% 할인</span>}
+                  {discount >= menu.price && <span className="text-xs text-bad">정가보다 낮아야 합니다</span>}
+                </label>
+              )}
+            </div>
           </div>
         </Card>
         <Card
@@ -194,6 +205,18 @@ export default function PosterPage() {
           <canvas ref={canvasRef} className="mx-auto block h-auto max-h-[70vh] w-auto max-w-full rounded-lg shadow" />
         </Card>
       </div>
+      <CaptionCard
+        req={{
+          storeName: store.name,
+          menuName: menu.name,
+          description: menu.description,
+          price: menu.price,
+          discountPrice: discount > 0 && discount < menu.price ? discount : undefined,
+          purpose,
+          copy,
+          praise,
+        }}
+      />
     </div>
   );
 }
@@ -205,6 +228,7 @@ interface DrawArgs {
   storeName: string;
   menuName: string;
   price: number | null;
+  discountPrice: number | null;
   badge: string;
   copy: PosterCopy;
   photo: HTMLImageElement | null;
@@ -226,12 +250,26 @@ function drawPoster(c: HTMLCanvasElement, a: DrawArgs) {
   ctx.fillRect(0, 0, w, h);
 
   // 사진 영역
+  // 텍스트 블록: 줄 수를 먼저 재고, 하단 가격 줄과 겹치지 않게 시작 위치를 올린다
+  const footY = h - 80 * u;
+  const headSize = (a.size === "feed" ? 76 : 92) * u;
+  const headStep = (a.size === "feed" ? 92 : 110) * u;
+  const subStep = 56 * u;
+  ctx.font = `800 ${headSize}px ${FONT}`;
+  const lines = wrap(ctx, a.copy.headline, w - 160 * u).slice(0, 2);
+  ctx.font = `500 ${(a.size === "feed" ? 38 : 46) * u}px ${FONT}`;
+  const subLines = a.copy.sub ? wrap(ctx, a.copy.sub, w - 160 * u).slice(0, 2) : [];
+  const blockSpan = (subLines.length ? lines.length * headStep + (subLines.length - 1) * subStep : (lines.length - 1) * headStep);
+  const preferred = a.style === "minimal" ? 80 * u + h * 0.55 + 90 * u : a.style === "bold" ? h * 0.62 : h * 0.62 + 110 * u;
+  const textTop = Math.min(preferred, footY - 80 * u - blockSpan);
+  // 글이 길어 위로 올라가면 사진 영역을 그만큼 줄인다
+  const photoLimit = textTop - headSize - (a.style === "minimal" ? 40 : 30) * u;
   const photoBox =
     a.style === "minimal"
-      ? { x: 80 * u, y: 80 * u, w: w - 160 * u, h: h * 0.55 }
+      ? { x: 80 * u, y: 80 * u, w: w - 160 * u, h: Math.min(h * 0.55, photoLimit - 80 * u) }
       : a.style === "bold"
         ? { x: 0, y: 0, w, h }
-        : { x: 0, y: 0, w, h: h * 0.62 };
+        : { x: 0, y: 0, w, h: Math.min(h * 0.62, photoLimit) };
   if (a.photo) {
     const { naturalWidth: iw, naturalHeight: ih } = a.photo;
     const scale = Math.max(photoBox.w / iw, photoBox.h / ih);
@@ -272,28 +310,41 @@ function drawPoster(c: HTMLCanvasElement, a: DrawArgs) {
   ctx.fillStyle = a.style === "minimal" ? "#ffffff" : a.style === "bold" ? "#1d1611" : a.brand;
   ctx.fillText(a.badge, bx + 24 * u, by + 44 * u);
 
-  // 텍스트 블록
-  const textTop = a.style === "minimal" ? photoBox.y + photoBox.h + 90 * u : a.style === "bold" ? h * 0.62 : photoBox.h + 110 * u;
   ctx.fillStyle = fg;
-  ctx.font = `800 ${(a.size === "feed" ? 76 : 92) * u}px ${FONT}`;
-  const lines = wrap(ctx, a.copy.headline, w - 160 * u);
+  ctx.font = `800 ${headSize}px ${FONT}`;
   let y = textTop;
-  for (const line of lines.slice(0, 2)) {
+  for (const line of lines) {
     ctx.fillText(line, 80 * u, y);
-    y += (a.size === "feed" ? 92 : 110) * u;
+    y += headStep;
   }
   ctx.globalAlpha = 0.85;
   ctx.font = `500 ${(a.size === "feed" ? 38 : 46) * u}px ${FONT}`;
-  for (const line of wrap(ctx, a.copy.sub, w - 160 * u).slice(0, 2)) {
+  for (const line of subLines) {
     ctx.fillText(line, 80 * u, y);
-    y += 56 * u;
+    y += subStep;
   }
   ctx.globalAlpha = 1;
 
   // 하단: 메뉴명·가격·가게명
-  const footY = h - 80 * u;
   ctx.font = `700 ${40 * u}px ${FONT}`;
-  ctx.fillText(a.menuName + (a.price ? `  ${a.price.toLocaleString()}원` : ""), 80 * u, footY);
+  if (a.price && a.discountPrice) {
+    // 할인: 정가에 취소선, 그 옆에 할인가
+    const name = `${a.menuName}  `;
+    ctx.fillText(name, 80 * u, footY);
+    let x = 80 * u + ctx.measureText(name).width;
+    const orig = `${a.price.toLocaleString()}원`;
+    ctx.globalAlpha = 0.6;
+    ctx.font = `500 ${32 * u}px ${FONT}`;
+    ctx.fillText(orig, x, footY);
+    const ow = ctx.measureText(orig).width;
+    ctx.fillRect(x, footY - 12 * u, ow, 3 * u);
+    ctx.globalAlpha = 1;
+    x += ow + 14 * u;
+    ctx.font = `800 ${46 * u}px ${FONT}`;
+    ctx.fillText(`${a.discountPrice.toLocaleString()}원`, x, footY);
+  } else {
+    ctx.fillText(a.menuName + (a.price ? `  ${a.price.toLocaleString()}원` : ""), 80 * u, footY);
+  }
   ctx.textAlign = "right";
   ctx.globalAlpha = 0.75;
   ctx.font = `600 ${34 * u}px ${FONT}`;
@@ -326,3 +377,52 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
   ctx.arcTo(x, y, x + w, y, r);
   ctx.closePath();
 }
+
+/** 인스타그램 게시글: 포스터와 같은 메뉴·문구로 본문과 해시태그를 만든다 */
+function CaptionCard({ req }: { req: CaptionRequest }) {
+  const key = JSON.stringify(req);
+  const [state, setState] = useState<{ key: string; text: string; source: "ai" | "template" } | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const ref = useRef<HTMLTextAreaElement>(null);
+  const current = state?.key === key ? state : { key, text: templateCaption(req), source: "template" as const };
+
+  const generate = async () => {
+    setLoading(true);
+    const ai = await platform().instaCaption(req);
+    setState({ key, text: ai ?? templateCaption(req), source: ai ? "ai" : "template" });
+    setLoading(false);
+  };
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(current.text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      ref.current?.select();
+    }
+  };
+
+  return (
+    <Card
+      title="인스타그램 게시글"
+      className="mt-4"
+      right={
+        <div className="flex gap-2">
+          <Button size="sm" variant="ghost" onClick={generate} disabled={loading}>
+            {loading ? "작성 중…" : "✨ AI로 다시 쓰기"}
+          </Button>
+          <Button size="sm" onClick={copy}>
+            {copied ? "복사됨 ✓" : "복사"}
+          </Button>
+        </div>
+      }
+    >
+      <textarea ref={ref} className={ic("h-48 text-sm")} value={current.text} onChange={(e) => setState({ key, text: e.target.value, source: current.source })} aria-label="인스타그램 게시글" />
+      <p className="mt-1 text-[11px] text-ink-2">
+        {current.source === "ai" ? "AI가 쓴 게시글" : "기본 템플릿 게시글"} · 포스터의 메뉴·문구·할인가가 바뀌면 다시 만들어집니다. 포스터 PNG와 함께 올리세요.
+      </p>
+    </Card>
+  );
+}
+

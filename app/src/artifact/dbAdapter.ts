@@ -2,12 +2,13 @@
 //   cafe/<키>             { value }            매장·메뉴·재료·직원·리뷰 등
 //   sales/<YYYY-MM>       { lines: [[날짜, 채널, 메뉴id, 수량], ...] }
 //   attendance/<YYYY-MM>  { rows: Attendance[] }
+//   shifts/<YYYY-MM>      { rows: Shift[] }
 import type { PersistAdapter } from "@/lib/persistence";
 import { localAdapter } from "@/lib/persistence";
 import { APP_KEYS, type AppData } from "@/lib/store";
-import type { Attendance, Channel, SaleLine } from "@/lib/types";
+import type { Attendance, Channel, SaleLine, Shift } from "@/lib/types";
 
-const SHARDED = new Set<keyof AppData>(["sales", "attendance"]);
+const SHARDED = new Set<keyof AppData>(["sales", "attendance", "shifts"]);
 const SIMPLE_KEYS = APP_KEYS.filter((k) => !SHARDED.has(k));
 
 type SaleTuple = [string, Channel, string, number];
@@ -26,6 +27,13 @@ function byMonth<T>(items: T[], monthOf: (t: T) => string) {
 const saleMonths = (sales: SaleLine[]) =>
   new Map([...byMonth(sales, (l) => l.date.slice(0, 7))].map(([k, v]) => [k, JSON.stringify(v.map((l) => [l.date, l.channel, l.menuId, l.qty]))]));
 const attendanceMonths = (rows: Attendance[]) => new Map([...byMonth(rows, (a) => a.clockIn.slice(0, 7))].map(([k, v]) => [k, JSON.stringify(v)]));
+const shiftMonths = (rows: Shift[]) => new Map([...byMonth(rows, (s) => s.date.slice(0, 7))].map(([k, v]) => [k, JSON.stringify(v)]));
+
+/** 월별 문서 묶음 저장: 내용이 바뀐 달만 쓰고, 사라진 달은 지운다 */
+async function saveMonths(db: ArtifactDB, coll: string, field: string, before: Map<string, string>, after: Map<string, string>) {
+  for (const [m, json] of after) if (before.get(m) !== json) await write(() => db.doc(`${coll}/${m}`).set({ [field]: JSON.parse(json) }));
+  for (const m of before.keys()) if (!after.has(m)) await write(() => db.doc(`${coll}/${m}`).delete());
+}
 
 function friendly(e: unknown): Error {
   const code = (e as { code?: string })?.code;
@@ -54,8 +62,8 @@ function dbAdapter(db: ArtifactDB): PersistAdapter {
   return {
     label: "claude.ai (모든 기기에서 같은 데이터)",
     async load() {
-      const [cafe, sales, attendance] = await Promise.all([db.collection("cafe").get(), db.collection("sales").get(), db.collection("attendance").get()]);
-      if (cafe.empty && sales.empty && attendance.empty) return null;
+      const [cafe, sales, attendance, shifts] = await Promise.all(["cafe", "sales", "attendance", "shifts"].map((c) => db.collection(c).get()));
+      if (cafe.empty && sales.empty && attendance.empty && shifts.empty) return null;
       const out: Partial<AppData> = {};
       for (const d of cafe.docs) {
         if ((SIMPLE_KEYS as string[]).includes(d.id)) (out as Record<string, unknown>)[d.id] = d.data()?.value;
@@ -64,6 +72,7 @@ function dbAdapter(db: ArtifactDB): PersistAdapter {
         ((d.data()?.lines as SaleTuple[]) ?? []).map(([date, channel, menuId, qty]) => ({ id: `sl-${date}-${menuId}-${channel}`, date, channel, menuId, qty })),
       );
       out.attendance = attendance.docs.flatMap((d) => (d.data()?.rows as Attendance[]) ?? []);
+      out.shifts = shifts.docs.flatMap((d) => (d.data()?.rows as Shift[]) ?? []);
       return out;
     },
     async save(next, prev) {
@@ -72,18 +81,10 @@ function dbAdapter(db: ArtifactDB): PersistAdapter {
         if (prev && JSON.stringify(prev[k]) === JSON.stringify(next[k])) continue;
         await write(() => db.doc(`cafe/${k}`).set({ value: next[k] as unknown as Record<string, unknown> }));
       }
-      if (!prev || prev.sales !== next.sales) {
-        const a = prev ? saleMonths(prev.sales) : new Map<string, string>();
-        const b = saleMonths(next.sales);
-        for (const [m, json] of b) if (a.get(m) !== json) await write(() => db.doc(`sales/${m}`).set({ lines: JSON.parse(json) }));
-        for (const m of a.keys()) if (!b.has(m)) await write(() => db.doc(`sales/${m}`).delete());
-      }
-      if (!prev || prev.attendance !== next.attendance) {
-        const a = prev ? attendanceMonths(prev.attendance) : new Map<string, string>();
-        const b = attendanceMonths(next.attendance);
-        for (const [m, json] of b) if (a.get(m) !== json) await write(() => db.doc(`attendance/${m}`).set({ rows: JSON.parse(json) }));
-        for (const m of a.keys()) if (!b.has(m)) await write(() => db.doc(`attendance/${m}`).delete());
-      }
+      if (!prev || prev.sales !== next.sales) await saveMonths(db, "sales", "lines", prev ? saleMonths(prev.sales) : new Map(), saleMonths(next.sales));
+      if (!prev || prev.attendance !== next.attendance)
+        await saveMonths(db, "attendance", "rows", prev ? attendanceMonths(prev.attendance) : new Map(), attendanceMonths(next.attendance));
+      if (!prev || prev.shifts !== next.shifts) await saveMonths(db, "shifts", "rows", prev ? shiftMonths(prev.shifts) : new Map(), shiftMonths(next.shifts));
     },
   };
 }

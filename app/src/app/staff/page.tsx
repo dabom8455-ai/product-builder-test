@@ -3,15 +3,16 @@
 import { useMemo, useState } from "react";
 import { newId, useApp } from "@/lib/store";
 import { usePayrolls } from "@/lib/hooks";
-import type { Attendance, Employee, TaxType } from "@/lib/types";
+import type { Attendance, Employee, Shift, TaxType } from "@/lib/types";
 import { calcShift, type PayrollResult } from "@/lib/domain/payroll";
-import { addMonths, DOW_LABEL, dayOfWeek, nowLocal, todayLocal } from "@/lib/dates";
+import { addDays, addMonths, DOW_LABEL, dayOfWeek, nowLocal, todayLocal, weekStart } from "@/lib/dates";
+import { compareShifts, copyWeek, forecastLabor, shiftWorkMinutes, type ShiftStatus } from "@/lib/domain/schedule";
 import { Badge, Button, Card, Empty, Field, NumInput, PageHeader, Segmented, Stat, ic, inputCls } from "@/components/ui";
 import { num, won } from "@/lib/format";
 import { platform } from "@/lib/platform";
 import { askConfirm } from "@/components/Confirm";
 
-type Tab = "clock" | "records" | "payroll" | "people";
+type Tab = "clock" | "schedule" | "records" | "payroll" | "people";
 const TAX: Record<TaxType, string> = { insurance: "4대보험", freelance: "3.3%", none: "공제 없음" };
 
 export default function StaffPage() {
@@ -27,6 +28,7 @@ export default function StaffPage() {
             onChange={setTab}
             options={[
               { id: "clock", label: "출퇴근" },
+              { id: "schedule", label: "근무표" },
               { id: "records", label: "근무 기록" },
               { id: "payroll", label: "급여" },
               { id: "people", label: "직원" },
@@ -35,6 +37,7 @@ export default function StaffPage() {
         }
       />
       {tab === "clock" && <Clock />}
+      {tab === "schedule" && <Schedule />}
       {tab === "records" && <Records />}
       {tab === "payroll" && <Payroll />}
       {tab === "people" && <People />}
@@ -443,6 +446,231 @@ function People() {
           </Card>
         );
       })}
+    </div>
+  );
+}
+
+const STATUS: Record<ShiftStatus, { label: string; tone?: "good" | "bad" | "warn" | "brand" }> = {
+  ok: { label: "정상", tone: "good" },
+  late: { label: "지각", tone: "warn" },
+  early: { label: "조퇴", tone: "warn" },
+  "late-early": { label: "지각·조퇴", tone: "warn" },
+  absent: { label: "결근", tone: "bad" },
+  working: { label: "근무 중", tone: "brand" },
+  upcoming: { label: "예정" },
+};
+
+/** 주간 근무표: 계획을 세우고, 출퇴근 기록과 비교하고, 인건비를 미리 본다 */
+function Schedule() {
+  const employees = useApp((s) => s.employees).filter((e) => e.active);
+  const shifts = useApp((s) => s.shifts);
+  const attendance = useApp((s) => s.attendance);
+  const addShifts = useApp((s) => s.addShifts);
+  const today = todayLocal();
+  const [ws, setWs] = useState(weekStart(today));
+  const [editing, setEditing] = useState<{ employeeId: string; date: string; shift?: Shift } | null>(null);
+  const days = Array.from({ length: 7 }, (_, i) => addDays(ws, i));
+  const weekShifts = shifts.filter((s) => s.date >= ws && s.date < addDays(ws, 7));
+  const checks = useMemo(() => compareShifts(weekShifts, attendance, today), [weekShifts, attendance, today]);
+  const checkOf = (id: string) => checks.find((c) => c.shift.id === id);
+  const issues = checks.filter((c) => ["late", "early", "late-early", "absent"].includes(c.status));
+
+  const month = today.slice(0, 7);
+  const forecasts = useMemo(
+    () =>
+      employees.map((e) => ({
+        e,
+        week: forecastLabor(e, shifts, ws, addDays(ws, 7)),
+        month: forecastLabor(e, shifts, `${month}-01`, `${addMonths(month, 1)}-01`),
+      })),
+    [employees, shifts, ws, month],
+  );
+  const weekTotal = forecasts.reduce((t, f) => t + f.week.total, 0);
+  const monthTotal = forecasts.reduce((t, f) => t + f.month.total, 0);
+  const prevWeekHas = shifts.some((s) => s.date >= addDays(ws, -7) && s.date < ws);
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <Button size="sm" variant="ghost" onClick={() => setWs(addDays(ws, -7))} aria-label="이전 주">
+          ◀
+        </Button>
+        <span className="text-center font-semibold tabular">
+          {ws.slice(5)} ~ {addDays(ws, 6).slice(5)}
+        </span>
+        <Button size="sm" variant="ghost" onClick={() => setWs(addDays(ws, 7))} aria-label="다음 주">
+          ▶
+        </Button>
+        {ws !== weekStart(today) && (
+          <Button size="sm" variant="ghost" onClick={() => setWs(weekStart(today))}>
+            이번 주
+          </Button>
+        )}
+        <Button
+          size="sm"
+          variant="ghost"
+          className="ml-auto"
+          disabled={!prevWeekHas}
+          onClick={() => addShifts(copyWeek(shifts, addDays(ws, -7), ws, () => newId("sh")))}
+        >
+          지난주 근무표 복사
+        </Button>
+      </div>
+
+      <Card>
+        {employees.length === 0 ? (
+          <Empty>직원 탭에서 직원을 먼저 등록하세요.</Empty>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[720px] table-fixed text-xs">
+              <thead>
+                <tr className="text-ink-2">
+                  <th className="w-20 text-left font-normal">직원</th>
+                  {days.map((d) => (
+                    <th key={d} className={`font-normal ${d === today ? "text-brand font-semibold" : dayOfWeek(d) === 0 ? "text-bad" : ""}`}>
+                      {DOW_LABEL[dayOfWeek(d)]} {d.slice(8)}
+                    </th>
+                  ))}
+                  <th className="w-16 text-right font-normal">계획</th>
+                </tr>
+              </thead>
+              <tbody>
+                {employees.map((e) => {
+                  const f = forecasts.find((x) => x.e.id === e.id)!;
+                  return (
+                    <tr key={e.id} className="border-t border-line/60 align-top">
+                      <td className="py-1.5 font-medium">{e.name}</td>
+                      {days.map((d) => {
+                        const list = weekShifts.filter((s) => s.employeeId === e.id && s.date === d);
+                        return (
+                          <td key={d} className="p-0.5">
+                            <div className="flex min-h-12 flex-col gap-0.5">
+                              {list.map((s) => {
+                                const st = STATUS[checkOf(s.id)?.status ?? "upcoming"];
+                                return (
+                                  <button key={s.id} onClick={() => setEditing({ employeeId: e.id, date: d, shift: s })} className="rounded-md bg-brand/10 px-1 py-1 text-left hover:bg-brand/20">
+                                    <div className="tabular">
+                                      {s.start}~{s.end}
+                                    </div>
+                                    {st.label !== "예정" && <Badge tone={st.tone}>{st.label}</Badge>}
+                                  </button>
+                                );
+                              })}
+                              <button onClick={() => setEditing({ employeeId: e.id, date: d })} className="rounded-md border border-dashed border-line py-0.5 text-ink-2 hover:border-brand" aria-label={`${e.name} ${d} 근무 추가`}>
+                                +
+                              </button>
+                            </div>
+                          </td>
+                        );
+                      })}
+                      <td className="text-right tabular">
+                        {num(f.week.hours, 1)}h
+                        {e.weeklyContractHours > 0 && <div className="text-ink-2">/{e.weeklyContractHours}h</div>}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {editing && <ShiftEditor key={`${editing.employeeId}-${editing.date}-${editing.shift?.id ?? "new"}`} {...editing} onClose={() => setEditing(null)} />}
+      </Card>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card title="예상 인건비 (근무표 기준)">
+          <div className="grid grid-cols-2 gap-3">
+            <Stat label="이번 주(선택한 주)" value={won(weekTotal)} />
+            <Stat label={`${month.slice(5)}월 전체`} value={won(monthTotal)} sub="주휴수당 포함, 세전" />
+          </div>
+          <ul className="mt-3 space-y-1 text-sm">
+            {forecasts.map(({ e, month: m }) => (
+              <li key={e.id} className="flex justify-between gap-2 tabular">
+                <span>{e.name}</span>
+                <span>
+                  {num(m.hours, 1)}h · {won(m.total)}
+                </span>
+              </li>
+            ))}
+          </ul>
+          {forecasts.some((f) => f.week.warnings.length) && (
+            <ul className="mt-3 space-y-1">
+              {forecasts.flatMap((f) =>
+                f.week.warnings.map((w) => (
+                  <li key={f.e.id + w}>
+                    <Badge tone="warn">
+                      {f.e.name}: {w}
+                    </Badge>
+                  </li>
+                )),
+              )}
+            </ul>
+          )}
+        </Card>
+        <Card title="계획 vs 실제 (이번 주)">
+          {issues.length === 0 ? (
+            <p className="text-sm text-ink-2">지각·조퇴·결근이 없습니다.</p>
+          ) : (
+            <ul className="space-y-1.5 text-sm">
+              {issues.map((c) => (
+                <li key={c.shift.id} className="flex flex-wrap items-center gap-2">
+                  <Badge tone={STATUS[c.status].tone}>{STATUS[c.status].label}</Badge>
+                  <span>
+                    {employees.find((e) => e.id === c.shift.employeeId)?.name} · {c.shift.date.slice(5)} ({DOW_LABEL[dayOfWeek(c.shift.date)]}) {c.shift.start}~{c.shift.end}
+                  </span>
+                  <span className="text-xs text-ink-2">
+                    {c.lateMin > 5 && `${Math.round(c.lateMin)}분 늦음`} {c.earlyMin > 5 && `${Math.round(c.earlyMin)}분 일찍 퇴근`}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className="mt-3 text-[11px] text-ink-2">출근이 예정보다 5분 넘게 늦으면 지각, 퇴근이 5분 넘게 이르면 조퇴, 지난 날짜에 출근 기록이 없으면 결근으로 표시합니다.</p>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+function ShiftEditor({ employeeId, date, shift, onClose }: { employeeId: string; date: string; shift?: Shift; onClose: () => void }) {
+  const upsert = useApp((s) => s.upsert);
+  const remove = useApp((s) => s.remove);
+  const name = useApp((s) => s.employees.find((e) => e.id === employeeId)?.name);
+  const [start, setStart] = useState(shift?.start ?? "10:00");
+  const [end, setEnd] = useState(shift?.end ?? "15:00");
+  const minutes = shiftWorkMinutes({ date, start, end });
+  return (
+    <div className="mt-4 flex flex-wrap items-end gap-3 rounded-xl bg-surface-2 p-3">
+      <div className="text-sm font-medium">
+        {name} · {date} ({DOW_LABEL[dayOfWeek(date)]})
+      </div>
+      <Field label="시작">
+        <input type="time" className={ic("w-32")} value={start} onChange={(e) => setStart(e.target.value)} />
+      </Field>
+      <Field label="종료">
+        <input type="time" className={ic("w-32")} value={end} onChange={(e) => setEnd(e.target.value)} />
+      </Field>
+      <span className="pb-2 text-xs text-ink-2">유급 {num(minutes / 60, 1)}시간 (법정 휴게 제외)</span>
+      <div className="ml-auto flex gap-2">
+        {shift && (
+          <Button size="sm" variant="danger" onClick={() => (remove("shifts", shift.id), onClose())}>
+            삭제
+          </Button>
+        )}
+        <Button size="sm" variant="ghost" onClick={onClose}>
+          취소
+        </Button>
+        <Button
+          size="sm"
+          disabled={!start || !end || start === end}
+          onClick={() => {
+            upsert("shifts", { id: shift?.id ?? newId("sh"), employeeId, date, start, end });
+            onClose();
+          }}
+        >
+          저장
+        </Button>
+      </div>
     </div>
   );
 }

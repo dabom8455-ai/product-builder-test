@@ -1,7 +1,7 @@
 // claude.ai 아티팩트용 플랫폼: AI 는 sample 기능(보는 사람의 Claude 계정), 파일 저장은 downloads 기능.
 import type { Platform } from "@/lib/platform";
 import { buildReplyPrompt } from "@/lib/domain/review";
-import { buildCopyPrompt, type PosterCopy } from "@/lib/domain/poster";
+import { buildCaptionPrompt, buildCopyPrompt, type PosterCopy } from "@/lib/domain/poster";
 
 const sampleP = () => window.claude?.use("sample").catch(() => null) ?? Promise.resolve(null);
 const downloadsP = () => window.claude?.use("downloads").catch(() => null) ?? Promise.resolve(null);
@@ -27,6 +27,16 @@ export const artifactPlatform: Platform = {
       if (!Array.isArray(arr)) return null;
       const copies = arr.filter((x) => x && typeof x.headline === "string").map((x) => ({ headline: String(x.headline), sub: String(x.sub ?? "") }));
       return copies.length ? copies : null;
+    } catch {
+      return null;
+    }
+  },
+  async instaCaption(req) {
+    const sample = await sampleP();
+    if (!sample) return null;
+    try {
+      const { text } = await sample(buildCaptionPrompt(req), { cache: false });
+      return text.trim() || null;
     } catch {
       return null;
     }

@@ -1,5 +1,8 @@
 import type {
   Attendance,
+  DayNote,
+  Purchase,
+  Shift,
   Channel,
   Employee,
   Expense,
@@ -11,7 +14,8 @@ import type {
   SaleLine,
   Store,
 } from "./types";
-import { addDays, addMonths, dayOfWeek } from "./dates";
+import { addDays, addMonths, dayOfWeek, weekStart } from "./dates";
+import { theoreticalUsage } from "./domain/usage";
 
 // 앱을 처음 열었을 때 바로 써볼 수 있는 샘플 카페 데이터. 설정 > 데이터에서 초기화할 수 있다.
 
@@ -24,6 +28,9 @@ export const DEFAULT_STORE: Store = {
   channelFeeRate: { hall: 0.011, baemin: 0.098, coupang: 0.098, yogiyo: 0.127, naver: 0.03 },
   deliveryPackagingCost: 150,
   targetCostRatio: { drink: 0.3, dessert: 0.35 },
+  monthlySalesTarget: 15_000_000,
+  closedDays: [],
+  replySignature: "",
 };
 
 // 2026년 기준. 4대보험 비율은 근사치이며 설정에서 조정한다.
@@ -70,11 +77,11 @@ export function buildSeed(today: string) {
     ing("i-flour", "박력분", "g", 1000, 2500, today),
     ing("i-egg", "계란", "개", 30, 8500, today),
     ing("i-ice", "얼음", "g", 1000, 300, today),
-    ing("i-cup-ice", "아이스컵 16oz", "개", 1000, 85000, today),
-    ing("i-cup-hot", "핫컵 12oz", "개", 1000, 70000, today),
-    ing("i-lid", "컵 뚜껑", "개", 1000, 30000, today),
-    ing("i-straw", "빨대", "개", 1000, 12000, today),
-    ing("i-box", "디저트 박스", "개", 100, 25000, today),
+    ing("i-cup-ice", "아이스컵 16oz", "개", 50, 4250, today),
+    ing("i-cup-hot", "핫컵 12oz", "개", 50, 3500, today),
+    ing("i-lid", "컵 뚜껑", "개", 50, 1500, today),
+    ing("i-straw", "빨대", "개", 50, 600, today),
+    ing("i-box", "디저트 박스", "개", 20, 5000, today),
   ];
 
   const I = (refId: string, qty: number) => ({ refId, kind: "ingredient" as const, qty });
@@ -153,11 +160,20 @@ export function buildSeed(today: string) {
     "e-seojun": { dows: [0, 6], start: "10:00", end: "18:30", breakMin: 60 },
     "e-haneul": { dows: [2, 4, 6], start: "18:00", end: "22:00" },
   };
+  // 근무표: 지난 8주 + 다음 1주. 출퇴근 기록은 근무표를 따르되 지각·결근이 가끔 섞인다.
+  const shifts: Shift[] = [];
   const attendance: Attendance[] = [];
-  for (let d = addDays(today, -56); d < today; d = addDays(d, 1)) {
+  const absentDay = addDays(weekStart(today), -15); // 3주 전 토요일
+  let n = 0;
+  for (let d = addDays(today, -56); d < addDays(today, 7); d = addDays(d, 1)) {
     for (const [empId, s] of Object.entries(schedule)) {
       if (!s.dows.includes(dayOfWeek(d))) continue;
-      attendance.push({ id: `at-${empId}-${d}`, employeeId: empId, clockIn: `${d}T${s.start}`, clockOut: `${d}T${s.end}`, breakMin: s.breakMin });
+      shifts.push({ id: `sh-${empId}-${d}`, employeeId: empId, date: d, start: s.start, end: s.end });
+      if (d >= today || (empId === "e-seojun" && d === absentDay)) continue;
+      n++;
+      const late = empId === "e-haneul" && n % 7 === 0;
+      const clockIn = late ? `${d}T${s.start.slice(0, 3)}12` : `${d}T${s.start}`;
+      attendance.push({ id: `at-${empId}-${d}`, employeeId: empId, clockIn, clockOut: `${d}T${s.end}`, breakMin: s.breakMin });
     }
   }
 
@@ -201,7 +217,30 @@ export function buildSeed(today: string) {
     r("rv-8", 8, "naver", 5, "카공족", "조용하고 콘센트 많아서 공부하기 좋아요. 카페라떼 부드러워요"),
   ];
 
-  return { ingredients, menus, sales, employees, attendance, recurring, expenses, reviews };
+  // 재료 매입: 매주 월요일, 지난주 판매 기준 이론 사용량에 재료별 여유분(로스)을 더해 포장 단위로 구매
+  const menuMap = new Map(menus.map((m) => [m.id, m]));
+  const extra: Record<string, number> = { "i-milk": 0.12, "i-bean": 0.06, "i-cream": 0.25, "i-strawberry": 0.3, "i-ice": 0 };
+  const PACKAGING = new Set(["i-cup-ice", "i-cup-hot", "i-lid", "i-straw", "i-box"]);
+  const purchases: Purchase[] = [];
+  for (let ws = weekStart(addDays(today, -56)); ws <= today; ws = addDays(ws, 7)) {
+    const used = theoreticalUsage(sales.filter((l) => l.date >= addDays(ws, -7) && l.date < ws), menuMap);
+    const items = ingredients
+      .filter((i) => i.id !== "i-ice" && (used.get(i.id) ?? 0) > 0)
+      .map((i) => {
+        // 포장재·소모품은 쓰는 만큼 채우고(재고 이월), 식재료는 여유분(로스)까지 포장 단위로 올려 산다
+        const need = ((used.get(i.id) ?? 0) * (1 + (PACKAGING.has(i.id) ? 0 : (extra[i.id] ?? 0.03)))) / i.packSize;
+        return { ingredientId: i.id, packs: Math.max(1, PACKAGING.has(i.id) ? Math.round(need) : Math.ceil(need)), packPrice: i.packPrice };
+      });
+    if (items.length && used.size) purchases.push({ id: `pu-${ws}`, date: ws, items, memo: "주간 정기 매입" });
+  }
+
+  const dayNotes: DayNote[] = [
+    { id: addDays(today, -3), date: addDays(today, -3), weather: "rain", memo: "오후 내내 비" },
+    { id: addDays(today, -10), date: addDays(today, -10), weather: "sunny", memo: "근처 공원 행사" },
+    { id: addDays(today, -20), date: addDays(today, -20), weather: "cloudy" },
+  ];
+
+  return { ingredients, menus, sales, employees, attendance, recurring, expenses, reviews, shifts, purchases, dayNotes };
 }
 
 export function priceHistorySeed(ingredients: Ingredient[], today: string) {

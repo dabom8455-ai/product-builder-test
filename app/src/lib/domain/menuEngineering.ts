@@ -1,6 +1,7 @@
 import type { Menu, Review, SaleLine, Store } from "../types";
 import { linePrice } from "./pnl";
 import { netOfVat, priceForTargetRatio } from "./cost";
+import { addDays, dayOfWeek } from "../dates";
 
 export type Quadrant = "star" | "plowhorse" | "puzzle" | "dog";
 
@@ -175,4 +176,28 @@ function buildSuggestions(stats: MenuStat[], store: Store): Suggestion[] {
   }
   const order = { fix: 0, reprice: 1, promote: 2, drop: 3, keep: 4 };
   return out.sort((a, b) => order[a.action] - order[b.action]);
+}
+
+/** 메뉴 × 요일 평균 판매량. from~to(미포함) 사이 각 요일이 며칠 있었는지로 나눈다. */
+export function weekdayMatrix(sales: SaleLine[], menuIds: string[], from: string, to: string) {
+  const dayCount = [0, 0, 0, 0, 0, 0, 0];
+  for (let d = from; d < to; d = addDays(d, 1)) dayCount[dayOfWeek(d)]++;
+  const sums = new Map(menuIds.map((id) => [id, [0, 0, 0, 0, 0, 0, 0]]));
+  for (const l of sales) {
+    if (l.date < from || l.date >= to) continue;
+    const row = sums.get(l.menuId);
+    if (row) row[dayOfWeek(l.date)] += l.qty;
+  }
+  return menuIds.map((id) => ({ menuId: id, avg: sums.get(id)!.map((v, i) => (dayCount[i] ? v / dayCount[i] : 0)) }));
+}
+
+/** 채널 그룹별 판매량 상위 메뉴 */
+export function topMenus(sales: SaleLine[], channels: string[], n = 5) {
+  const m = new Map<string, number>();
+  for (const l of sales) if (channels.includes(l.channel)) m.set(l.menuId, (m.get(l.menuId) ?? 0) + l.qty);
+  const total = [...m.values()].reduce((t, v) => t + v, 0);
+  return [...m.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, n)
+    .map(([menuId, qty]) => ({ menuId, qty, share: total ? qty / total : 0 }));
 }

@@ -2,15 +2,16 @@
 
 import { useMemo, useState } from "react";
 import { newId, useApp, useMaps } from "@/lib/store";
-import type { Ingredient, Menu, MenuCategory } from "@/lib/types";
+import type { Ingredient, Menu, MenuCategory, Purchase, PurchaseItem } from "@/lib/types";
 import { CHANNELS } from "@/lib/types";
 import { costRatio, menuCost, priceForTargetRatio, unitCost, unitMargin } from "@/lib/domain/cost";
 import { Badge, Button, Card, Empty, Explain, Field, NumInput, PageHeader, Segmented, ic, inputCls } from "@/components/ui";
 import { num, pct, won } from "@/lib/format";
-import { addDays, todayLocal } from "@/lib/dates";
+import { addDays, addMonths, todayLocal } from "@/lib/dates";
+import { lossReport, purchaseAmount } from "@/lib/domain/usage";
 import { askConfirm } from "@/components/Confirm";
 
-type Tab = "menus" | "ingredients" | "simulate";
+type Tab = "menus" | "ingredients" | "purchases" | "simulate";
 
 export default function MenuPage() {
   const [tab, setTab] = useState<Tab>("menus");
@@ -26,6 +27,7 @@ export default function MenuPage() {
             options={[
               { id: "menus", label: "메뉴·레시피" },
               { id: "ingredients", label: "재료 단가" },
+              { id: "purchases", label: "매입·로스" },
               { id: "simulate", label: "단가 변동 시뮬" },
             ]}
           />
@@ -33,6 +35,7 @@ export default function MenuPage() {
       />
       {tab === "menus" && <MenusTab />}
       {tab === "ingredients" && <IngredientsTab />}
+      {tab === "purchases" && <PurchasesTab />}
       {tab === "simulate" && <SimulateTab />}
     </div>
   );
@@ -128,7 +131,16 @@ function MenusTab() {
         )}
       </Card>
       {editing && menus.find((m) => m.id === editing) ? (
-        <MenuEditor key={editing} menu={menus.find((m) => m.id === editing)!} onClose={() => setEditing(null)} />
+        <MenuEditor
+          key={editing}
+          menu={menus.find((m) => m.id === editing)!}
+          onClose={() => setEditing(null)}
+          onDuplicate={(m) => {
+            const copy: Menu = { ...m, id: newId(m.isSub ? "s" : "m"), name: `${m.name} (복사)`, recipe: m.recipe.map((r) => ({ ...r })) };
+            upsert("menus", copy);
+            setEditing(copy.id);
+          }}
+        />
       ) : (
         <Empty>왼쪽에서 메뉴를 선택하면 레시피와 원가를 편집할 수 있습니다.</Empty>
       )}
@@ -136,7 +148,7 @@ function MenusTab() {
   );
 }
 
-function MenuEditor({ menu, onClose }: { menu: Menu; onClose: () => void }) {
+function MenuEditor({ menu, onClose, onDuplicate }: { menu: Menu; onClose: () => void; onDuplicate: (m: Menu) => void }) {
   const upsert = useApp((s) => s.upsert);
   const remove = useApp((s) => s.remove);
   const ingredients = useApp((s) => s.ingredients);
@@ -328,7 +340,10 @@ function MenuEditor({ menu, onClose }: { menu: Menu; onClose: () => void }) {
         )}
       </div>
 
-      <div className="mt-4 text-right">
+      <div className="mt-4 flex justify-end gap-2">
+        <Button size="sm" variant="ghost" onClick={() => onDuplicate(menu)}>
+          복제
+        </Button>
         <Button
           size="sm"
           variant="danger"
@@ -524,6 +539,218 @@ function SimulateTab() {
           </table>
         </>
       )}
+    </Card>
+  );
+}
+
+/** 매입 영수증 기록 + 레시피 기준 사용량과 비교한 로스 분석 */
+function PurchasesTab() {
+  const purchases = useApp((s) => s.purchases);
+  const sales = useApp((s) => s.sales);
+  const remove = useApp((s) => s.remove);
+  const { ingMap, menuMap, unitCosts } = useMaps();
+  const [month, setMonth] = useState(addMonths(todayLocal().slice(0, 7), -1));
+  const [editing, setEditing] = useState<Purchase | null>(null);
+
+  const monthPurchases = purchases.filter((p) => p.date.startsWith(month)).sort((a, b) => b.date.localeCompare(a.date));
+  const monthSales = useMemo(() => sales.filter((l) => l.date.startsWith(month)), [sales, month]);
+  const rows = useMemo(() => lossReport({ sales: monthSales, purchases: monthPurchases, menus: menuMap, ingredients: ingMap }), [monthSales, monthPurchases, menuMap, ingMap]);
+  const bought = monthPurchases.reduce((t, p) => t + purchaseAmount(p), 0);
+  const theoretical = monthSales.reduce((t, l) => t + (unitCosts.get(l.menuId) ?? 0) * l.qty, 0);
+  const lossCost = rows.reduce((t, r) => t + Math.max(0, r.diffCost), 0);
+
+  const newPurchase = (): Purchase => ({ id: newId("pu"), date: todayLocal(), items: [], memo: "" });
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <Button size="sm" variant="ghost" onClick={() => setMonth(addMonths(month, -1))} aria-label="이전 달">
+          ◀
+        </Button>
+        <span className="w-20 text-center font-semibold tabular">{month}</span>
+        <Button size="sm" variant="ghost" onClick={() => setMonth(addMonths(month, 1))} aria-label="다음 달">
+          ▶
+        </Button>
+        <Button size="sm" className="ml-auto" onClick={() => setEditing(newPurchase())}>
+          + 매입 기록
+        </Button>
+      </div>
+
+      {editing && <PurchaseEditor key={editing.id} initial={editing} onClose={() => setEditing(null)} />}
+
+      <div className="grid grid-cols-3 gap-3">
+        <div className="rounded-2xl border border-line bg-surface p-4">
+          <div className="text-xs text-ink-2">실제 매입액</div>
+          <div className="mt-1 text-lg font-bold tabular">{won(bought)}</div>
+        </div>
+        <div className="rounded-2xl border border-line bg-surface p-4">
+          <div className="text-xs text-ink-2">레시피 기준 원가</div>
+          <div className="mt-1 text-lg font-bold tabular">{won(theoretical)}</div>
+        </div>
+        <div className="rounded-2xl border border-line bg-surface p-4">
+          <div className="text-xs text-ink-2">추정 로스(초과 매입)</div>
+          <div className={`mt-1 text-lg font-bold tabular ${lossCost > 0 ? "text-bad" : ""}`}>{won(lossCost)}</div>
+        </div>
+      </div>
+
+      <Card title="재료별 로스 분석">
+        {rows.length === 0 ? (
+          <p className="text-sm text-ink-2">이 달 매입 기록이 없습니다. 영수증을 기록하면 레시피대로 쓰였는지 비교할 수 있습니다.</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[620px] text-sm tabular">
+              <thead className="text-xs text-ink-2">
+                <tr>
+                  <th className="text-left font-normal">재료</th>
+                  <th className="text-right font-normal">레시피 사용량</th>
+                  <th className="text-right font-normal">매입량</th>
+                  <th className="text-right font-normal">차이</th>
+                  <th className="text-right font-normal">차이율</th>
+                  <th className="text-right font-normal">금액</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((r) => (
+                  <tr key={r.ingredient.id} className="border-t border-line/60">
+                    <td className="py-1.5">{r.ingredient.name}</td>
+                    <td className="text-right">
+                      {num(r.used)}
+                      {r.ingredient.unit}
+                    </td>
+                    <td className="text-right">
+                      {num(r.purchased)}
+                      {r.ingredient.unit}
+                    </td>
+                    <td className="text-right">
+                      {r.diff > 0 ? "+" : ""}
+                      {num(r.diff)}
+                      {r.ingredient.unit}
+                    </td>
+                    <td className="text-right">
+                      <Badge tone={r.diffRate > 0.1 ? "bad" : r.diffRate > 0.05 ? "warn" : "good"}>{pct(r.diffRate, 0)}</Badge>
+                    </td>
+                    <td className={`text-right ${r.diffCost > 0 ? "text-bad" : ""}`}>{won(r.diffCost)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <p className="mt-3 text-[11px] text-ink-2">
+          차이 = 매입량 − (판매수량 × 레시피, 로스율 포함). 월초·월말 재고 차이는 반영하지 않으므로 2~3개월 추세로 보세요. 10%를 넘는 재료는 계량·폐기·레시피 준수를 점검하세요.
+        </p>
+      </Card>
+
+      <Card title={`매입 기록 ${monthPurchases.length}건`}>
+        {monthPurchases.length === 0 ? (
+          <p className="text-sm text-ink-2">기록 없음</p>
+        ) : (
+          <ul className="divide-y divide-line">
+            {monthPurchases.map((p) => (
+              <li key={p.id} className="flex flex-wrap items-center justify-between gap-2 py-2 text-sm">
+                <div className="min-w-0">
+                  <div className="font-medium">
+                    {p.date} · {won(purchaseAmount(p))}
+                  </div>
+                  <div className="truncate text-xs text-ink-2">
+                    {p.items.map((it) => `${ingMap.get(it.ingredientId)?.name ?? "?"} ${it.packs}개`).join(", ")}
+                    {p.memo && ` · ${p.memo}`}
+                  </div>
+                </div>
+                <div className="flex gap-1">
+                  <Button size="sm" variant="ghost" onClick={() => setEditing(p)}>
+                    수정
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={async () => (await askConfirm(`${p.date} 매입 기록을 삭제할까요? 재료 단가는 바뀌지 않습니다.`, { confirmLabel: "삭제", danger: true })) && remove("purchases", p.id)}
+                  >
+                    삭제
+                  </Button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Card>
+    </div>
+  );
+}
+
+function PurchaseEditor({ initial, onClose }: { initial: Purchase; onClose: () => void }) {
+  const ingredients = useApp((s) => s.ingredients);
+  const savePurchase = useApp((s) => s.savePurchase);
+  const [p, setP] = useState<Purchase>(initial);
+  const setItem = (i: number, patch: Partial<PurchaseItem>) => setP({ ...p, items: p.items.map((it, j) => (j === i ? { ...it, ...patch } : it)) });
+  const addItem = () => {
+    const ing = ingredients.find((g) => !p.items.some((it) => it.ingredientId === g.id)) ?? ingredients[0];
+    if (ing) setP({ ...p, items: [...p.items, { ingredientId: ing.id, packs: 1, packPrice: ing.packPrice }] });
+  };
+  const valid = p.items.length > 0 && p.items.every((it) => it.packs > 0 && it.packPrice >= 0);
+
+  return (
+    <Card title={initial.items.length ? "매입 수정" : "새 매입 (영수증 1장)"} right={<Button size="sm" variant="ghost" onClick={onClose}>닫기</Button>}>
+      <div className="flex flex-wrap gap-3">
+        <Field label="날짜">
+          <input type="date" className={ic("w-44")} value={p.date} onChange={(e) => e.target.value && setP({ ...p, date: e.target.value })} />
+        </Field>
+        <div className="min-w-48 flex-1">
+          <Field label="메모">
+            <input className={inputCls} placeholder="거래처, 영수증 번호 등" value={p.memo ?? ""} onChange={(e) => setP({ ...p, memo: e.target.value })} />
+          </Field>
+        </div>
+      </div>
+      <div className="mt-4 space-y-2">
+        {p.items.map((it, i) => {
+          const ing = ingredients.find((g) => g.id === it.ingredientId);
+          return (
+            <div key={i} className="flex flex-wrap items-center gap-2">
+              <select className={ic("min-w-36 flex-1")} value={it.ingredientId} onChange={(e) => {
+                const g = ingredients.find((x) => x.id === e.target.value);
+                setItem(i, { ingredientId: e.target.value, packPrice: g?.packPrice ?? it.packPrice });
+              }} aria-label="재료">
+                {ingredients.map((g) => (
+                  <option key={g.id} value={g.id}>
+                    {g.name} ({num(g.packSize)}
+                    {g.unit})
+                  </option>
+                ))}
+              </select>
+              <NumInput className="w-20" value={it.packs} min={0} onChange={(n) => setItem(i, { packs: n })} aria-label="수량(포장 단위)" />
+              <span className="text-xs text-ink-2">개 ×</span>
+              <NumInput className="w-28" value={it.packPrice} step={100} onChange={(n) => setItem(i, { packPrice: n })} aria-label="포장 1개 가격" />
+              <span className="w-24 text-right text-xs tabular">{won(it.packs * it.packPrice)}</span>
+              {ing && it.packPrice !== ing.packPrice && (
+                <Badge tone={it.packPrice > ing.packPrice ? "bad" : "good"}>
+                  단가 {it.packPrice > ing.packPrice ? "▲" : "▼"} {pct(Math.abs(it.packPrice - ing.packPrice) / (ing.packPrice || 1), 0)}
+                </Badge>
+              )}
+              <button className="text-ink-2 hover:text-bad" aria-label="항목 삭제" onClick={() => setP({ ...p, items: p.items.filter((_, j) => j !== i) })}>
+                ✕
+              </button>
+            </div>
+          );
+        })}
+        <Button size="sm" variant="ghost" onClick={addItem} disabled={ingredients.length === 0}>
+          + 재료 추가
+        </Button>
+      </div>
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+        <span className="text-sm">
+          합계 <b className="tabular">{won(purchaseAmount(p))}</b>
+          <span className="ml-2 text-xs text-ink-2">저장하면 가장 최근 매입가로 재료 단가가 갱신됩니다.</span>
+        </span>
+        <Button
+          disabled={!valid}
+          onClick={() => {
+            savePurchase(p);
+            onClose();
+          }}
+        >
+          저장
+        </Button>
+      </div>
     </Card>
   );
 }
